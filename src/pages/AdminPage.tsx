@@ -426,14 +426,8 @@ export const AdminPage: React.FC = () => {
               <div className="p-4 rounded-2xl bg-brand-card border border-brand-border/80 space-y-2">
                 <div className="flex items-center space-x-2 text-emerald-400 text-xs font-semibold">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>Code envoyé à : {adminEmail}</span>
+                  <span>Code de sécurité généré pour : {adminEmail}</span>
                 </div>
-                {generatedOtp && (
-                  <div className="p-3 rounded-xl bg-brand-surface border border-brand-red/40 text-center">
-                    <p className="text-[10px] text-brand-textMuted uppercase font-bold tracking-wider">Votre Code de Sécurité Temporaire :</p>
-                    <p className="text-2xl font-mono font-black text-brand-red tracking-widest mt-1">{generatedOtp}</p>
-                  </div>
-                )}
               </div>
 
               <div>
