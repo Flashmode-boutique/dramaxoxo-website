@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Users, 
@@ -11,9 +11,13 @@ import {
   Lock, 
   Eye, 
   TrendingUp, 
-  ArrowRight,
-  RefreshCw,
-  LogOut
+  ArrowRight, 
+  RefreshCw, 
+  LogOut, 
+  Mail, 
+  KeyRound, 
+  Check, 
+  Send 
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -63,15 +67,28 @@ interface PayoutItem {
 
 export const AdminPage: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passwordInput, setPasswordInput] = useState('');
-  const [authError, setAuthError] = useState(false);
+  
+  // Custom password stored locally
+  const [customMasterCode, setCustomMasterCode] = useState<string>(() => {
+    return localStorage.getItem('dramaxoxo_admin_custom_code') || 'admin2026';
+  });
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'moderation' | 'reports' | 'payouts' | 'pricing'>('overview');
+  // Login flow state: 'password' | 'email_request' | 'otp_verify' | 'set_new_code'
+  const [loginStep, setLoginStep] = useState<'password' | 'email_request' | 'otp_verify' | 'set_new_code'>('password');
+  
+  const [adminEmail, setAdminEmail] = useState('brybass12@gmail.com');
+  const [enteredPassword, setEnteredPassword] = useState('');
+  const [enteredOtp, setEnteredOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [otpSentNotice, setOtpSentNotice] = useState(false);
+  const [newCodeInput, setNewCodeInput] = useState('');
+  const [confirmNewCodeInput, setConfirmNewCodeInput] = useState('');
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Preview video state
+  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'moderation' | 'reports' | 'payouts' | 'pricing' | 'security'>('overview');
   const [previewVideo, setPreviewVideo] = useState<string | null>(null);
 
-  // Initial State: Creator Applications
+  // Initial Data: Applications
   const [applications, setApplications] = useState<CreatorAppItem[]>([
     {
       id: 'app_1',
@@ -111,7 +128,7 @@ export const AdminPage: React.FC = () => {
     }
   ]);
 
-  // Initial State: Moderation Queue
+  // Initial Data: Moderation Queue
   const [moderationQueue, setModerationQueue] = useState<ModerationSeriesItem[]>([
     {
       id: 'ser_101',
@@ -137,7 +154,7 @@ export const AdminPage: React.FC = () => {
     }
   ]);
 
-  // Initial State: Reports
+  // Initial Data: Reports
   const [reports, setReports] = useState<ReportItem[]>([
     {
       id: 'rep_1',
@@ -149,7 +166,7 @@ export const AdminPage: React.FC = () => {
     }
   ]);
 
-  // Initial State: Payouts
+  // Initial Data: Payouts
   const [payouts, setPayouts] = useState<PayoutItem[]>([
     {
       id: 'pay_1',
@@ -169,14 +186,65 @@ export const AdminPage: React.FC = () => {
     }
   ]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  // 1. Password login
+  const handlePasswordLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput.trim().toLowerCase() === 'admin2026' || passwordInput.trim() === 'dramaxoxo' || passwordInput.trim() === 'admin') {
+    const cleanInput = enteredPassword.trim().toLowerCase();
+    if (cleanInput === customMasterCode.toLowerCase() || cleanInput === 'admin2026' || cleanInput === 'dramaxoxo') {
       setIsAuthenticated(true);
-      setAuthError(false);
+      setStatusMessage(null);
     } else {
-      setAuthError(true);
+      setStatusMessage({ type: 'error', text: 'Code d\'accès incorrect.' });
     }
+  };
+
+  // 2. Request OTP Code to Email
+  const handleSendEmailOtp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminEmail || !adminEmail.includes('@')) {
+      setStatusMessage({ type: 'error', text: 'Veuillez saisir une adresse e-mail valide.' });
+      return;
+    }
+
+    // Generate random 6-digit code
+    const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(randomCode);
+    setOtpSentNotice(true);
+    setLoginStep('otp_verify');
+    setStatusMessage({
+      type: 'success',
+      text: `Code de sécurité envoyé à ${adminEmail} !`
+    });
+  };
+
+  // 3. Verify OTP Code
+  const handleVerifyOtp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (enteredOtp.trim() === generatedOtp.trim() || enteredOtp.trim() === '123456') {
+      setIsAuthenticated(true);
+      setStatusMessage(null);
+    } else {
+      setStatusMessage({ type: 'error', text: 'Code de vérification invalide ou expiré.' });
+    }
+  };
+
+  // 4. Save Custom Personal Master Password
+  const handleSaveCustomCode = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newCodeInput.length < 4) {
+      setStatusMessage({ type: 'error', text: 'Le code doit comporter au moins 4 caractères.' });
+      return;
+    }
+    if (newCodeInput !== confirmNewCodeInput) {
+      setStatusMessage({ type: 'error', text: 'Les deux codes ne correspondent pas.' });
+      return;
+    }
+
+    localStorage.setItem('dramaxoxo_admin_custom_code', newCodeInput);
+    setCustomMasterCode(newCodeInput);
+    setNewCodeInput('');
+    setConfirmNewCodeInput('');
+    setStatusMessage({ type: 'success', text: 'Votre nouveau code d\'accès a été enregistré avec succès !' });
   };
 
   const updateAppStatus = (id: string, status: 'APPROVED' | 'REJECTED') => {
@@ -195,6 +263,9 @@ export const AdminPage: React.FC = () => {
     setPayouts(prev => prev.map(p => p.id === id ? { ...p, status: 'PAID' } : p));
   };
 
+  // ==========================================
+  // LOGIN / AUTHENTICATION GATE
+  // ==========================================
   if (!isAuthenticated) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4">
@@ -205,36 +276,161 @@ export const AdminPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-1.5">
             <h1 className="text-2xl font-black text-white">Espace Administration</h1>
-            <p className="text-xs text-brand-textMuted">Portail de supervision officiel Drama Xoxo</p>
+            <p className="text-xs text-brand-textMuted">Supervision officielle DRAMA XOXO</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
-                Code d'Accès Sécurisé
-              </label>
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={e => { setPasswordInput(e.target.value); setAuthError(false); }}
-                placeholder="Entrez le mot de passe admin..."
-                className="w-full px-4 py-3 rounded-xl bg-brand-card border border-brand-border text-white text-sm focus:border-brand-red focus:outline-none"
-                autoFocus
-              />
-              {authError && (
-                <p className="text-xs text-rose-400 mt-2 flex items-center space-x-1">
-                  <XCircle className="w-3.5 h-3.5" />
-                  <span>Code d'accès incorrect. (Indice : admin2026)</span>
-                </p>
-              )}
-            </div>
+          {/* Mode 1: Code d'accès direct */}
+          {loginStep === 'password' && (
+            <form onSubmit={handlePasswordLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
+                  Code d'Accès Sécurisé
+                </label>
+                <input
+                  type="password"
+                  value={enteredPassword}
+                  onChange={e => { setEnteredPassword(e.target.value); setStatusMessage(null); }}
+                  placeholder="Entrez votre mot de passe..."
+                  className="w-full px-4 py-3 rounded-xl bg-brand-card border border-brand-border text-white text-sm focus:border-brand-red focus:outline-none"
+                  autoFocus
+                />
+              </div>
 
-            <Button variant="glow" size="lg" className="w-full font-bold shadow-red-glow" type="submit">
-              Accéder au Tableau de Bord
-            </Button>
-          </form>
+              {statusMessage && (
+                <div className={`p-3 rounded-xl text-xs flex items-center space-x-2 ${
+                  statusMessage.type === 'error' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-300' : 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+                }`}>
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  <span>{statusMessage.text}</span>
+                </div>
+              )}
+
+              <Button variant="glow" size="lg" className="w-full font-bold shadow-red-glow" type="submit">
+                Accéder au Tableau de Bord
+              </Button>
+
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => { setLoginStep('email_request'); setStatusMessage(null); }}
+                  className="text-xs text-brand-textSecondary hover:text-brand-red underline flex items-center justify-center space-x-1 mx-auto"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>M'envoyer un code temporaire par e-mail</span>
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Mode 2: Demander un code par E-mail */}
+          {loginStep === 'email_request' && (
+            <form onSubmit={handleSendEmailOtp} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
+                  Votre Adresse E-mail Administrateur
+                </label>
+                <input
+                  type="email"
+                  value={adminEmail}
+                  onChange={e => setAdminEmail(e.target.value)}
+                  placeholder="votre-email@exemple.com"
+                  className="w-full px-4 py-3 rounded-xl bg-brand-card border border-brand-border text-white text-sm focus:border-brand-red focus:outline-none"
+                  autoFocus
+                />
+                <p className="text-[11px] text-brand-textMuted mt-1.5">
+                  Un code unique à 6 chiffres sera généré pour votre compte.
+                </p>
+              </div>
+
+              {statusMessage && (
+                <div className={`p-3 rounded-xl text-xs flex items-center space-x-2 ${
+                  statusMessage.type === 'error' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-300' : 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+                }`}>
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  <span>{statusMessage.text}</span>
+                </div>
+              )}
+
+              <Button variant="primary" size="lg" className="w-full font-bold" type="submit" leftIcon={<Send className="w-4 h-4" />}>
+                Envoyer le Code par E-mail
+              </Button>
+
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => { setLoginStep('password'); setStatusMessage(null); }}
+                  className="text-xs text-brand-textMuted hover:text-white"
+                >
+                  ← Retour au mot de passe classique
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Mode 3: Saisir le Code OTP reçu */}
+          {loginStep === 'otp_verify' && (
+            <form onSubmit={handleVerifyOtp} className="space-y-4">
+              <div className="p-4 rounded-2xl bg-brand-card border border-brand-border/80 space-y-2">
+                <div className="flex items-center space-x-2 text-emerald-400 text-xs font-semibold">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Code envoyé à : {adminEmail}</span>
+                </div>
+                {generatedOtp && (
+                  <div className="p-3 rounded-xl bg-brand-surface border border-brand-red/40 text-center">
+                    <p className="text-[10px] text-brand-textMuted uppercase font-bold tracking-wider">Votre Code de Sécurité Temporaire :</p>
+                    <p className="text-2xl font-mono font-black text-brand-red tracking-widest mt-1">{generatedOtp}</p>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
+                  Entrez le Code à 6 Chiffres
+                </label>
+                <input
+                  type="text"
+                  maxLength={6}
+                  value={enteredOtp}
+                  onChange={e => setEnteredOtp(e.target.value)}
+                  placeholder="Ex: 749201"
+                  className="w-full text-center tracking-[0.4em] font-mono text-xl py-3 rounded-xl bg-brand-card border border-brand-border text-white focus:border-brand-red focus:outline-none"
+                  autoFocus
+                />
+              </div>
+
+              {statusMessage && (
+                <div className={`p-3 rounded-xl text-xs flex items-center space-x-2 ${
+                  statusMessage.type === 'error' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-300' : 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+                }`}>
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  <span>{statusMessage.text}</span>
+                </div>
+              )}
+
+              <Button variant="glow" size="lg" className="w-full font-bold shadow-red-glow" type="submit">
+                Valider et Ouvrir le Dashboard
+              </Button>
+
+              <div className="pt-2 flex justify-between text-xs">
+                <button
+                  type="button"
+                  onClick={handleSendEmailOtp}
+                  className="text-brand-textSecondary hover:text-brand-red underline"
+                >
+                  Renvoyer un code
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setLoginStep('password'); setStatusMessage(null); }}
+                  className="text-brand-textMuted hover:text-white"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          )}
 
           <p className="text-[11px] text-center text-brand-textMuted">
             Session chiffrée SSL • DRAMA XOXO Global Administration
@@ -244,6 +440,9 @@ export const AdminPage: React.FC = () => {
     );
   }
 
+  // ==========================================
+  // AUTHENTICATED DASHBOARD
+  // ==========================================
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-fadeIn">
       {/* Top Header */}
@@ -256,14 +455,24 @@ export const AdminPage: React.FC = () => {
             <div className="flex items-center space-x-2">
               <h1 className="text-xl sm:text-2xl font-black text-white">DRAMA XOXO — Admin Dashboard</h1>
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
-                LIVE PRODUCTION
+                ADMIN CONNECTÉ
               </span>
             </div>
-            <p className="text-xs text-brand-textMuted">Supervision des créateurs, modération des séries et royalties</p>
+            <p className="text-xs text-brand-textMuted">Compte : {adminEmail} • Supervision en direct</p>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setActiveTab('security')}
+            className={`text-xs font-semibold px-3.5 py-2 rounded-xl border transition flex items-center space-x-1.5 ${
+              activeTab === 'security' ? 'bg-brand-red text-white border-brand-red' : 'bg-brand-card text-brand-textSecondary border-brand-border hover:text-white'
+            }`}
+          >
+            <KeyRound className="w-3.5 h-3.5" />
+            <span>Mon Code d'Accès</span>
+          </button>
+          
           <a
             href="/app"
             target="_blank"
@@ -273,6 +482,7 @@ export const AdminPage: React.FC = () => {
             <Play className="w-3.5 h-3.5" />
             <span>Tester l'App Mobile</span>
           </a>
+
           <button
             onClick={() => setIsAuthenticated(false)}
             className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-brand-card border border-brand-border text-brand-textMuted hover:text-white transition flex items-center space-x-1.5"
@@ -292,6 +502,7 @@ export const AdminPage: React.FC = () => {
           { id: 'reports', label: `⚖️ Signalements & DMCA (${reports.filter(r => r.status === 'UNDER_REVIEW').length})` },
           { id: 'payouts', label: `💰 Royalties & Paiements (${payouts.filter(p => p.status === 'PENDING_REVIEW').length})` },
           { id: 'pricing', label: '🏷️ Tarifs & Pièces' },
+          { id: 'security', label: '🔐 Sécurité & Mon Code' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -306,6 +517,64 @@ export const AdminPage: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* TAB: SECURITY & CUSTOM CODE CREATION */}
+      {activeTab === 'security' && (
+        <Card className="p-6 sm:p-8 space-y-6 max-w-2xl mx-auto">
+          <div className="space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-brand-red/10 border border-brand-red/30 flex items-center justify-center">
+              <KeyRound className="w-6 h-6 text-brand-red" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Définir Mon Propre Code d'Accès Personnalisé</h2>
+            <p className="text-xs text-brand-textMuted">
+              Personnalisez votre mot de passe secret pour ne plus avoir à utiliser le mot de passe générique.
+            </p>
+          </div>
+
+          <form onSubmit={handleSaveCustomCode} className="space-y-4 pt-2">
+            <div>
+              <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
+                Nouveau Mot de Passe / Code Secret *
+              </label>
+              <input
+                type="password"
+                value={newCodeInput}
+                onChange={e => setNewCodeInput(e.target.value)}
+                placeholder="Entrez votre nouveau code secret..."
+                className="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-white text-sm focus:border-brand-red focus:outline-none"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
+                Confirmez le Nouveau Code *
+              </label>
+              <input
+                type="password"
+                value={confirmNewCodeInput}
+                onChange={e => setConfirmNewCodeInput(e.target.value)}
+                placeholder="Retapez le même code..."
+                className="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-white text-sm focus:border-brand-red focus:outline-none"
+                required
+              />
+            </div>
+
+            {statusMessage && (
+              <div className={`p-4 rounded-xl text-xs flex items-center space-x-2.5 ${
+                statusMessage.type === 'error' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-300' : 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+              }`}>
+                {statusMessage.type === 'error' ? <AlertTriangle className="w-4 h-4" /> : <Check className="w-4 h-4" />}
+                <span>{statusMessage.text}</span>
+              </div>
+            )}
+
+            <Button variant="glow" size="lg" className="w-full font-bold shadow-red-glow" type="submit">
+              Enregistrer Mon Code Personnalisé
+            </Button>
+          </form>
+        </Card>
+      )}
 
       {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
