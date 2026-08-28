@@ -68,19 +68,16 @@ interface PayoutItem {
 export const AdminPage: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  // Custom password stored locally
+  // Custom password stored locally and master password
   const [customMasterCode, setCustomMasterCode] = useState<string>(() => {
-    return localStorage.getItem('dramaxoxo_admin_custom_code') || 'admin2026';
+    return localStorage.getItem('dramaxoxo_admin_custom_code') || 'Virtualsis@$1';
   });
 
-  // Login flow state: 'password' | 'email_request' | 'otp_verify' | 'set_new_code'
-  const [loginStep, setLoginStep] = useState<'password' | 'email_request' | 'otp_verify' | 'set_new_code'>('password');
+  // Login flow state
+  const [loginStep, setLoginStep] = useState<'password'>('password');
   
   const [adminEmail, setAdminEmail] = useState('brybass12@gmail.com');
   const [enteredPassword, setEnteredPassword] = useState('');
-  const [enteredOtp, setEnteredOtp] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState('');
-  const [otpSentNotice, setOtpSentNotice] = useState(false);
   const [newCodeInput, setNewCodeInput] = useState('');
   const [confirmNewCodeInput, setConfirmNewCodeInput] = useState('');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -189,12 +186,12 @@ export const AdminPage: React.FC = () => {
   // 1. Password login
   const handlePasswordLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanInput = enteredPassword.trim().toLowerCase();
-    if (cleanInput === customMasterCode.toLowerCase() || cleanInput === 'admin2026' || cleanInput === 'dramaxoxo') {
+    const cleanInput = enteredPassword.trim();
+    if (cleanInput === 'Virtualsis@$1' || cleanInput === customMasterCode) {
       setIsAuthenticated(true);
       setStatusMessage(null);
     } else {
-      setStatusMessage({ type: 'error', text: 'Code d\'accès incorrect.' });
+      setStatusMessage({ type: 'error', text: 'Mot de passe administrateur incorrect.' });
     }
   };
 
