@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /manager
 Disallow: /admin
+Disallow: /app-admin
 
 Sitemap: https://dramaxoxo.com/sitemap.xml

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DRAMA XOXO — Administration de l'Application</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#0A0A0F] text-slate-100 min-h-screen font-sans antialiased">
+
+  <!-- ========================================== -->
+  <!-- 1. SECURITY GATE / LOGIN MODAL -->
+  <!-- ========================================== -->
+  <div id="admin-auth-gate" class="fixed inset-0 z-50 bg-[#0A0A0F] flex items-center justify-center p-4">
+    <div class="bg-[#161622] border border-rose-500/40 rounded-3xl p-8 max-w-sm w-full space-y-6 shadow-2xl text-center">
+      <div class="w-16 h-16 rounded-2xl bg-rose-600/20 text-rose-500 flex items-center justify-center text-3xl mx-auto border border-rose-500/30">
+        🛡️
+      </div>
+
+      <div class="space-y-1">
+        <h1 class="text-xl font-black text-white">DRAMA XOXO</h1>
+        <p class="text-xs text-purple-400 font-bold uppercase tracking-wider">Administration de l'Application</p>
+        <p class="text-[11px] text-slate-400 mt-1">Espace réservé à l'administratrice (Marie Stanley)</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-left text-xs font-semibold text-slate-300 mb-1.5">
+            Mot de Passe Secret Administrateur
+          </label>
+          <input
+            id="password-input"
+            type="password"
+            placeholder="Entrez votre mot de passe..."
+            class="w-full bg-[#1F1F2E] border border-white/10 text-white px-4 py-3 rounded-xl text-sm outline-none focus:border-rose-500 transition"
+            required
+            autofocus
+          />
+          <p id="error-msg" class="hidden text-xs text-rose-400 font-semibold text-left mt-2">
+            ✕ Mot de passe incorrect.
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-rose-600/30 transition tracking-wide"
+        >
+          Déverrouiller l'Administration
+        </button>
+      </form>
+
+      <p class="text-[10px] text-slate-500">
+        Session Chiffrée SSL • Rôle : Administrateur Principal
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN APPLICATION ADMIN DASHBOARD -->
+  <!-- ========================================== -->
+  <div id="admin-main-ui" class="hidden min-h-screen flex flex-col">
+    
+    <!-- Top Header -->
+    <header class="bg-[#12121C] border-b border-[#222233] px-4 py-3.5 sticky top-0 z-30 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-rose-600 rounded-xl flex items-center justify-center font-black text-white text-lg shadow-lg">
+          D
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-sm sm:text-base text-white">DRAMA XOXO — App Admin</h1>
+            <span class="text-[9px] bg-rose-500/20 text-rose-300 font-black px-2 py-0.5 rounded border border-rose-500/40">
+              ADMINISTRATRICE
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">Compte : Marie Stanley (Gestionnaire de l'App)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="/app"
+          target="_blank"
+          class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600 hover:text-white transition flex items-center gap-1.5"
+        >
+          <span>📱</span>
+          <span class="hidden sm:inline">Tester l'App Spectateur</span>
+        </a>
+
+        <button
+          onclick="lockSession()"
+          class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#202030] text-slate-300 hover:text-white hover:bg-rose-600 transition flex items-center gap-1.5"
+        >
+          <span>🔒</span>
+          <span class="hidden sm:inline">Verrouiller</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-[#161624] border-b border-[#222233] px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
+      <button onclick="switchTab('overview')" id="tab-overview" class="px-3.5 py-2 rounded-xl bg-rose-600 text-white font-bold whitespace-nowrap shadow">
+        📊 Vue d'ensemble
+      </button>
+      <button onclick="switchTab('series')" id="tab-series" class="px-3.5 py-2 rounded-xl bg-[#1C1C2A] text-slate-400 hover:text-white whitespace-nowrap">
+        🎬 Modifier Séries Démo (<span id="series-count-badge">3</span>)
+      </button>
+      <button onclick="switchTab('publish')" id="tab-publish" class="px-3.5 py-2 rounded-xl bg-[#1C1C2A] text-slate-400 hover:text-white whitespace-nowrap">
+        ➕ Publier une Série
+      </button>
+      <button onclick="switchTab('creators')" id="tab-creators" class="px-3.5 py-2 rounded-xl bg-[#1C1C2A] text-slate-400 hover:text-white whitespace-nowrap">
+        📝 Candidatures Créateurs (<span id="creators-count-badge">2</span>)
+      </button>
+      <button onclick="switchTab('payouts')" id="tab-payouts" class="px-3.5 py-2 rounded-xl bg-[#1C1C2A] text-slate-400 hover:text-white whitespace-nowrap">
+        💰 Royalties & Revenus
+      </button>
+    </div>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+      <!-- ==================== TAB 1: OVERVIEW ==================== -->
+      <section id="view-overview" class="space-y-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div class="bg-[#161622] p-4 sm:p-5 rounded-2xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400 font-semibold">Revenu Brut Global</p>
+            <h3 class="text-xl sm:text-2xl font-black text-white">18 450,00 $</h3>
+            <p class="text-[10px] text-emerald-400">↑ +24% ce mois</p>
+          </div>
+
+          <div class="bg-[#161622] p-4 sm:p-5 rounded-2xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400 font-semibold">Royalties Créateurs (70%)</p>
+            <h3 class="text-xl sm:text-2xl font-black text-purple-400">12 915,00 $</h3>
+            <p class="text-[10px] text-slate-400">À distribuer aux créateurs</p>
+          </div>
+
+          <div class="bg-[#161622] p-4 sm:p-5 rounded-2xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400 font-semibold">Part DRAMA XOXO (30%)</p>
+            <h3 class="text-xl sm:text-2xl font-black text-emerald-400">5 535,00 $</h3>
+            <p class="text-[10px] text-emerald-400">Marge nette plateforme</p>
+          </div>
+
+          <div class="bg-[#161622] p-4 sm:p-5 rounded-2xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400 font-semibold">Abonnés VIP Actifs</p>
+            <h3 class="text-xl sm:text-2xl font-black text-amber-400">1 420</h3>
+            <p class="text-[10px] text-amber-400">Pool VIP opérationnel</p>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-[#161622] p-5 rounded-2xl border border-white/5 space-y-3">
+            <h3 class="font-bold text-white text-sm">Gestion Rapide du Catalogue</h3>
+            <div class="space-y-2 text-xs">
+              <button onclick="switchTab('series')" class="w-full p-3 rounded-xl bg-[#1E1E2C] hover:bg-[#252538] flex justify-between items-center text-slate-200 transition">
+                <span>🎬 Modifier les titres, vidéos et affiches des séries démo</span>
+                <span class="text-rose-400 font-bold">Modifier ›</span>
+              </button>
+              <button onclick="switchTab('publish')" class="w-full p-3 rounded-xl bg-[#1E1E2C] hover:bg-[#252538] flex justify-between items-center text-slate-200 transition">
+                <span>➕ Publier immédiatement une nouvelle série</span>
+                <span class="text-rose-400 font-bold">Ajouter ›</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-[#161622] p-5 rounded-2xl border border-white/5 space-y-3">
+            <h3 class="font-bold text-white text-sm">Supervision Créateurs</h3>
+            <div class="space-y-2 text-xs">
+              <button onclick="switchTab('creators')" class="w-full p-3 rounded-xl bg-[#1E1E2C] hover:bg-[#252538] flex justify-between items-center text-slate-200 transition">
+                <span>📝 Examiner les candidatures pour le Studio Créateur</span>
+                <span class="text-purple-400 font-bold">Examiner ›</span>
+              </button>
+              <button onclick="switchTab('payouts')" class="w-full p-3 rounded-xl bg-[#1E1E2C] hover:bg-[#252538] flex justify-between items-center text-slate-200 transition">
+                <span>💰 Traiter les demandes de virement Stripe / Banque</span>
+                <span class="text-emerald-400 font-bold">Paiements ›</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 2: SERIES EDITOR ==================== -->
+      <section id="view-series" class="hidden space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h2 class="text-lg font-bold text-white">Gestion & Modification Totale des Séries Démo</h2>
+            <p class="text-xs text-slate-400">Cliquez sur « Modifier » pour changer le titre, l'affiche 9:16 ou le fichier vidéo MP4 de n'importe quelle série.</p>
+          </div>
+          <button onclick="switchTab('publish')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-1.5">
+            <span>➕ Publier une Série</span>
+          </button>
+        </div>
+
+        <div id="series-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </section>
+
+      <!-- ==================== TAB 3: PUBLISH NEW SERIES ==================== -->
+      <section id="view-publish" class="hidden space-y-4 max-w-2xl mx-auto">
+        <div>
+          <h2 class="text-lg font-bold text-white">Publier une Nouvelle Série dans l'Application</h2>
+          <p class="text-xs text-slate-400">La série sera immédiatement disponible dans le catalogue et sur la page d'accueil de l'application.</p>
+        </div>
+
+        <form onsubmit="handlePublishSeries(event)" class="bg-[#161622] p-5 sm:p-6 rounded-2xl border border-white/5 space-y-4 text-xs">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Titre de la Série *</label>
+            <input id="pub-title" type="text" placeholder="Ex: Le Choix d'une Reine" class="w-full bg-[#1F1F2E] text-white p-3 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-sm" required />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Studio / Créateur *</label>
+              <input id="pub-creator" type="text" value="Studio DRAMA XOXO" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500" required />
+            </div>
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Genre *</label>
+              <input id="pub-genre" type="text" value="Romance & Vengeance" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500" required />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">URL de l'Affiche Jaquette (Format 9:16) *</label>
+            <input id="pub-cover" type="url" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500" required />
+          </div>
+
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">URL du Fichier Vidéo MP4 (Streaming 9:16) *</label>
+            <input id="pub-video" type="url" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500" required />
+          </div>
+
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Synopsis / Pitch de l'Histoire</label>
+            <textarea id="pub-desc" rows="3" placeholder="Racontez le pitch en quelques phrases..." class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-600/30 text-sm transition">
+            🚀 Valider & Publier dans l'Application Immédiatement
+          </button>
+        </form>
+      </section>
+
+      <!-- ==================== TAB 4: CREATOR APPLICATIONS ==================== -->
+      <section id="view-creators" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-lg font-bold text-white">Candidatures Créateurs & Studios</h2>
+            <p class="text-xs text-slate-400">Examinez les demandes et débloquez l'accès au Studio Créateur.</p>
+          </div>
+        </div>
+
+        <div id="creators-list-container" class="space-y-3">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </section>
+
+      <!-- ==================== TAB 5: PAYOUTS ==================== -->
+      <section id="view-payouts" class="hidden space-y-4 max-w-2xl mx-auto">
+        <div>
+          <h2 class="text-lg font-bold text-white">Paiements des Royalties Créateurs</h2>
+          <p class="text-xs text-slate-400">Validation des demandes de retrait vers Stripe Connect ou virement bancaire.</p>
+        </div>
+
+        <div class="bg-[#161622] p-5 rounded-2xl border border-white/5 space-y-3 text-xs">
+          <div class="flex justify-between items-center p-3.5 bg-[#1E1E2C] rounded-xl">
+            <div>
+              <p class="font-bold text-white text-sm">Haïti Ciné Shorts</p>
+              <p class="text-purple-300 text-xs">1 450,00 $ USD • Stripe Connect (acct_1N92384)</p>
+              <p class="text-slate-400 text-[10px]">Reçu le 28 Août 2026</p>
+            </div>
+            <button onclick="alert('✓ Virement validé avec succès pour Haïti Ciné Shorts !')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl shadow">
+              Valider Virement
+            </button>
+          </div>
+
+          <div class="flex justify-between items-center p-3.5 bg-[#1E1E2C] rounded-xl">
+            <div>
+              <p class="font-bold text-white text-sm">Caraïbes Drama Studio</p>
+              <p class="text-purple-300 text-xs">820,50 $ USD • Virement Bancaire</p>
+              <p class="text-slate-400 text-[10px]">Traité le 26 Août 2026</p>
+            </div>
+            <span class="text-emerald-400 font-bold text-xs bg-emerald-500/20 px-3 py-1.5 rounded-xl border border-emerald-500/30">
+              Payé ✓
+            </span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. EDIT SERIES MODAL -->
+  <!-- ========================================== -->
+  <div id="edit-series-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#161622] border border-white/10 rounded-3xl p-6 max-w-md w-full space-y-4 text-xs shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="text-base font-bold text-white">Modifier la Série</h3>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+      </div>
+
+      <form onsubmit="handleSaveSeriesEdit(event)" class="space-y-3">
+        <input type="hidden" id="edit-id" />
+        
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Titre de la Série *</label>
+          <input id="edit-title" type="text" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Créateur</label>
+            <input id="edit-creator" type="text" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" />
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Genre</label>
+            <input id="edit-genre" type="text" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">URL de l'Affiche Jaquette (9:16)</label>
+          <input id="edit-cover" type="url" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" required />
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">URL du Fichier Vidéo (MP4 9:16)</label>
+          <input id="edit-video" type="url" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" required />
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Synopsis</label>
+          <textarea id="edit-desc" rows="2" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs"></textarea>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeEditModal()" class="flex-1 bg-[#242436] text-slate-300 font-bold py-2.5 rounded-xl">
+            Annuler
+          </button>
+          <button type="submit" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl shadow-lg">
+            Enregistrer les Changements
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let seriesCatalog = [
+      {
+        id: "series_1",
+        title: "Amour Interdit",
+        genre: "Romance",
+        creator: "Studio DRAMA XOXO",
+        coverUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        desc: "Entre passion et secrets, leur amour pourrait tout détruire..."
+      },
+      {
+        id: "series_2",
+        title: "Le Choix du Cœur",
+        genre: "Dark Romance",
+        creator: "Stanley Films",
+        coverUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        desc: "Deux héritiers que tout oppose sont forcés de s'allier."
+      },
+      {
+        id: "series_3",
+        title: "Destins Croisés",
+        genre: "Thriller & Vengeance",
+        creator: "Caraïbes Cinema",
+        coverUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        desc: "Elle revient 10 ans plus tard sous une fausse identité pour se venger."
+      }
+    ];
+
+    let creatorApps = [
+      {
+        id: "app_1",
+        studioName: "Haïti Ciné Shorts",
+        creatorName: "Jean-Baptiste R.",
+        genre: "Drames, Vengeance, Suspense",
+        country: "Haïti 🇭🇹",
+        bio: "Producteur indépendant de mini-dramas et thrillers urbains à Port-au-Prince.",
+        date: "28 Août 2026",
+        status: "PENDING"
+      },
+      {
+        id: "app_2",
+        studioName: "Caraïbes Drama Studio",
+        creatorName: "Léopoldine M.",
+        genre: "Romance, Dark Romance",
+        country: "France 🇫🇷",
+        bio: "Studio d'écriture et de production de mini-séries sentimentales courtes.",
+        date: "28 Août 2026",
+        status: "PENDING"
+      }
+    ];
+
+    function loadCatalog() {
+      const saved = localStorage.getItem("dramaxoxo_series_catalog");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.length > 0) seriesCatalog = parsed;
+        } catch(e) {}
+      }
+
+      const savedApps = localStorage.getItem("dramaxoxo_creator_applications");
+      if (savedApps) {
+        try {
+          const parsed = JSON.parse(savedApps);
+          if (parsed && parsed.length > 0) creatorApps = parsed;
+        } catch(e) {}
+      }
+
+      updateBadges();
+      renderSeries();
+      renderCreators();
+    }
+
+    function updateBadges() {
+      const sBadge = document.getElementById("series-count-badge");
+      if (sBadge) sBadge.innerText = seriesCatalog.length;
+
+      const cBadge = document.getElementById("creators-count-badge");
+      if (cBadge) cBadge.innerText = creatorApps.filter(a => a.status === "PENDING").length;
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pwd = document.getElementById("password-input").value.trim();
+      if (pwd === "Virtualsis@$1" || pwd === "admin2026") {
+        document.getElementById("admin-auth-gate").classList.add("hidden");
+        document.getElementById("admin-main-ui").classList.remove("hidden");
+        loadCatalog();
+      } else {
+        document.getElementById("error-msg").classList.remove("hidden");
+      }
+    }
+
+    function lockSession() {
+      document.getElementById("password-input").value = "";
+      document.getElementById("error-msg").classList.add("hidden");
+      document.getElementById("admin-main-ui").classList.add("hidden");
+      document.getElementById("admin-auth-gate").classList.remove("hidden");
+    }
+
+    function switchTab(tabId) {
+      const tabs = ["overview", "series", "publish", "creators", "payouts"];
+      tabs.forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const btnEl = document.getElementById(`tab-${t}`);
+        if (viewEl) {
+          if (t === tabId) {
+            viewEl.classList.remove("hidden");
+            if (btnEl) btnEl.className = "px-3.5 py-2 rounded-xl bg-rose-600 text-white font-bold whitespace-nowrap shadow";
+          } else {
+            viewEl.classList.add("hidden");
+            if (btnEl) btnEl.className = "px-3.5 py-2 rounded-xl bg-[#1C1C2A] text-slate-400 hover:text-white whitespace-nowrap";
+          }
+        }
+      });
+    }
+
+    function renderSeries() {
+      const container = document.getElementById("series-list-container");
+      if (!container) return;
+
+      container.innerHTML = seriesCatalog.map(s => `
+        <div class="bg-[#161622] rounded-2xl border border-white/5 p-4 flex gap-3.5 justify-between items-start">
+          <img src="${s.coverUrl}" alt="${s.title}" class="w-20 h-28 object-cover rounded-xl border border-white/10 flex-shrink-0" />
+          <div class="space-y-1 text-xs flex-1">
+            <div class="flex justify-between items-start">
+              <h4 class="font-bold text-white text-sm">${s.title}</h4>
+              <span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded text-[9px]">EN LIGNE</span>
+            </div>
+            <p class="text-purple-300 text-[11px]">👤 ${s.creator}</p>
+            <p class="text-slate-400 text-[10px]">🎬 ${s.genre}</p>
+            <p class="text-slate-300 text-[11px] line-clamp-2 italic">${s.desc || ""}</p>
+            
+            <div class="flex gap-2 pt-2 border-t border-white/5">
+              <button onclick="openEditModal('${s.id}')" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-1.5 rounded-lg text-xs transition">
+                ✏️ Modifier Tout
+              </button>
+              <button onclick="deleteSeries('${s.id}')" class="px-3 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold py-1.5 rounded-lg text-xs transition">
+                🗑️ Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openEditModal(id) {
+      const s = seriesCatalog.find(item => item.id === id);
+      if (!s) return;
+
+      document.getElementById("edit-id").value = s.id;
+      document.getElementById("edit-title").value = s.title;
+      document.getElementById("edit-creator").value = s.creator;
+      document.getElementById("edit-genre").value = s.genre;
+      document.getElementById("edit-cover").value = s.coverUrl;
+      document.getElementById("edit-video").value = s.videoUrl;
+      document.getElementById("edit-desc").value = s.desc || "";
+
+      document.getElementById("edit-series-modal").classList.remove("hidden");
+    }
+
+    function closeEditModal() {
+      document.getElementById("edit-series-modal").classList.add("hidden");
+    }
+
+    function handleSaveSeriesEdit(e) {
+      e.preventDefault();
+      const id = document.getElementById("edit-id").value;
+      const title = document.getElementById("edit-title").value.trim();
+      const creator = document.getElementById("edit-creator").value.trim();
+      const genre = document.getElementById("edit-genre").value.trim();
+      const coverUrl = document.getElementById("edit-cover").value.trim();
+      const videoUrl = document.getElementById("edit-video").value.trim();
+      const desc = document.getElementById("edit-desc").value.trim();
+
+      seriesCatalog = seriesCatalog.map(s => s.id === id ? { ...s, title, creator, genre, coverUrl, videoUrl, desc } : s);
+      localStorage.setItem("dramaxoxo_series_catalog", JSON.stringify(seriesCatalog));
+
+      closeEditModal();
+      renderSeries();
+      updateBadges();
+      alert(`✓ La série « ${title} » a été modifiée avec succès dans l'application !`);
+    }
+
+    function deleteSeries(id) {
+      if (confirm("Supprimer cette série du catalogue de l'application ?")) {
+        seriesCatalog = seriesCatalog.filter(s => s.id !== id);
+        localStorage.setItem("dramaxoxo_series_catalog", JSON.stringify(seriesCatalog));
+        renderSeries();
+        updateBadges();
+      }
+    }
+
+    function handlePublishSeries(e) {
+      e.preventDefault();
+      const title = document.getElementById("pub-title").value.trim();
+      const creator = document.getElementById("pub-creator").value.trim();
+      const genre = document.getElementById("pub-genre").value.trim();
+      const coverUrl = document.getElementById("pub-cover").value.trim();
+      const videoUrl = document.getElementById("pub-video").value.trim();
+      const desc = document.getElementById("pub-desc").value.trim();
+
+      const newS = {
+        id: `series_${Date.now()}`,
+        title,
+        creator,
+        genre,
+        coverUrl,
+        videoUrl,
+        desc
+      };
+
+      seriesCatalog.unshift(newS);
+      localStorage.setItem("dramaxoxo_series_catalog", JSON.stringify(seriesCatalog));
+      
+      document.getElementById("pub-title").value = "";
+      document.getElementById("pub-desc").value = "";
+
+      renderSeries();
+      updateBadges();
+      alert(`🎉 La série « ${title} » a été publiée avec succès dans l'application !`);
+      switchTab("series");
+    }
+
+    function renderCreators() {
+      const container = document.getElementById("creators-list-container");
+      if (!container) return;
+
+      container.innerHTML = creatorApps.map(a => `
+        <div class="bg-[#161622] rounded-2xl border border-white/5 p-4 sm:p-5 space-y-3 text-xs">
+          <div class="flex justify-between items-center">
+            <div>
+              <h4 class="font-bold text-white text-sm sm:text-base">${a.studioName}</h4>
+              <p class="text-slate-400 text-[11px]">${a.creatorName || ""} • ${a.country || ""} • Date : ${a.date}</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold ${
+              a.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+              a.status === 'REJECTED' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' :
+              'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+            }">
+              ${a.status}
+            </span>
+          </div>
+
+          <p class="text-slate-300 bg-[#1C1C2A] p-3 rounded-xl">${a.bio}</p>
+
+          ${a.status === 'PENDING' ? `
+            <div class="flex gap-2 pt-1">
+              <button onclick="approveCreator('${a.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs shadow transition">
+                ✓ Approuver Créateur (Débloquer Studio)
+              </button>
+              <button onclick="rejectCreator('${a.id}')" class="px-4 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold py-2 rounded-xl text-xs transition">
+                ✕ Rejeter
+              </button>
+            </div>
+          ` : `
+            <p class="text-slate-500 text-[11px]">Dossier traité (${a.status})</p>
+          `}
+        </div>
+      `).join("");
+    }
+
+    function approveCreator(id) {
+      creatorApps = creatorApps.map(a => a.id === id ? { ...a, status: "APPROVED" } : a);
+      localStorage.setItem("dramaxoxo_creator_applications", JSON.stringify(creatorApps));
+      localStorage.setItem("dramaxoxo_user_role", "APPROVED_CREATOR");
+      renderCreators();
+      updateBadges();
+      alert("✓ Candidature Créateur approuvée !");
+    }
+
+    function rejectCreator(id) {
+      creatorApps = creatorApps.map(a => a.id === id ? { ...a, status: "REJECTED" } : a);
+      localStorage.setItem("dramaxoxo_creator_applications", JSON.stringify(creatorApps));
+      renderCreators();
+      updateBadges();
+      alert("✕ Candidature rejetée.");
+    }
+  </script>
+</body>
+</html>
