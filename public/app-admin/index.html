@@ -225,14 +225,55 @@
             </div>
           </div>
 
-          <div>
-            <label class="block text-slate-300 font-semibold mb-1">URL de l'Affiche Jaquette (Format 9:16) *</label>
-            <input id="pub-cover" type="url" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500" required />
+          <!-- AFFICHE JAQUETTE (IMPORT FICHIER PNG/JPG + URL + TÉLÉCHARGEMENT) -->
+          <div class="space-y-2 p-3 bg-[#1B1B2B] rounded-2xl border border-purple-500/20">
+            <div class="flex justify-between items-center">
+              <label class="block text-slate-300 font-bold uppercase text-[10px]">Affiche Jaquette (Format 9:16) *</label>
+              <span class="text-[9px] text-purple-300">PNG, JPG, JPEG</span>
+            </div>
+
+            <label class="flex flex-col items-center justify-center p-3 border-2 border-dashed border-purple-500/40 rounded-xl bg-purple-950/20 hover:bg-purple-950/40 cursor-pointer transition text-center">
+              <span class="text-lg mb-0.5">📁</span>
+              <span class="text-[11px] font-bold text-purple-200">Choisir une image depuis l'appareil (PNG / JPG)</span>
+              <span class="text-[9px] text-slate-400">Glisser-déposer ou cliquer pour importer</span>
+              <input type="file" id="pub-cover-file" accept="image/png, image/jpeg, image/jpg, image/webp" onchange="handleCoverFileUpload(event, 'pub')" class="hidden" />
+            </label>
+
+            <div class="flex items-center gap-3 pt-1">
+              <img id="pub-cover-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800" class="w-14 h-20 object-cover rounded-xl border border-white/10" />
+              <div class="flex-1 space-y-1">
+                <input id="pub-cover" type="text" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800" oninput="document.getElementById('pub-cover-preview').src = this.value" class="w-full bg-[#1F1F2E] text-white p-2 rounded-xl border border-white/10 outline-none focus:border-purple-500 text-[10px]" placeholder="Ou collez une URL d'image directe..." required />
+                <button type="button" onclick="triggerDownload(document.getElementById('pub-cover').value, 'affiche-dramaxoxo.jpg')" class="text-[10px] text-purple-300 hover:text-white bg-purple-600/20 px-2.5 py-1 rounded-lg border border-purple-500/30 flex items-center gap-1">
+                  <span>⬇️</span> <span>Télécharger l'affiche (JPG/PNG)</span>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-slate-300 font-semibold mb-1">URL du Fichier Vidéo MP4 (Streaming 9:16) *</label>
-            <input id="pub-video" type="url" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500" required />
+          <!-- VIDÉO MP4 (IMPORT FICHIER MP4 + URL + TÉLÉCHARGEMENT) -->
+          <div class="space-y-2 p-3 bg-[#1B1B2B] rounded-2xl border border-rose-500/20">
+            <div class="flex justify-between items-center">
+              <label class="block text-slate-300 font-bold uppercase text-[10px]">Fichier Vidéo (Format MP4 9:16) *</label>
+              <span class="text-[9px] text-rose-300">MP4, MOV, WEBM</span>
+            </div>
+
+            <label class="flex flex-col items-center justify-center p-3 border-2 border-dashed border-rose-500/40 rounded-xl bg-rose-950/20 hover:bg-rose-950/40 cursor-pointer transition text-center">
+              <span class="text-lg mb-0.5">🎬</span>
+              <span class="text-[11px] font-bold text-rose-200">Choisir un fichier vidéo depuis l'appareil (MP4)</span>
+              <span class="text-[9px] text-slate-400">Glisser-déposer ou cliquer pour importer</span>
+              <input type="file" id="pub-video-file" accept="video/mp4, video/quicktime, video/webm" onchange="handleVideoFileUpload(event, 'pub')" class="hidden" />
+            </label>
+
+            <div class="space-y-2 pt-1">
+              <video id="pub-video-preview" controls class="w-full max-h-40 rounded-xl bg-black border border-white/10" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
+              <p id="pub-video-status" class="hidden text-[10px] text-emerald-400 font-semibold"></p>
+              <div class="flex items-center gap-2">
+                <input id="pub-video" type="text" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" oninput="document.getElementById('pub-video-preview').src = this.value" class="flex-1 bg-[#1F1F2E] text-white p-2 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-[10px]" placeholder="Ou collez une URL vidéo MP4..." required />
+                <button type="button" onclick="triggerDownload(document.getElementById('pub-video').value, 'video-dramaxoxo.mp4')" class="text-[10px] text-rose-300 hover:text-white bg-rose-600/20 px-2.5 py-2 rounded-xl border border-rose-500/30 whitespace-nowrap flex items-center gap-1">
+                  <span>⬇️</span> <span>Télécharger (MP4)</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -325,14 +366,55 @@
           </div>
         </div>
 
-        <div>
-          <label class="block text-slate-300 font-semibold mb-1">URL de l'Affiche Jaquette (9:16)</label>
-          <input id="edit-cover" type="url" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" required />
+        <!-- AFFICHE JAQUETTE (IMPORT FICHIER PNG/JPG + URL + TÉLÉCHARGEMENT) -->
+        <div class="space-y-2 p-3 bg-[#1B1B2B] rounded-2xl border border-purple-500/20">
+          <div class="flex justify-between items-center">
+            <label class="block text-slate-300 font-bold uppercase text-[10px]">Affiche Jaquette (Format 9:16) *</label>
+            <span class="text-[9px] text-purple-300">PNG, JPG, JPEG</span>
+          </div>
+
+          <label class="flex flex-col items-center justify-center p-2.5 border-2 border-dashed border-purple-500/40 rounded-xl bg-purple-950/20 hover:bg-purple-950/40 cursor-pointer transition text-center">
+            <span class="text-base mb-0.5">📁</span>
+            <span class="text-[11px] font-bold text-purple-200">Importer une nouvelle image (PNG / JPG)</span>
+            <span class="text-[9px] text-slate-400">Glisser-déposer ou cliquer pour importer</span>
+            <input type="file" id="edit-cover-file" accept="image/png, image/jpeg, image/jpg, image/webp" onchange="handleCoverFileUpload(event, 'edit')" class="hidden" />
+          </label>
+
+          <div class="flex items-center gap-3 pt-1">
+            <img id="edit-cover-preview" src="" class="w-12 h-16 object-cover rounded-xl border border-white/10" />
+            <div class="flex-1 space-y-1">
+              <input id="edit-cover" type="text" oninput="document.getElementById('edit-cover-preview').src = this.value" class="w-full bg-[#1F1F2E] text-white p-2 rounded-xl border border-white/10 outline-none focus:border-purple-500 text-[10px]" placeholder="Ou collez une URL d'image..." required />
+              <button type="button" onclick="triggerDownload(document.getElementById('edit-cover').value, (document.getElementById('edit-title').value || 'affiche') + '.jpg')" class="text-[10px] text-purple-300 hover:text-white bg-purple-600/20 px-2.5 py-1 rounded-lg border border-purple-500/30 flex items-center gap-1">
+                <span>⬇️</span> <span>Télécharger l'affiche actuelle (JPG/PNG)</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-slate-300 font-semibold mb-1">URL du Fichier Vidéo (MP4 9:16)</label>
-          <input id="edit-video" type="url" class="w-full bg-[#1F1F2E] text-white p-2.5 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-xs" required />
+        <!-- VIDÉO MP4 (IMPORT FICHIER MP4 + URL + TÉLÉCHARGEMENT) -->
+        <div class="space-y-2 p-3 bg-[#1B1B2B] rounded-2xl border border-rose-500/20">
+          <div class="flex justify-between items-center">
+            <label class="block text-slate-300 font-bold uppercase text-[10px]">Fichier Vidéo (Format MP4 9:16) *</label>
+            <span class="text-[9px] text-rose-300">MP4, MOV, WEBM</span>
+          </div>
+
+          <label class="flex flex-col items-center justify-center p-2.5 border-2 border-dashed border-rose-500/40 rounded-xl bg-rose-950/20 hover:bg-rose-950/40 cursor-pointer transition text-center">
+            <span class="text-base mb-0.5">🎬</span>
+            <span class="text-[11px] font-bold text-rose-200">Importer un nouveau fichier vidéo (MP4)</span>
+            <span class="text-[9px] text-slate-400">Glisser-déposer ou cliquer pour importer</span>
+            <input type="file" id="edit-video-file" accept="video/mp4, video/quicktime, video/webm" onchange="handleVideoFileUpload(event, 'edit')" class="hidden" />
+          </label>
+
+          <div class="space-y-1.5 pt-1">
+            <video id="edit-video-preview" controls class="w-full max-h-36 rounded-xl bg-black border border-white/10" src=""></video>
+            <p id="edit-video-status" class="hidden text-[10px] text-emerald-400 font-semibold"></p>
+            <div class="flex items-center gap-2">
+              <input id="edit-video" type="text" oninput="document.getElementById('edit-video-preview').src = this.value" class="flex-1 bg-[#1F1F2E] text-white p-2 rounded-xl border border-white/10 outline-none focus:border-rose-500 text-[10px]" placeholder="Ou collez une URL vidéo MP4..." required />
+              <button type="button" onclick="triggerDownload(document.getElementById('edit-video').value, (document.getElementById('edit-title').value || 'video') + '.mp4')" class="text-[10px] text-rose-300 hover:text-white bg-rose-600/20 px-2.5 py-2 rounded-xl border border-rose-500/30 whitespace-nowrap flex items-center gap-1">
+                <span>⬇️</span> <span>Télécharger (MP4)</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -561,11 +643,96 @@
       document.getElementById("edit-video").value = s.videoUrl;
       document.getElementById("edit-desc").value = s.desc || "";
 
+      const coverPreview = document.getElementById("edit-cover-preview");
+      if (coverPreview) coverPreview.src = s.coverUrl;
+
+      const videoPreview = document.getElementById("edit-video-preview");
+      if (videoPreview) videoPreview.src = s.videoUrl;
+
+      const videoStatus = document.getElementById("edit-video-status");
+      if (videoStatus) videoStatus.classList.add("hidden");
+
       document.getElementById("edit-series-modal").classList.remove("hidden");
     }
 
     function closeEditModal() {
       document.getElementById("edit-series-modal").classList.add("hidden");
+    }
+
+    // Gestion de l'import d'image (PNG / JPG / JPEG)
+    function handleCoverFileUpload(event, targetPrefix) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const maxW = 720;
+          const maxH = 1280;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxW) {
+            height = Math.round((height * maxW) / width);
+            width = maxW;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL(file.type === "image/png" ? "image/png" : "image/jpeg", 0.85);
+
+          const inputEl = document.getElementById(`${targetPrefix}-cover`);
+          const previewEl = document.getElementById(`${targetPrefix}-cover-preview`);
+          if (inputEl) inputEl.value = compressedDataUrl;
+          if (previewEl) previewEl.src = compressedDataUrl;
+
+          alert(`✓ Image « ${file.name} » (${(file.size / 1024).toFixed(0)} KB) importée avec succès !`);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Gestion de l'import de vidéo (MP4 / MOV)
+    function handleVideoFileUpload(event, targetPrefix) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const videoBlobUrl = URL.createObjectURL(file);
+      const inputEl = document.getElementById(`${targetPrefix}-video`);
+      const previewVideo = document.getElementById(`${targetPrefix}-video-preview`);
+      const statusEl = document.getElementById(`${targetPrefix}-video-status`);
+
+      if (inputEl) inputEl.value = videoBlobUrl;
+      if (previewVideo) {
+        previewVideo.src = videoBlobUrl;
+        previewVideo.load();
+      }
+      if (statusEl) {
+        statusEl.innerText = `✓ Vidéo MP4 chargée : ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+        statusEl.classList.remove("hidden");
+      }
+
+      alert(`🎬 Fichier vidéo « ${file.name} » importé avec succès dans le lecteur !`);
+    }
+
+    // Fonction de Téléchargement de Fichiers (Images & Vidéos)
+    function triggerDownload(url, filename) {
+      if (!url) {
+        alert("Aucun fichier disponible au téléchargement.");
+        return;
+      }
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename || "dramaxoxo-media";
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
     function handleSaveSeriesEdit(e) {
