@@ -218,14 +218,22 @@ export const HeroSection: React.FC = () => {
               </div>
             </div>
 
-            <Button
-              variant="primary"
-              size="md"
-              className="w-full font-bold"
-              onClick={() => setModalOpen(false)}
-            >
-              {t.hero.modalClose}
-            </Button>
+            <div className="space-y-2.5">
+              <a
+                href="/app"
+                className="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-brand-red to-rose-600 hover:from-rose-600 hover:to-rose-700 shadow-red-glow transition"
+              >
+                ▶️ Tester l'Application en Direct
+              </a>
+              <Button
+                variant="secondary"
+                size="md"
+                className="w-full font-semibold text-xs"
+                onClick={() => setModalOpen(false)}
+              >
+                {t.hero.modalClose}
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DRAMA XOXO — Streaming Vertical</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              500: "#9333EA",
+              600: "#7E22CE",
+              rose: "#E11D48",
+              dark: "#08080C",
+              card: "#12121A",
+              border: "#20202E"
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #050508; color: #F3F4F6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .phone-mockup {
+      width: 410px;
+      height: 860px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 12px #181824;
+      border-radius: 44px;
+    }
+    .safe-top-padding {
+      padding-top: max(env(safe-area-inset-top, 0px), 14px);
+    }
+    .hero-title-shadow {
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Chic Streaming Dynamic Poster Wall Animation (Vibrant & Visible) */
+    @keyframes marqueeUp {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    @keyframes marqueeDown {
+      0% { transform: translateY(-50%); }
+      100% { transform: translateY(0); }
+    }
+    .poster-marquee-col-1 {
+      animation: marqueeUp 38s linear infinite;
+    }
+    .poster-marquee-col-2 {
+      animation: marqueeDown 44s linear infinite;
+    }
+    .poster-marquee-col-3 {
+      animation: marqueeUp 34s linear infinite;
+    }
+    .cinema-backdrop-overlay {
+      background: radial-gradient(circle at 50% 10%, rgba(147, 51, 234, 0.48), transparent 60%),
+                  radial-gradient(circle at 90% 65%, rgba(225, 29, 72, 0.38), transparent 50%),
+                  radial-gradient(circle at 10% 85%, rgba(99, 102, 241, 0.35), transparent 50%),
+                  linear-gradient(180deg, rgba(9, 9, 15, 0.35) 0%, rgba(9, 9, 15, 0.65) 50%, rgba(9, 9, 15, 0.85) 100%);
+    }
+    .glass-card {
+      background: rgba(22, 22, 34, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+    .glass-header {
+      background: rgba(9, 9, 15, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-tabbar {
+      background: rgba(14, 14, 22, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
+    }
+    .hero-sub-shadow {
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+    }
+    @media (max-width: 640px) {
+      .phone-mockup {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-0 sm:p-6 select-none">
+
+  <!-- Main Phone Container -->
+  <div class="phone-mockup bg-[#09090F] relative overflow-hidden flex flex-col">
+    <!-- DYNAMIC CHIC STREAMING BACKGROUND (Animated Mini-Series Poster Wall) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-80">
+      <!-- 3 Diagonal/Vertical Scrolling Columns of Mini-Series Posters -->
+      <div class="absolute -inset-x-12 -top-24 -bottom-24 flex gap-3 rotate-[-6deg] scale-110">
+        
+        <!-- Column 1 (Scroll Up) -->
+        <div class="flex-1 flex flex-col gap-3 poster-marquee-col-1">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <!-- Duplicate for seamless infinite loop -->
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+        </div>
+
+        <!-- Column 2 (Scroll Down) -->
+        <div class="flex-1 flex flex-col gap-3 poster-marquee-col-2">
+          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <!-- Duplicate for seamless infinite loop -->
+          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+        </div>
+
+        <!-- Column 3 (Scroll Up) -->
+        <div class="flex-1 flex flex-col gap-3 poster-marquee-col-3">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <!-- Duplicate for seamless infinite loop -->
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" class="w-full aspect-[9/16] object-cover rounded-2xl shadow-lg brightness-95 contrast-105" />
+        </div>
+
+      </div>
+
+      <!-- Frosted Cinema Gradient Filter Overlay -->
+      <div class="absolute inset-0 cinema-backdrop-overlay backdrop-blur-[2px]"></div>
+    </div>
+
+    
+    <!-- Phone Top Notch (Desktop only mockup) -->
+    <div class="hidden sm:flex justify-center pt-2.5 pb-1 z-50 bg-black/40 backdrop-blur-md">
+      <div class="w-32 h-4 bg-black rounded-full"></div>
+    </div>
+
+    <!-- APP CONTENT (Dynamic Screen Switcher) -->
+    <div id="screen-container" class="flex-1 relative overflow-hidden flex flex-col z-10">
+      
+      <!-- SCREEN 1: VIEWER STREAMING HOME -->
+      <div id="screen-home" class="flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20">
+        
+        <!-- Admin Active Indicator Banner (Visible ONLY when in Admin mode) -->
+        <div id="admin-active-banner" class="hidden bg-gradient-to-r from-purple-950 via-indigo-950 to-[#12121E] px-4 py-2 border-b border-purple-500/40 flex items-center justify-between z-50">
+          <span class="text-[11px] font-bold text-purple-300 flex items-center gap-1.5">
+            <span>👑</span> <span>Mode Admin Drama Xoxo</span>
+          </span>
+          <div class="flex items-center gap-2">
+            <button onclick="switchTab('admin')" class="bg-purple-600/40 text-purple-200 border border-purple-400 text-[10px] font-bold px-2 py-0.5 rounded">
+              Console Admin
+            </button>
+            <button onclick="switchRole('viewer')" class="text-rose-400 text-[10px] hover:underline">
+              Vue Spectateur
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Header: Logo + Search + Notification Bell -->
+        <div class="safe-top-padding flex items-center justify-between px-4 pb-3 sm:pt-3 glass-header z-40 sticky top-0">
+          <div>
+            <h1 class="text-white font-black text-xl tracking-wider leading-none">DRAMA XOXO</h1>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="switchTab('discover')" class="w-9 h-9 rounded-full bg-[#161622] flex items-center justify-center text-slate-300 hover:text-white transition">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </button>
+
+            <button onclick="alert('Notifications (3) :\n1. Nouvel épisode disponible : Amour Interdit Ép. 6\n2. Bonus quotidien disponible (+20 pièces)\n3. Destins Croisés est en tendance !')" class="relative w-9 h-9 rounded-full bg-[#161622] flex items-center justify-center text-slate-300 hover:text-white transition">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+              <span class="absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow">
+                3
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Featured Hero Banner (Amour Interdit) -->
+        <div class="px-4 pt-1 pb-3">
+          <div id="hero-banner-card" class="relative h-[360px] rounded-3xl overflow-hidden border border-[#202030] shadow-2xl group cursor-pointer" onclick="openPlayer(0)">
+            <img id="home-hero-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700 ease-out" />
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent flex flex-col justify-end p-5 z-10">
+              <div class="mb-2">
+                <span id="hero-genre-badge" class="bg-purple-900/80 text-purple-200 border border-purple-500/40 text-[11px] font-semibold px-2.5 py-0.5 rounded-md backdrop-blur-sm">
+                  Romance
+                </span>
+              </div>
+
+              <h2 id="home-hero-title" class="text-2xl font-black text-white leading-tight line-clamp-2 hero-title-shadow mb-1">
+                Amour Interdit
+              </h2>
+
+              <p id="home-hero-ep-tag" class="text-xs font-bold text-rose-400 mb-1">
+                Épisode 5 • Saison 1
+              </p>
+              <p id="home-hero-sub" class="text-xs text-slate-300 leading-snug line-clamp-2 hero-sub-shadow mb-4">
+                Entre passion et secrets, leur amour pourrait tout détruire...
+              </p>
+
+              <div class="flex gap-3">
+                <button onclick="openPlayer(0); event.stopPropagation();" class="flex-1 bg-white hover:bg-slate-200 text-black font-extrabold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                  <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i> <span id="btn-watch-ep1">Regarder</span>
+                </button>
+                <button onclick="toggleMyListHero(event)" id="btn-hero-mylist" class="flex-1 bg-[#1A1A28]/80 hover:bg-[#252538] text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 border border-white/20 backdrop-blur-sm shadow transition">
+                  <span>+</span> <span>Ma Liste</span>
+                </button>
+              </div>
+
+              <div class="flex justify-center items-center gap-1.5 mt-3">
+                <span class="w-2 h-2 rounded-full bg-white"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 1: REPRENDRE LA LECTURE -->
+        <div class="px-4 mb-5">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-bold text-white tracking-wide">Reprendre la lecture</h3>
+          </div>
+          <div class="grid grid-cols-3 gap-2.5">
+            <div onclick="openPlayer(0)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[4/3] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                  <div class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm border border-white/40 text-white flex items-center justify-center text-[10px]">▶</div>
+                </div>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Amour Interdit</p>
+              <p class="text-[10px] text-slate-400">Ép. 5</p>
+            </div>
+
+            <div onclick="openPlayer(1)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[4/3] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                  <div class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm border border-white/40 text-white flex items-center justify-center text-[10px]">▶</div>
+                </div>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Le Choix du Cœur</p>
+              <p class="text-[10px] text-slate-400">Ép. 3</p>
+            </div>
+
+            <div onclick="openPlayer(2)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[4/3] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                  <div class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm border border-white/40 text-white flex items-center justify-center text-[10px]">▶</div>
+                </div>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Destins Croisés</p>
+              <p class="text-[10px] text-slate-400">Ép. 8</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: TENDANCE MAINTENANT -->
+        <div class="px-4 mb-5">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-bold text-white tracking-wide">Tendance maintenant</h3>
+          </div>
+          <div class="grid grid-cols-3 gap-2.5">
+            <div onclick="openPlayer(0)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[3/4] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300" class="w-full h-full object-cover" />
+                <div class="absolute bottom-1.5 right-1.5 w-6 h-6 rounded-full bg-black/70 backdrop-blur-sm text-white flex items-center justify-center text-[9px]">▶</div>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Le Secret</p>
+              <p class="text-[10px] text-slate-400">Ép. 1</p>
+            </div>
+
+            <div onclick="openPlayer(1)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[3/4] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300" class="w-full h-full object-cover" />
+                <div class="absolute bottom-1.5 right-1.5 w-6 h-6 rounded-full bg-black/70 backdrop-blur-sm text-white flex items-center justify-center text-[9px]">▶</div>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Flamme Cachée</p>
+              <p class="text-[10px] text-slate-400">Ép. 4</p>
+            </div>
+
+            <div onclick="openPlayer(2)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[3/4] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300" class="w-full h-full object-cover" />
+                <div class="absolute bottom-1.5 right-1.5 w-6 h-6 rounded-full bg-black/70 backdrop-blur-sm text-white flex items-center justify-center text-[9px]">▶</div>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Entre Deux Mondes</p>
+              <p class="text-[10px] text-slate-400">Ép. 2</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: NOUVEAUX ÉPISODES -->
+        <div class="px-4 mb-6">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-bold text-white tracking-wide">Nouveaux épisodes</h3>
+          </div>
+          <div class="grid grid-cols-3 gap-2.5">
+            <div onclick="openPlayer(0)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[3/4] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300" class="w-full h-full object-cover" />
+                <span class="absolute top-1.5 left-1.5 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded">NEW</span>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Cœur Lié</p>
+              <p class="text-[10px] text-slate-400">Ép. 1</p>
+            </div>
+
+            <div onclick="openPlayer(1)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[3/4] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300" class="w-full h-full object-cover" />
+                <span class="absolute top-1.5 left-1.5 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded">NEW</span>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Les Liens du Sang</p>
+              <p class="text-[10px] text-slate-400">Ép. 6</p>
+            </div>
+
+            <div onclick="openPlayer(2)" class="cursor-pointer group">
+              <div class="relative rounded-xl overflow-hidden aspect-[3/4] bg-[#1A1A28] border border-[#262638] group-hover:border-purple-500 transition">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300" class="w-full h-full object-cover" />
+                <span class="absolute top-1.5 left-1.5 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded">NEW</span>
+              </div>
+              <p class="text-[11px] font-bold text-white mt-1.5 truncate">Regard Sombre</p>
+              <p class="text-[10px] text-slate-400">Ép. 2</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SCREEN 2: DISCOVER / SEARCH SCREEN -->
+      <div id="screen-discover" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-20">
+        <h2 class="text-lg font-bold text-white mb-3">🔍 Découvrir & Rechercher</h2>
+        
+        <div class="relative mb-4">
+          <input
+            id="search-input"
+            type="text"
+            oninput="handleSearch(this.value)"
+            placeholder="Rechercher une série, un créateur, un genre..."
+            class="w-full bg-[#161622] border border-white/10 rounded-2xl py-3 pl-10 pr-4 text-xs text-white outline-none focus:border-purple-500"
+          />
+          <span class="absolute left-3 top-3.5 text-slate-400 text-sm">🔍</span>
+        </div>
+
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Genres Populaires</h3>
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <div onclick="switchTab('home');" class="p-3 bg-gradient-to-r from-purple-900/60 to-slate-900/40 rounded-xl border border-purple-500/30 cursor-pointer">
+            <p class="text-xs font-bold text-white">❤️ Romance & Passion</p>
+            <p class="text-[10px] text-purple-200">18 mini-séries</p>
+          </div>
+          <div onclick="switchTab('home');" class="p-3 bg-gradient-to-r from-rose-900/60 to-pink-900/40 rounded-xl border border-rose-500/30 cursor-pointer">
+            <p class="text-xs font-bold text-white">🖤 Dark Romance</p>
+            <p class="text-[10px] text-rose-200">12 mini-séries</p>
+          </div>
+          <div onclick="switchTab('home');" class="p-3 bg-gradient-to-r from-amber-900/60 to-red-900/40 rounded-xl border border-amber-500/30 cursor-pointer">
+            <p class="text-xs font-bold text-white">🔪 Vengeance & Thriller</p>
+            <p class="text-[10px] text-amber-200">9 mini-séries</p>
+          </div>
+          <div onclick="switchTab('home');" class="p-3 bg-gradient-to-r from-blue-900/60 to-indigo-900/40 rounded-xl border border-blue-500/30 cursor-pointer">
+            <p class="text-xs font-bold text-white">👑 Secrets de Famille</p>
+            <p class="text-[10px] text-blue-200">15 mini-séries</p>
+          </div>
+        </div>
+
+        <div id="search-results-list" class="space-y-2.5"></div>
+      </div>
+
+      <!-- SCREEN 3: MA LISTE (FAVORIS DU SPECTATEUR) -->
+      <div id="screen-mylist" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-20">
+        <h2 class="text-lg font-bold text-white mb-3">➕ Ma Liste (Mes Séries Favorites)</h2>
+        <div id="mylist-container" class="space-y-2.5">
+          <div onclick="openPlayer(0)" class="flex items-center justify-between p-3 bg-[#161622] rounded-2xl border border-white/5 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" class="w-12 h-16 object-cover rounded-xl" />
+              <div>
+                <p class="font-bold text-xs text-white">Amour Interdit</p>
+                <p class="text-[10px] text-purple-300">Romance • 30 épisodes</p>
+                <p class="text-[10px] text-slate-400">Progression : Épisode 5</p>
+              </div>
+            </div>
+            <span class="text-purple-400 font-bold text-xs">▶ Continuer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: VERTICAL 9:16 SHORTS PLAYER -->
+      <div id="screen-player" class="hidden absolute inset-0 bg-black flex flex-col z-30">
+        <button onclick="closePlayer()" class="absolute top-4 left-4 z-40 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-white text-xl">
+          ‹
+        </button>
+
+        <div class="relative flex-1 w-full h-full bg-black flex items-center justify-center">
+          <video id="vertical-video" class="w-full h-full object-cover" playsinline loop controls></video>
+
+          <div id="locked-overlay" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center z-20 overflow-y-auto no-scrollbar">
+            <div class="w-12 h-12 rounded-full bg-rose-600/20 text-rose-500 flex items-center justify-center text-2xl mb-2 border border-rose-500/30">
+              🔒
+            </div>
+            <h3 id="locked-ep-title" class="text-base font-bold text-white mb-0.5">Épisode Verrouillé</h3>
+            <p class="text-xs text-slate-300 mb-4">Choisissez comment débloquer cet épisode :</p>
+
+            <div class="w-full max-w-xs space-y-2.5">
+              <button onclick="triggerRewardedAd()" id="btn-ad-unlock" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-between shadow-lg border border-emerald-400/40">
+                <span class="flex items-center gap-1.5">
+                  <span class="text-sm">📺</span>
+                  <span>Regarder une pub — Gratuit</span>
+                </span>
+                <span class="bg-black/30 text-emerald-200 text-[10px] px-2 py-0.5 rounded-full font-bold">5/5 restants</span>
+              </button>
+
+              <button onclick="unlockCurrentEpisode()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-between shadow-lg shadow-rose-600/30">
+                <span class="flex items-center gap-1.5">
+                  <span class="text-sm">🪙</span>
+                  <span>Débloquer pour 15 pièces</span>
+                </span>
+                <span class="text-[10px] text-rose-200 font-bold">1 épisode</span>
+              </button>
+
+              <button onclick="openStoreModal()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-between shadow-lg shadow-purple-600/30">
+                <span class="flex items-center gap-1.5">
+                  <span class="text-sm">👑</span>
+                  <span>Pass VIP Illimité</span>
+                </span>
+                <span class="text-[10px] text-purple-200 font-bold">100% Tout</span>
+              </button>
+            </div>
+
+            <p class="text-[11px] text-amber-400 font-semibold mt-3">
+              Votre solde : <span id="player-coin-balance">195</span> pièces
+            </p>
+          </div>
+
+          <!-- Bottom Info -->
+          <div class="absolute bottom-6 left-4 right-16 z-10">
+            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wide">AMOUR INTERDIT • ÉPISODE 1</span>
+            <h3 class="text-sm font-bold text-white truncate">Le Mariage Forcé</h3>
+            <p class="text-xs text-slate-400">@StudioDRAMAXOXO</p>
+          </div>
+
+          <!-- Right Side Actions -->
+          <div class="absolute right-3 bottom-10 flex flex-col items-center gap-4 z-20">
+            <button onclick="toggleLike()" class="flex flex-col items-center">
+              <div id="like-icon-wrap" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-xl text-white">🤍</div>
+              <span class="text-[10px] font-bold text-white mt-1">14.2K</span>
+            </button>
+
+            <button onclick="alert('Commentaires (340) : Épisode captivant !')" class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-xl text-white">💬</div>
+              <span class="text-[10px] font-bold text-white mt-1">340</span>
+            </button>
+
+            <button onclick="openReportModal()" class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-base text-white">🚨</div>
+              <span class="text-[8px] font-bold text-slate-400 mt-1">Signaler</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 6: CREATOR STUDIO (ACCESSIBLE UNIQUEMENT POUR APPROVED_CREATOR) -->
+      <div id="screen-creator" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-20">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-black text-white flex items-center gap-2">🎬 Creator Studio</h2>
+            <p id="creator-channel-display" class="text-xs text-purple-300 font-semibold">Chaîne : @MonStudio</p>
+          </div>
+          <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            ● Créateur Approuvé
+          </span>
+        </div>
+
+        <!-- 6 METRICS DASHBOARD -->
+        <div class="grid grid-cols-3 gap-2 mb-4">
+          <div class="bg-[#161622] border border-white/5 p-2.5 rounded-xl">
+            <p class="text-[9px] text-slate-400 uppercase">Total Views</p>
+            <p class="text-sm font-bold text-white">45.2K</p>
+          </div>
+          <div class="bg-[#161622] border border-white/5 p-2.5 rounded-xl">
+            <p class="text-[9px] text-slate-400 uppercase">Unique Viewers</p>
+            <p class="text-sm font-bold text-white">18.4K</p>
+          </div>
+          <div class="bg-[#161622] border border-white/5 p-2.5 rounded-xl">
+            <p class="text-[9px] text-slate-400 uppercase">Completion Rate</p>
+            <p class="text-sm font-bold text-emerald-400">82.1%</p>
+          </div>
+        </div>
+
+        <!-- Solde & Payouts -->
+        <div class="bg-gradient-to-br from-[#1E1B4B] to-[#111118] border border-purple-500/40 p-4 rounded-2xl mb-4 shadow-lg">
+          <p class="text-[10px] font-bold text-purple-300 uppercase">Solde Disponible (Royalties Nettes Éligibles)</p>
+          <h3 class="text-2xl font-black text-emerald-400 my-1">320,00 $ USD</h3>
+          <button onclick="alert('Demande de payout enregistrée auprès de l'administration.')" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 rounded-xl text-xs shadow mt-2">
+            Demander un Payout (Seuil Minimum : 50.00 $)
+          </button>
+        </div>
+
+        <!-- Formulaire de Création & Workflow de Modération (Draft -> Submit for Review) -->
+        <div class="bg-[#161622] border border-white/5 p-4 rounded-2xl mb-4">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-2">Créer une Mini-Série (Soumission à la Modération)</h3>
+          <form onsubmit="creatorSubmitSeries(event)" class="space-y-2.5 text-xs">
+            <input id="creator-series-title" required type="text" placeholder="Titre de la mini-série *" class="w-full bg-[#202030] text-white p-2.5 rounded-xl border border-white/10" />
+            <div class="grid grid-cols-2 gap-2">
+              <select id="creator-series-genre" class="bg-[#202030] text-white p-2 rounded-xl border border-white/10">
+                <option>Romance</option>
+                <option>Dark Romance</option>
+                <option>Thriller & Vengeance</option>
+                <option>Drame</option>
+              </select>
+              <input id="creator-series-ep-count" required type="number" min="5" max="100" value="30" placeholder="Nb Épisodes *" class="bg-[#202030] text-white p-2 rounded-xl border border-white/10" />
+            </div>
+            <textarea id="creator-series-desc" required rows="2" placeholder="Synopsis complet de la série..." class="w-full bg-[#202030] text-white p-2 rounded-xl border border-white/10"></textarea>
+            
+            <label class="block text-[10px] text-purple-300 font-semibold">Affiche de couverture 9:16 (JPG/PNG) *</label>
+            <input id="creator-series-cover-file" required type="file" accept="image/*" class="w-full bg-[#202030] text-white p-1.5 rounded-xl border border-white/10 text-[10px]" />
+
+            <label class="block text-[10px] text-purple-300 font-semibold">Fichier Vidéo Épisode 1 (MP4) *</label>
+            <input id="creator-series-video-file" required type="file" accept="video/mp4,video/*" class="w-full bg-[#202030] text-white p-1.5 rounded-xl border border-white/10 text-[10px]" />
+
+            <p class="text-[9px] text-amber-300 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+              ⚠️ <strong>Workflow de validation</strong> : Votre série sera soumise à l'administrateur Drama Xoxo avant d'être publiée sur l'application.
+            </p>
+
+            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl shadow transition">
+              Soumettre à la Modération Admin
+            </button>
+          </form>
+        </div>
+
+        <!-- Mes Séries & Statuts de Modération -->
+        <div class="bg-[#161622] border border-white/5 p-4 rounded-2xl">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-2">Mes Séries Soumises</h3>
+          <div id="creator-my-series-list" class="space-y-2">
+            <div class="p-3 bg-[#1F1F2E] rounded-xl border border-white/5 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-white text-xs">Les Secrets du Passé</p>
+                <p class="text-[10px] text-amber-400">Statut : ⏳ En cours d'examen par l'admin</p>
+              </div>
+              <span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-1 rounded font-bold">SOUMIS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- SCREEN 5: PROFIL SPECTATEUR (100% FONCTIONNEL & SANS CREATOR STUDIO) -->
+      <div id="screen-profile" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-20">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-14 h-14 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-xl">M</div>
+          <div>
+            <h3 class="font-bold text-white text-base">Marie Stanley</h3>
+            <p class="text-xs text-slate-400">user@dramaxoxo.app</p>
+            <span class="text-[10px] bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block">SPECTATEUR</span>
+          </div>
+        </div>
+
+        <!-- Wallet Card -->
+        <div class="bg-[#161622] border border-white/10 p-4 rounded-2xl mb-4 flex justify-between items-center">
+          <div>
+            <p class="text-xs text-slate-400">Solde Total</p>
+            <h4 class="text-xl font-bold text-amber-400"><span id="profile-coins">195</span> Pièces</h4>
+          </div>
+          <button onclick="openStoreModal()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow">
+            + Recharger
+          </button>
+        </div>
+
+        <!-- Apply to become creator banner -->
+        <div class="mb-4">
+          <button onclick="openCreatorApplicationModal()" class="w-full bg-gradient-to-r from-purple-950 to-indigo-950 hover:from-purple-900 hover:to-indigo-900 p-3.5 rounded-2xl border border-purple-500/40 flex items-center justify-between text-left shadow-lg transition">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🎬</span>
+              <div>
+                <p id="apply-cta-title" class="text-xs font-bold text-white">Devenir Créateur DRAMA XOXO</p>
+                <p id="apply-cta-sub" class="text-[10px] text-purple-200">Publiez vos mini-séries et gagnez des royalties sur Drama Xoxo.</p>
+              </div>
+            </div>
+            <span id="apply-cta-badge" class="text-purple-300 text-xs font-bold bg-purple-500/20 px-2 py-1 rounded-lg">Postuler ›</span>
+          </button>
+        </div>
+
+        <!-- Actions & Politiques Spectateur (100% Opérationnelles) -->
+        <div class="bg-[#161622] rounded-2xl border border-white/5 overflow-hidden text-xs text-slate-200 divide-y divide-[#202030] mb-4">
+          <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] text-emerald-400 font-semibold transition">
+            <span class="flex items-center gap-2.5">
+              <span>🔄</span>
+              <span>Restaurer les Achats (StoreKit / IAP)</span>
+            </span>
+            <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">DEMO</span>
+          </button>
+
+          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] transition">
+            <span class="flex items-center gap-2.5">
+              <span>📜</span>
+              <span>Conditions Générales d'Utilisation (CGU)</span>
+            </span>
+            <span class="text-slate-500">›</span>
+          </button>
+
+          <button onclick="openPrivacyModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] transition">
+            <span class="flex items-center gap-2.5">
+              <span>🔒</span>
+              <span>Politique de Confidentialité</span>
+            </span>
+            <span class="text-slate-500">›</span>
+          </button>
+
+          <button onclick="openCopyrightPolicyModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] transition">
+            <span class="flex items-center gap-2.5">
+              <span>⚖️</span>
+              <span>Politique Copyright & Propriété Intellectuelle</span>
+            </span>
+            <span class="text-slate-500">›</span>
+          </button>
+
+          <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] text-rose-500 font-bold transition">
+            <span class="flex items-center gap-2.5">
+              <span>🗑️</span>
+              <span>Supprimer mon compte</span>
+            </span>
+            <span class="text-slate-500">›</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM TAB BAR (5 TABS SPECTATEUR : ACCUEIL, DÉCOUVRIR, MA LISTE, COINS, PROFIL) -->
+    <div id="bottom-tab-bar" class="absolute bottom-0 left-0 right-0 h-16 bg-[#09090F]/95 backdrop-blur-md border-t border-[#1C1C2A] flex items-center justify-around z-20 px-1">
+      <button onclick="switchTab('home')" id="tab-home" class="flex flex-col items-center text-purple-500 font-bold text-[10px]">
+        <i data-lucide="home" class="w-5 h-5 mb-0.5"></i>
+        <span>Accueil</span>
+      </button>
+
+      <button onclick="switchTab('discover')" id="tab-discover" class="flex flex-col items-center text-slate-400 text-[10px] hover:text-white">
+        <i data-lucide="search" class="w-5 h-5 mb-0.5"></i>
+        <span>Découvrir</span>
+      </button>
+
+      <button onclick="switchTab('mylist')" id="tab-mylist" class="flex flex-col items-center text-slate-400 text-[10px] hover:text-white">
+        <i data-lucide="plus-circle" class="w-5 h-5 mb-0.5"></i>
+        <span>Ma Liste</span>
+      </button>
+
+      <button onclick="openStoreModal()" id="tab-coins" class="flex flex-col items-center text-slate-400 text-[10px] hover:text-white">
+        <span class="text-base leading-none mb-0.5">🪙</span>
+        <span>Coins</span>
+      </button>
+
+      <button onclick="switchTab('profile')" id="tab-profile" class="flex flex-col items-center text-slate-400 text-[10px] hover:text-white">
+        <i data-lucide="user" class="w-5 h-5 mb-0.5"></i>
+        <span>Profil</span>
+      </button>
+    </div>
+
+    <!-- ==================== TOUTES LES MODALES POLITIQUES & SERVICES ==================== -->
+
+    <!-- MODAL 1: RESTAURER LES ACHATS -->
+    <div id="restore-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-5">
+      <div class="bg-[#161622] rounded-3xl border border-emerald-500/40 p-6 w-full max-w-sm text-center">
+        <div class="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-3 border border-emerald-500/30">
+          🔄
+        </div>
+        <h3 class="text-base font-bold text-white mb-1">Restauration des Achats</h3>
+        <p class="text-xs text-slate-300 mb-2">Vérification de vos reçus StoreKit et In-App Purchases.</p>
+        <span class="text-[9px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">STATUS: SIMULATION DEMO</span>
+        <div class="mt-4 space-y-2">
+          <button onclick="confirmRestorePurchases()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg shadow-emerald-600/30">
+            ✓ Synchroniser les Droits Maintenant
+          </button>
+          <button onclick="closeRestorePurchasesModal()" class="w-full text-xs text-slate-400 py-1">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: CONDITIONS GÉNÉRALES D'UTILISATION (CGU) -->
+    <div id="cgu-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="bg-[#161622] rounded-3xl border border-white/10 p-5 w-full max-w-sm max-h-[85%] flex flex-col text-xs text-slate-300">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-base font-bold text-white flex items-center gap-1.5">
+            <span>📜</span> <span>Conditions Générales (CGU)</span>
+          </h3>
+          <button onclick="closeCguModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 font-bold">✕</button>
+        </div>
+        <div class="flex-1 overflow-y-auto no-scrollbar space-y-3 pr-1 text-[11px] leading-relaxed">
+          <p class="font-bold text-white">1. Objet du Service</p>
+          <p>DRAMA XOXO est une plateforme de diffusion et de streaming de mini-séries verticales au format 9:16.</p>
+          
+          <p class="font-bold text-white">2. Achats In-App & Pièces Virtuelles</p>
+          <p>Les pièces virtuelles permettent de débloquer des épisodes à l'unité. Les paiements sont sécurisés et traités par Apple App Store et Google Play. Les pièces ne sont ni remboursables ni transférables.</p>
+          
+          <p class="font-bold text-white">3. Abonnements VIP Auto-Renouvelables</p>
+          <p>Le Pass VIP donne un accès illimité à l'intégralité du catalogue sans publicité. L'abonnement se renouvelle automatiquement sauf résiliation au moins 24h avant la fin de la période en cours dans les réglages de votre compte Apple / Google.</p>
+          
+          <p class="font-bold text-white">4. Règles d'Usage & Modération</p>
+          <p>Tout abus, tentative de fraude, piratage ou partage de compte pourra entraîner la suspension immédiate de l'accès.</p>
+        </div>
+        <button onclick="closeCguModal()" class="w-full bg-purple-600 text-white font-bold py-2 rounded-xl text-xs mt-3 shadow">
+          J'ai compris et j'accepte
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 3: POLITIQUE DE CONFIDENTIALITÉ -->
+    <div id="privacy-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="bg-[#161622] rounded-3xl border border-white/10 p-5 w-full max-w-sm max-h-[85%] flex flex-col text-xs text-slate-300">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-base font-bold text-white flex items-center gap-1.5">
+            <span>🔒</span> <span>Politique de Confidentialité</span>
+          </h3>
+          <button onclick="closePrivacyModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 font-bold">✕</button>
+        </div>
+        <div class="flex-1 overflow-y-auto no-scrollbar space-y-3 pr-1 text-[11px] leading-relaxed">
+          <p class="font-bold text-white">1. Données Collectées</p>
+          <p>Nous collectons uniquement les informations nécessaires au fonctionnement du service : identifiant de compte (Apple ID, Google ID ou email), préférences linguistiques, historique de lecture et solde de pièces.</p>
+          
+          <p class="font-bold text-white">2. Utilisation des Données</p>
+          <p>Vos données sont utilisées pour synchroniser votre progression de lecture, sécuriser vos achats et personnaliser vos recommandations.</p>
+          
+          <p class="font-bold text-white">3. Protection & Partage</p>
+          <p>DRAMA XOXO ne vend aucune de vos données personnelles à des tiers. Les données de transaction sont chiffrées de bout en bout par les systèmes Apple et Google.</p>
+          
+          <p class="font-bold text-white">4. Vos Droits</p>
+          <p>Vous pouvez à tout moment exporter ou supprimer définitivement vos données via le bouton « Supprimer mon compte ».</p>
+        </div>
+        <button onclick="closePrivacyModal()" class="w-full bg-purple-600 text-white font-bold py-2 rounded-xl text-xs mt-3 shadow">
+          Fermer
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 4: POLITIQUE COPYRIGHT & PROPRIÉTÉ INTELLECTUELLE -->
+    <div id="copyright-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="bg-[#161622] rounded-3xl border border-white/10 p-5 w-full max-w-sm max-h-[85%] flex flex-col text-xs text-slate-300">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-base font-bold text-white flex items-center gap-1.5">
+            <span>⚖️</span> <span>Copyright & Droits d'Auteur</span>
+          </h3>
+          <button onclick="closeCopyrightPolicyModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 font-bold">✕</button>
+        </div>
+        <div class="flex-1 overflow-y-auto no-scrollbar space-y-3 pr-1 text-[11px] leading-relaxed">
+          <p class="font-bold text-white">1. Protection des Créateurs et Ayants Droit</p>
+          <p>DRAMA XOXO respecte strictement les droits d'auteur et de propriété intellectuelle. Tous les contenus sont soumis à vérification préalable.</p>
+          
+          <p class="font-bold text-white">2. Procédure de Signalement DMCA</p>
+          <p>Les signalements de violation de droits d'auteur sont examinés dans les meilleurs délais conformément à notre politique. Tout contenu faisant l'objet d'une réclamation justifiée sera immédiatement retiré.</p>
+          
+          <p class="font-bold text-white">3. Contact Réclamations</p>
+          <p>Pour adresser une réclamation officielle : <span class="text-purple-300">copyright@dramaxoxo.app</span> (À configurer en production).</p>
+        </div>
+        <button onclick="closeCopyrightPolicyModal()" class="w-full bg-purple-600 text-white font-bold py-2 rounded-xl text-xs mt-3 shadow">
+          Fermer
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 5: SUPPRIMER MON COMPTE (APPLE 5.1.1 COMPLIANT) -->
+    <div id="delete-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-5">
+      <div class="bg-[#161622] rounded-3xl border border-rose-500/50 p-6 w-full max-w-sm text-center">
+        <div class="w-14 h-14 rounded-full bg-rose-600/20 text-rose-500 flex items-center justify-center text-2xl mx-auto mb-3 border border-rose-500/30">
+          🗑️
+        </div>
+        <h3 class="text-base font-bold text-white mb-1">Supprimer définitivement mon compte</h3>
+        <p class="text-xs text-slate-300 mb-3">Cette action est <span class="text-rose-400 font-bold">irréversible</span>. Votre solde de pièces, historique et favoris seront définitivement effacés.</p>
+        
+        <input id="delete-confirm-input" type="text" placeholder="Tapez SUPPRIMER" class="w-full mb-3 bg-[#202030] text-xs text-white p-2.5 rounded-xl border border-white/10 outline-none text-center focus:border-rose-500 uppercase" />
+        
+        <button onclick="confirmAccountDeletion()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl text-xs mb-2 shadow-lg">
+          Confirmer la Suppression Définitive
+        </button>
+        <button onclick="closeDeleteAccountModal()" class="w-full text-xs text-slate-400 py-1">Annuler</button>
+      </div>
+    </div>
+
+    <!-- MODAL 6: CANDIDATURE CRÉATEUR AVEC APERÇU VIDÉO -->
+    <div id="creator-app-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="bg-[#161622] rounded-3xl border border-purple-500/40 p-5 w-full max-w-sm max-h-[92%] flex flex-col text-xs text-slate-300 shadow-2xl">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>🎬</span> <span>Postuler comme Créateur</span>
+          </h3>
+          <button onclick="closeCreatorApplicationModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 font-bold hover:bg-slate-700">✕</button>
+        </div>
+        <p class="text-slate-400 mb-2.5 text-[11px]">Rejoignez DRAMA XOXO pour monétiser vos mini-séries (70% de royalties nettes).</p>
+        
+        <form onsubmit="submitCreatorApp(event)" class="space-y-2.5 flex-1 overflow-y-auto no-scrollbar pr-0.5">
+          <!-- Nom & Email (Email simple sans "Professionnel") -->
+          <div>
+            <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Nom du Studio ou Chaîne *</label>
+            <input id="app-name-input" required type="text" placeholder="Ex: Caraïbes Studio" class="w-full bg-[#202030] text-white p-2.5 rounded-xl border border-white/10 text-xs focus:border-purple-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Email *</label>
+            <input id="app-email-input" required type="email" placeholder="votre.email@exemple.com" class="w-full bg-[#202030] text-white p-2.5 rounded-xl border border-white/10 text-xs focus:border-purple-500 outline-none" />
+          </div>
+
+          <!-- Titre & Genre de la Mini-Série -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Titre de la Série *</label>
+              <input id="app-series-title" required type="text" placeholder="Ex: L'Ombre du Passé" class="w-full bg-[#202030] text-white p-2 rounded-xl border border-white/10 text-xs focus:border-purple-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Genre *</label>
+              <select id="app-series-genre" class="w-full bg-[#202030] text-white p-2 rounded-xl border border-white/10 text-xs focus:border-purple-500 outline-none">
+                <option>Romance</option>
+                <option>Dark Romance</option>
+                <option>Thriller & Vengeance</option>
+                <option>Drame & Secrets</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Synopsis / Pitch *</label>
+            <textarea id="app-bio-input" required rows="2" placeholder="Résumez l'intrigue de votre série en quelques lignes..." class="w-full bg-[#202030] text-white p-2 rounded-xl border border-white/10 text-xs focus:border-purple-500 outline-none"></textarea>
+          </div>
+
+          <!-- APERÇU VIDÉO DE LA MINI-SÉRIE (Fichier ou URL) -->
+          <div class="p-3 bg-[#1B1B2B] rounded-2xl border border-purple-500/30">
+            <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1 flex items-center justify-between">
+              <span>📹 Aperçu de votre Mini-Série *</span>
+              <span class="text-[9px] text-purple-400 font-normal">Teaser ou Extrait 9:16</span>
+            </label>
+
+            <!-- File Upload Input -->
+            <label class="flex flex-col items-center justify-center p-3 border-2 border-dashed border-purple-500/40 rounded-xl bg-purple-950/20 hover:bg-purple-950/40 cursor-pointer transition mb-2">
+              <span class="text-xl mb-1">📁</span>
+              <span id="file-upload-label" class="text-[11px] font-semibold text-purple-200 text-center">Choisir un fichier vidéo MP4 / MOV</span>
+              <span class="text-[9px] text-slate-400">Glisser-déposer ou cliquer pour importer</span>
+              <input id="app-video-file" type="file" accept="video/*" onchange="handlePreviewUpload(event)" class="hidden" />
+            </label>
+
+            <!-- Video Player Preview Container -->
+            <div id="app-video-preview-wrap" class="hidden mb-2">
+              <video id="app-video-preview-player" controls class="w-full h-36 bg-black rounded-xl object-contain border border-purple-500/40"></video>
+            </div>
+
+            <p class="text-[9px] text-slate-400 text-center">OU indiquez un lien direct vers votre vidéo :</p>
+            <input id="app-video-url" type="url" oninput="handlePreviewUrlInput(this.value)" placeholder="https://exemple.com/mon-teaser.mp4" class="w-full mt-1 bg-[#202030] text-white p-1.5 rounded-lg border border-white/10 text-[10px] focus:border-purple-500 outline-none" />
+          </div>
+
+          <label class="flex items-start gap-2 text-[10px] pt-1">
+            <input type="checkbox" required class="mt-0.5 rounded text-purple-600" />
+            <span>Je certifie posséder 100% des droits de propriété intellectuelle sur ce contenu.</span>
+          </label>
+
+          <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg shadow-purple-600/30 transition">
+            Soumettre ma Candidature avec Aperçu Vidéo
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL 7: BOUTIQUE DE PIÈCES -->
+    <div id="store-modal" class="hidden absolute inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col justify-end">
+      <div class="bg-[#161622] rounded-t-3xl border-t border-white/10 p-5 max-h-[90%] overflow-y-auto no-scrollbar">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-white">🪙 Boutique de Pièces & VIP</h3>
+          <button onclick="closeStoreModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 font-bold">✕</button>
+        </div>
+
+        <div class="bg-gradient-to-r from-purple-900 to-indigo-950 border border-purple-500/50 p-4 rounded-2xl mb-4">
+          <span class="bg-amber-400 text-black text-[9px] font-black px-2 py-0.5 rounded">👑 PASS VIP ILLIMITÉ</span>
+          <h4 class="text-sm font-bold text-white mt-1">Tout le catalogue en illimité</h4>
+          <p class="text-[11px] text-purple-200 mb-3">Zéro cadenas, streaming infini sans pièces</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="buyVip('Mensuel')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 rounded-xl text-xs text-center">
+              9,99 € / mois
+            </button>
+            <button onclick="buyVip('Annuel')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 rounded-xl text-xs text-center">
+              79,99 € / an (-33%)
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2 mb-4">
+          <div onclick="buyCoins(100)" class="flex justify-between items-center p-3 bg-[#1E1E2C] rounded-xl border border-white/5 cursor-pointer">
+            <div>
+              <p class="text-xs font-bold text-white">🪙 100 Pièces</p>
+              <p class="text-[10px] text-slate-400">Pour ~7 épisodes</p>
+            </div>
+            <span class="bg-slate-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg">4,99 €</span>
+          </div>
+
+          <div onclick="buyCoins(550)" class="flex justify-between items-center p-3 bg-[#1E1E2C] rounded-xl border border-rose-500/40 relative cursor-pointer">
+            <span class="absolute -top-2 left-4 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded">POPULAIRE (+10%)</span>
+            <div>
+              <p class="text-xs font-bold text-white">🪙 550 Pièces</p>
+              <p class="text-[10px] text-slate-400">500 + 50 offertes</p>
+            </div>
+            <span class="bg-rose-600 text-white font-bold text-xs px-3 py-1.5 rounded-lg">19,99 €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 8: SIGNALEMENT -->
+    <div id="report-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-5">
+      <div class="bg-[#161622] rounded-3xl border border-white/10 p-5 w-full max-w-sm text-xs">
+        <h3 class="text-base font-bold text-white mb-2">🚨 Signaler un Contenu</h3>
+        <select class="w-full bg-[#202030] text-white p-2 rounded-xl mb-3 border border-white/10">
+          <option>Violation de droits d'auteur</option>
+          <option>Contenu sexuel ou nudité</option>
+          <option>Violence excessive</option>
+          <option>Haine ou harcèlement</option>
+          <option>Autre motif</option>
+        </select>
+        <button onclick="alert('Signalement transmis à la modération.'); document.getElementById('report-modal').classList.add('hidden');" class="w-full bg-rose-600 text-white font-bold py-2 rounded-xl mb-2">
+          Envoyer le Signalement
+        </button>
+        <button onclick="document.getElementById('report-modal').classList.add('hidden');" class="w-full text-slate-400 text-center py-1">Annuler</button>
+      </div>
+    </div>
+
+    <!-- MODAL 9: REWARDED AD -->
+    <div id="admob-modal" class="hidden absolute inset-0 bg-black/95 backdrop-blur-lg z-50 flex flex-col justify-between p-5">
+      <div class="flex items-center justify-between pt-2">
+        <span class="bg-amber-400 text-black text-[9px] font-black px-2 py-0.5 rounded">ANNONCE ADMOB (TEST)</span>
+        <button onclick="document.getElementById('admob-modal').classList.add('hidden');" class="text-slate-400 text-xs bg-slate-800 px-3 py-1.5 rounded-full">✕ Quitter</button>
+      </div>
+      <div class="flex-1 flex flex-col items-center justify-center text-center">
+        <div class="w-16 h-16 rounded-2xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-3xl mb-4 animate-pulse">🎬</div>
+        <h3 class="text-lg font-black text-white mb-2">Découvrez les Nouveaux Shorts</h3>
+        <p class="text-xs text-slate-300">Regardez la vidéo pour débloquer votre épisode.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    let userRole = localStorage.getItem("dramaxoxo_user_role") || "VIEWER"; // VIEWER, CREATOR_PENDING, APPROVED_CREATOR, ADMIN
+    let currentCreatorStudio = localStorage.getItem("dramaxoxo_creator_studio_name") || "@MonStudio";
+
+    function updateRoleUI() {
+      const applyContainer = document.getElementById("profile-creator-apply-container") || document.getElementById("apply-cta-title")?.closest(".mb-4");
+      const ctaTitle = document.getElementById("apply-cta-title");
+      const ctaSub = document.getElementById("apply-cta-sub");
+      const ctaBadge = document.getElementById("apply-cta-badge");
+      const profileRoleBadge = document.getElementById("profile-role-badge") || document.querySelector("#screen-profile span.bg-slate-800");
+
+      if (userRole === "CREATOR_PENDING") {
+        if (ctaTitle) ctaTitle.innerText = "Candidature en cours d'examen";
+        if (ctaSub) ctaSub.innerText = "Votre dossier est en cours d'examen par l'équipe Drama Xoxo.";
+        if (ctaBadge) {
+          ctaBadge.innerText = "En Examen ⏳";
+          ctaBadge.className = "text-amber-300 text-xs font-bold bg-amber-500/20 px-2 py-1 rounded-lg border border-amber-500/30";
+        }
+        if (profileRoleBadge) {
+          profileRoleBadge.innerText = "CANDIDAT CRÉATEUR";
+          profileRoleBadge.className = "text-[10px] bg-amber-500/20 text-amber-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block";
+        }
+      } else if (userRole === "APPROVED_CREATOR") {
+        // Hide "Devenir Créateur" banner completely
+        if (applyContainer) applyContainer.style.display = "none";
+        if (profileRoleBadge) {
+          profileRoleBadge.innerText = "CRÉATEUR APPROUVÉ";
+          profileRoleBadge.className = "text-[10px] bg-purple-500/20 text-purple-300 font-bold px-2 py-0.5 rounded mt-1 inline-block";
+        }
+        // Change profile tab / bottom tab or show Studio CTA
+        renderCreatorStudioButton();
+      } else {
+        // VIEWER
+        if (applyContainer) applyContainer.style.display = "block";
+        if (ctaTitle) ctaTitle.innerText = "Devenir Créateur DRAMA XOXO";
+        if (ctaSub) ctaSub.innerText = "Publiez vos mini-séries et gagnez des royalties sur Drama Xoxo.";
+        if (ctaBadge) {
+          ctaBadge.innerText = "Postuler ›";
+          ctaBadge.className = "text-purple-300 text-xs font-bold bg-purple-500/20 px-2 py-1 rounded-lg";
+        }
+        if (profileRoleBadge) {
+          profileRoleBadge.innerText = "SPECTATEUR";
+          profileRoleBadge.className = "text-[10px] bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block";
+        }
+      }
+    }
+
+    function renderCreatorStudioButton() {
+      const bottomBar = document.getElementById("bottom-tab-bar");
+      if (!bottomBar || document.getElementById("tab-studio-btn")) return;
+      
+      const studioBtn = document.createElement("button");
+      studioBtn.id = "tab-studio-btn";
+      studioBtn.onclick = () => switchTab("creator");
+      studioBtn.className = "flex flex-col items-center text-purple-400 font-bold text-[10px] hover:text-white";
+      studioBtn.innerHTML = `
+        <span class="text-base leading-none mb-0.5">🎬</span>
+        <span>Studio</span>
+      `;
+      bottomBar.insertBefore(studioBtn, bottomBar.lastElementChild);
+    }
+
+    function submitCreatorApp(e) {
+      e.preventDefault();
+      const studioName = document.getElementById("app-name-input").value.trim();
+      const email = document.getElementById("app-email-input").value.trim();
+      const country = document.getElementById("app-country-input").value.trim();
+      const languages = document.getElementById("app-languages-input").value.trim();
+      const contentType = document.getElementById("app-content-type").value;
+      const bio = document.getElementById("app-bio-input").value.trim();
+      const portfolio = document.getElementById("app-portfolio-url").value.trim();
+
+      const newApp = {
+        id: `app_${Date.now()}`,
+        studioName,
+        email,
+        country,
+        languages,
+        contentType,
+        bio,
+        portfolio,
+        date: new Date().toISOString().split("T")[0],
+        status: "PENDING"
+      };
+
+      // Save to localStorage applications queue for Admin review
+      const existingApps = JSON.parse(localStorage.getItem("dramaxoxo_creator_applications") || "[]");
+      existingApps.unshift(newApp);
+      localStorage.setItem("dramaxoxo_creator_applications", JSON.stringify(existingApps));
+
+      // Update local role to CREATOR_PENDING
+      userRole = "CREATOR_PENDING";
+      localStorage.setItem("dramaxoxo_user_role", userRole);
+      localStorage.setItem("dramaxoxo_creator_studio_name", studioName);
+
+      closeCreatorApplicationModal();
+      updateRoleUI();
+
+      alert(`🎉 Candidature envoyée avec succès, ${studioName} !\n\nVotre dossier est désormais en cours d'examen par l'administrateur DRAMA XOXO.\n\nStatut : Candidature en cours d'examen.`);
+    }
+
+    function creatorSubmitSeries(e) {
+      e.preventDefault();
+      const title = document.getElementById("creator-series-title").value.trim();
+      const genre = document.getElementById("creator-series-genre").value;
+      const desc = document.getElementById("creator-series-desc").value.trim();
+      const epCount = document.getElementById("creator-series-ep-count").value;
+
+      const submission = {
+        id: `mod_${Date.now()}`,
+        title,
+        genre,
+        desc,
+        epCount,
+        creator: currentCreatorStudio,
+        status: "SUBMITTED_FOR_REVIEW",
+        date: new Date().toISOString().split("T")[0]
+      };
+
+      const queue = JSON.parse(localStorage.getItem("dramaxoxo_moderation_queue") || "[]");
+      queue.unshift(submission);
+      localStorage.setItem("dramaxoxo_moderation_queue", JSON.stringify(queue));
+
+      alert(`✓ La série « ${title} » a été soumise à la modération de l'administrateur Drama Xoxo.\n\nElle sera publiée dans le catalogue dès validation.`);
+      document.getElementById("creator-series-title").value = "";
+      document.getElementById("creator-series-desc").value = "";
+    }
+
+    let currentRole = "viewer";
+    let userCoins = 195;
+    let isVipUser = false;
+    let isLiked = false;
+
+    let seriesCatalog = [
+      {
+        id: "series_1",
+        title: "Amour Interdit",
+        genre: "Romance",
+        creator: "Studio DRAMA XOXO",
+        coverUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        desc: "Entre passion et secrets, leur amour pourrait tout détruire..."
+      },
+      {
+        id: "series_2",
+        title: "Le Choix du Cœur",
+        genre: "Dark Romance",
+        creator: "Stanley Films",
+        coverUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        desc: "Deux héritiers que tout oppose sont forcés de s'allier."
+      },
+      {
+        id: "series_3",
+        title: "Destins Croisés",
+        genre: "Thriller & Vengeance",
+        creator: "Caraïbes Cinema",
+        coverUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        desc: "Elle revient 10 ans plus tard sous une fausse identité pour se venger."
+      }
+    ];
+
+    function loadDynamicCatalog() {
+      const saved = localStorage.getItem("dramaxoxo_series_catalog");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.length > 0) {
+            seriesCatalog = parsed;
+          }
+        } catch(e) {}
+      }
+
+      // Update hero banner dynamically with the first active series
+      if (seriesCatalog.length > 0) {
+        const hero = seriesCatalog[0];
+        const heroImg = document.getElementById("home-hero-img");
+        const heroTitle = document.getElementById("home-hero-title");
+        const heroSub = document.getElementById("home-hero-sub");
+        const heroBadge = document.getElementById("hero-genre-badge");
+
+        if (heroImg && hero.coverUrl) heroImg.src = hero.coverUrl;
+        if (heroTitle && hero.title) heroTitle.innerText = hero.title;
+        if (heroSub && hero.desc) heroSub.innerText = hero.desc;
+        if (heroBadge && hero.genre) heroBadge.innerText = hero.genre;
+      }
+    }
+
+    const videoEl = document.getElementById("vertical-video");
+
+    function switchTab(tabId) {
+      // Permission check: Viewer / Pending cannot open creator studio directly
+      if (tabId === "creator" && userRole !== "APPROVED_CREATOR" && userRole !== "ADMIN") {
+        alert("🔒 Cet espace est réservé aux créateurs approuvés par Drama Xoxo.");
+        return;
+      }
+
+      ["home", "discover", "mylist", "profile", "creator"].forEach(id => {
+        const scr = document.getElementById(`screen-${id}`);
+        if (scr) scr.classList.add("hidden");
+        const tab = document.getElementById(`tab-${id}`) || document.getElementById(`tab-studio-btn`);
+        if (tab && id !== tabId) tab.className = "flex flex-col items-center text-slate-400 text-[10px] hover:text-white";
+      });
+
+      const activeScr = document.getElementById(`screen-${tabId}`);
+      if (activeScr) activeScr.classList.remove("hidden");
+      const activeTab = document.getElementById(`tab-${tabId}`) || (tabId === "creator" ? document.getElementById("tab-studio-btn") : null);
+      if (activeTab) activeTab.className = "flex flex-col items-center text-purple-500 font-bold text-[10px]";
+    }
+
+    function openPlayer(idx) {
+      const s = seriesCatalog[idx] || seriesCatalog[0];
+      document.getElementById("screen-player").classList.remove("hidden");
+      videoEl.src = s.videoUrl;
+      videoEl.play().catch(() => {});
+    }
+
+    function closePlayer() {
+      videoEl.pause();
+      document.getElementById("screen-player").classList.add("hidden");
+    }
+
+    function toggleMyListHero(e) {
+      e.stopPropagation();
+      const btn = document.getElementById("btn-hero-mylist");
+      if (btn.innerText.includes("+")) {
+        btn.innerHTML = `<span>✓</span> <span>Dans Ma Liste</span>`;
+        btn.className = "flex-1 bg-purple-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition";
+        alert("✓ « Amour Interdit » a été ajouté à votre liste !");
+      } else {
+        btn.innerHTML = `<span>+</span> <span>Ma Liste</span>`;
+        btn.className = "flex-1 bg-[#1A1A28]/80 hover:bg-[#252538] text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 border border-white/20 backdrop-blur-sm shadow transition";
+      }
+    }
+
+    // Modal Handlers (100% Fonctionnels)
+    function openRestorePurchasesModal() { document.getElementById("restore-modal").classList.remove("hidden"); }
+    function closeRestorePurchasesModal() { document.getElementById("restore-modal").classList.add("hidden"); }
+    function confirmRestorePurchases() {
+      isVipUser = true;
+      closeRestorePurchasesModal();
+      alert("✅ Droits d'achats StoreKit restaurés avec succès (Mode DEMO) !");
+    }
+
+    function openCguModal() { document.getElementById("cgu-modal").classList.remove("hidden"); }
+    function closeCguModal() { document.getElementById("cgu-modal").classList.add("hidden"); }
+
+    function openPrivacyModal() { document.getElementById("privacy-modal").classList.remove("hidden"); }
+    function closePrivacyModal() { document.getElementById("privacy-modal").classList.add("hidden"); }
+
+    function openCopyrightPolicyModal() { document.getElementById("copyright-modal").classList.remove("hidden"); }
+    function closeCopyrightPolicyModal() { document.getElementById("copyright-modal").classList.add("hidden"); }
+
+    function openDeleteAccountModal() { 
+      document.getElementById("delete-confirm-input").value = "";
+      document.getElementById("delete-modal").classList.remove("hidden"); 
+    }
+    function closeDeleteAccountModal() { document.getElementById("delete-modal").classList.add("hidden"); }
+    function confirmAccountDeletion() {
+      const val = document.getElementById("delete-confirm-input").value.trim().toUpperCase();
+      if (val !== "SUPPRIMER") {
+        alert("Veuillez taper SUPPRIMER pour confirmer.");
+        return;
+      }
+      userCoins = 0;
+      isVipUser = false;
+      document.getElementById("profile-coins").innerText = "0";
+      closeDeleteAccountModal();
+      alert("🗑️ Votre compte et toutes vos données ont été définitivement supprimés.");
+      switchTab("home");
+    }
+
+    function openStoreModal() { document.getElementById("store-modal").classList.remove("hidden"); }
+    function closeStoreModal() { document.getElementById("store-modal").classList.add("hidden"); }
+    function openCreatorApplicationModal() { document.getElementById("creator-app-modal").classList.remove("hidden"); }
+    function closeCreatorApplicationModal() { document.getElementById("creator-app-modal").classList.add("hidden"); }
+
+
+    function openReportModal() { document.getElementById("report-modal").classList.remove("hidden"); }
+
+    function buyCoins(qty) {
+      userCoins += qty;
+      document.getElementById("profile-coins").innerText = userCoins;
+      closeStoreModal();
+      alert(`+${qty} pièces créditées !`);
+    }
+
+    function buyVip(plan) {
+      isVipUser = true;
+      closeStoreModal();
+      alert(`Félicitations ! Vous êtes Membre VIP (${plan}).`);
+    }
+
+    function toggleLike() {
+      isLiked = !isLiked;
+      document.getElementById("like-icon-wrap").innerHTML = isLiked ? "❤️" : "🤍";
+    }
+
+    function triggerRewardedAd() {
+      document.getElementById("admob-modal").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("admob-modal").classList.add("hidden");
+        alert("Publicité terminée ! Épisode débloqué.");
+      }, 3000);
+    }
+
+    function unlockCurrentEpisode() {
+      if (userCoins < 15) { openStoreModal(); return; }
+      userCoins -= 15;
+      document.getElementById("profile-coins").innerText = userCoins;
+      document.getElementById("locked-overlay").classList.add("hidden");
+      videoEl.play().catch(() => {});
+      alert("Épisode débloqué pour 15 pièces !");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadDynamicCatalog();
+      updateRoleUI();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
