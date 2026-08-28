@@ -82,35 +82,19 @@ export const SupportPage: React.FC = () => {
         </h2>
 
         <Accordion>
-          <AccordionItem title="Comment débloquer les épisodes d'une mini-série ?" defaultOpen={true}>
-            <p>
-              Les premiers épisodes de la plupart de nos séries sont accessibles gratuitement. Pour continuer l'histoire, vous pouvez utiliser vos <strong>Coins</strong> (obtenus gratuitement via les récompenses quotidiennes ou achetés dans l'application) ou souscrire à un <strong>Pass VIP</strong> pour un visionnage illimité.
-            </p>
-          </AccordionItem>
-
-          <AccordionItem title="Comment restaurer mes achats si je change de téléphone ?">
-            <p>
-              Tous vos déblocages et soldes sont liés à votre compte utilisateur Drama Xoxo ou à votre identifiant Apple ID / Google Play. En vous reconnectant avec les mêmes identifiants sur votre nouvel appareil et en appuyant sur « Restaurer les achats » dans le menu Profil, votre solde sera automatiquement synchronisé.
-            </p>
-          </AccordionItem>
-
-          <AccordionItem title="Comment devenir créateur ou studio partenaire sur Drama Xoxo ?">
-            <p>
-              Les créateurs peuvent soumettre leur projet de mini-série ou portfolio via notre programme partenaire. Dès l'ouverture officielle des candidatures, vous pourrez soumettre vos épisodes au format vertical 9:16 après validation de votre compte selon les termes de l'<a href="/creator-agreement" className="text-brand-red underline">Accord Créateur</a>.
-            </p>
-          </AccordionItem>
-
-          <AccordionItem title="Comment signaler un problème de lecture vidéo ?">
-            <p>
-              Si une vidéo ne se charge pas correctement, vérifiez votre connexion réseau, redémarrez l'application ou videz le cache dans les paramètres de votre téléphone. Si le souci persiste, contactez-nous via le formulaire ci-dessous avec le titre de la série et le numéro de l'épisode concerné.
-            </p>
-          </AccordionItem>
-
-          <AccordionItem title="Comment demander la suppression définitive de mon compte ?">
-            <p>
-              Vous pouvez demander l'effacement complet de vos données et la suppression de votre compte en consultant directement notre page <a href="/delete-account" className="text-brand-red underline">Suppression de Compte</a>.
-            </p>
-          </AccordionItem>
+          {t.support.faqList.map((faq, idx) => (
+            <AccordionItem key={idx} title={faq.question} defaultOpen={idx === 0}>
+              <p>
+                {faq.answer}
+                {faq.linkText && faq.linkUrl && (
+                  <a href={faq.linkUrl} className="text-brand-red underline hover:text-white">
+                    {faq.linkText}
+                  </a>
+                )}
+                {faq.answerAfter}
+              </p>
+            </AccordionItem>
+          ))}
         </Accordion>
       </div>
 

@@ -128,6 +128,13 @@ export interface TranslationDictionary {
       legal: { title: string; desc: string };
     };
     faqTitle: string;
+    faqList: Array<{
+      question: string;
+      answer: string;
+      linkText?: string;
+      linkUrl?: string;
+      answerAfter?: string;
+    }>;
     contactTitle: string;
     contactDesc: string;
     hoursTitle: string;
@@ -487,6 +494,34 @@ export const translations: Record<Language, TranslationDictionary> = {
         legal: { title: "Sécurité & Légal", desc: "Signalement de contenu et demandes DMCA." },
       },
       faqTitle: "Foire Aux Questions (FAQ)",
+      faqList: [
+        {
+          question: "Comment débloquer les épisodes d'une mini-série ?",
+          answer: "Les premiers épisodes de la plupart de nos séries sont accessibles gratuitement. Pour continuer l'histoire, vous pouvez utiliser vos Coins (obtenus gratuitement via les récompenses quotidiennes ou achetés dans l'application) ou souscrire à un Pass VIP pour un visionnage illimité."
+        },
+        {
+          question: "Comment restaurer mes achats si je change de téléphone ?",
+          answer: "Tous vos déblocages et soldes sont liés à votre compte utilisateur Drama Xoxo ou à votre identifiant Apple ID / Google Play. En vous reconnectant avec les mêmes identifiants sur votre nouvel appareil et en appuyant sur « Restaurer les achats » dans le menu Profil, votre solde sera automatiquement synchronisé."
+        },
+        {
+          question: "Comment devenir créateur ou studio partenaire sur Drama Xoxo ?",
+          answer: "Les créateurs peuvent soumettre leur projet de mini-série ou portfolio via notre programme partenaire. Dès l'ouverture officielle des candidatures, vous pourrez soumettre vos épisodes au format vertical 9:16 après validation de votre compte selon les termes de l'",
+          linkText: "Accord Créateur",
+          linkUrl: "/creator-agreement",
+          answerAfter: "."
+        },
+        {
+          question: "Comment signaler un problème de lecture vidéo ?",
+          answer: "Si une vidéo ne se charge pas correctement, vérifiez votre connexion réseau, redémarrez l'application ou videz le cache dans les paramètres de votre téléphone. Si le souci persiste, contactez-nous via le formulaire ci-dessous avec le titre de la série et le numéro de l'épisode concerné."
+        },
+        {
+          question: "Comment demander la suppression définitive de mon compte ?",
+          answer: "Vous pouvez demander l'effacement complet de vos données et la suppression de votre compte en consultant directement notre page ",
+          linkText: "Suppression de Compte",
+          linkUrl: "/delete-account",
+          answerAfter: "."
+        }
+      ],
       contactTitle: "Contactez l'Assistance",
       contactDesc: "Notre équipe traite les demandes de support relatives aux comptes utilisateurs, aux achats et aux signalements éditoriaux.",
       hoursTitle: "Disponibilité",
@@ -923,6 +958,34 @@ export const translations: Record<Language, TranslationDictionary> = {
         legal: { title: "Security & Legal", desc: "Content reporting and DMCA copyright inquiries." },
       },
       faqTitle: "Frequently Asked Questions",
+      faqList: [
+        {
+          question: "How do I unlock mini-series episodes?",
+          answer: "The first episodes of most of our series are free to watch. To continue the story, you can use your Coins (earned for free through daily rewards or purchased in-app) or subscribe to a VIP Pass for unlimited streaming."
+        },
+        {
+          question: "How do I restore my purchases if I change my phone?",
+          answer: "All your unlocks and coin balances are tied to your Drama Xoxo account or your Apple ID / Google Play account. Simply sign in with the same credentials on your new device and tap 'Restore Purchases' in your Profile menu to sync everything."
+        },
+        {
+          question: "How to become a partner creator or studio on Drama Xoxo?",
+          answer: "Creators can submit their mini-series project or portfolio through our partner program. Once applications open, you will be able to upload your 9:16 vertical episodes after account verification according to the ",
+          linkText: "Creator Agreement",
+          linkUrl: "/creator-agreement",
+          answerAfter: "."
+        },
+        {
+          question: "How to report a video playback issue?",
+          answer: "If a video does not load properly, check your internet connection, restart the app, or clear the app cache in your device settings. If the issue persists, contact us via the form below with the series title and episode number."
+        },
+        {
+          question: "How to request permanent account deletion?",
+          answer: "You can request the permanent erasure of your personal data and account by visiting our ",
+          linkText: "Account Deletion page",
+          linkUrl: "/delete-account",
+          answerAfter: "."
+        }
+      ],
       contactTitle: "Contact Support",
       contactDesc: "Our team handles inquiries regarding user accounts, transactions, and content moderation.",
       hoursTitle: "Support Hours",
@@ -1359,6 +1422,34 @@ export const translations: Record<Language, TranslationDictionary> = {
         legal: { title: "Sekirite ak Lwa", desc: "Siyale kontni ak dwa otè DMCA." },
       },
       faqTitle: "Kesyon Moun Poze Souvan (FAQ)",
+      faqList: [
+        {
+          question: "Kijan pou m debloke epizòd yon mini-seri ?",
+          answer: "Premye epizòd pifò seri nou yo gratis pou tout moun. Pou kontinye istwa a, ou ka itilize pyès Coins ou yo (ou jwenn gratis chak jou oswa ou achte nan app la) oubyen pran yon Pas VIP pou gade tout seri san limit."
+        },
+        {
+          question: "Kijan pou m retabli acha m yo si m chanje telefòn ?",
+          answer: "Tout epizòd ou te debloke ak pyès ou yo lye ak kont Drama Xoxo w la oswa Apple ID / Google Play ou. Lè w konekte ak menm kont lan sou nouvo telefòn ou an epi w klike sou « Retabli Acha » nan meni Pwofil la, tout bagay ap retounen otomatikman."
+        },
+        {
+          question: "Kijan pou m vin kreyatè oswa estidyo patnè sou Drama Xoxo ?",
+          answer: "Kreyatè yo ka soumèt pwojè seri oswa portfolio yo nan pwogram patnè nou an. Depi enskripsyon yo louvri, w ap ka telechaje epizòd vètikal 9:16 ou yo apre validasyon kont ou selon kondisyon ",
+          linkText: "Akò Kreyatè a",
+          linkUrl: "/creator-agreement",
+          answerAfter: "."
+        },
+        {
+          question: "Kijan pou m rapòte yon pwoblèm lekti videyo ?",
+          answer: "Si yon videyo pa jwe byen, verifye koneksyon entènèt ou, fèmen epi relouvri aplikasyon an oswa vide kach la nan paramèt telefòn ou. Si pwoblèm lan rete, ekri nou nan fòmilè anba a avèk non seri a ak nimewo epizòd la."
+        },
+        {
+          question: "Kijan pou m mande siprime kont mwen nèt ?",
+          answer: "Ou ka mande pou efase tout done w ak kont ou nèt lè w ale dirèkteman sou paj ",
+          linkText: "Sipresyon Kont",
+          linkUrl: "/delete-account",
+          answerAfter: " nou an."
+        }
+      ],
       contactTitle: "Kontakte Sipò a",
       contactDesc: "Ekip nou an la pou reponn tout kesyon sou kont, acha ak kontni.",
       hoursTitle: "Disponibilite",
