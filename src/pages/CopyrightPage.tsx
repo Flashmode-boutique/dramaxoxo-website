@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { LegalLayout } from '../components/LegalLayout';
-import { siteConfig } from '../../config/siteConfig';
+import { siteConfig } from '../config/siteConfig';
 import { ShieldCheck, Mail, AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../components/ui/Button';
 
 export const CopyrightPage: React.FC = () => {
   const [claimSubmitted, setClaimSubmitted] = useState(false);

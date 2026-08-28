@@ -1,6 +1,6 @@
 import React from 'react';
 import { LegalLayout } from '../components/LegalLayout';
-import { siteConfig } from '../../config/siteConfig';
+import { siteConfig } from '../config/siteConfig';
 import { AlertTriangle, Ban, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 export const ContentGuidelinesPage: React.FC = () => {

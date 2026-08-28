@@ -3,7 +3,7 @@ import { HelpCircle, Mail, Send, CheckCircle2, AlertCircle, Key, CreditCard, Fil
 import { Button } from '../components/ui/Button';
 import { Accordion, AccordionItem } from '../components/ui/Accordion';
 import { Card } from '../components/ui/Card';
-import { siteConfig } from '../../config/siteConfig';
+import { siteConfig } from '../config/siteConfig';
 import { useTranslation } from '../i18n/LanguageContext';
 
 export const SupportPage: React.FC = () => {
