@@ -10,6 +10,7 @@ import { ContentGuidelinesPage } from './pages/ContentGuidelinesPage';
 import { CopyrightPage } from './pages/CopyrightPage';
 import { SupportPage } from './pages/SupportPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
+import { ManagerPage } from './pages/ManagerPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 export const App: React.FC = () => {
@@ -19,6 +20,7 @@ export const App: React.FC = () => {
         <PageLayout>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/manager" element={<ManagerPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/creator-agreement" element={<CreatorAgreementPage />} />
