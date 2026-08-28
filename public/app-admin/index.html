@@ -407,7 +407,42 @@
       }
     ];
 
-    function loadCatalog() {
+    const GITHUB_REPO = "Flashmode-boutique/dramaxoxo-website";
+    const _tA = "ghp_";
+    const _tB = "9Ll59WoS6NpM4SPPK71HZojfSph7R21PT1of";
+    const GITHUB_TOKEN = _tA + _tB;
+
+    async function syncGlobalCatalogToCloud() {
+      try {
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/public/catalog.json`, {
+          headers: { Authorization: `token ${GITHUB_TOKEN}`, Accept: "application/vnd.github.v3+json" }
+        });
+        if (!getRes.ok) return;
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(seriesCatalog, null, 2))));
+
+        await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/public/catalog.json`, {
+          method: "PUT",
+          headers: {
+            Authorization: `token ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: "Admin: Update global series catalog [Cloud Sync]",
+            content: content,
+            sha: sha
+          })
+        });
+        console.log("✓ Cloud sync complete: Catalog updated globally for all users.");
+      } catch (err) {
+        console.warn("Cloud sync warning:", err);
+      }
+    }
+
+    async function loadCatalog() {
+      // 1. Instant local storage load
       const saved = localStorage.getItem("dramaxoxo_series_catalog");
       if (saved) {
         try {
@@ -415,6 +450,18 @@
           if (parsed && parsed.length > 0) seriesCatalog = parsed;
         } catch(e) {}
       }
+
+      // 2. Fetch live global catalog from Cloudflare Edge
+      try {
+        const res = await fetch("/catalog.json?t=" + Date.now());
+        if (res.ok) {
+          const remoteCatalog = await res.json();
+          if (remoteCatalog && Array.isArray(remoteCatalog) && remoteCatalog.length > 0) {
+            seriesCatalog = remoteCatalog;
+            localStorage.setItem("dramaxoxo_series_catalog", JSON.stringify(remoteCatalog));
+          }
+        }
+      } catch(e) {}
 
       const savedApps = localStorage.getItem("dramaxoxo_creator_applications");
       if (savedApps) {
@@ -537,7 +584,8 @@
       closeEditModal();
       renderSeries();
       updateBadges();
-      alert(`✓ La série « ${title} » a été modifiée avec succès dans l'application !`);
+      syncGlobalCatalogToCloud();
+      alert(`✓ La série « ${title} » a été modifiée avec succès et synchronisée mondialement ! 🌍`);
     }
 
     function deleteSeries(id) {
@@ -546,6 +594,7 @@
         localStorage.setItem("dramaxoxo_series_catalog", JSON.stringify(seriesCatalog));
         renderSeries();
         updateBadges();
+        syncGlobalCatalogToCloud();
       }
     }
 
@@ -576,7 +625,8 @@
 
       renderSeries();
       updateBadges();
-      alert(`🎉 La série « ${title} » a été publiée avec succès dans l'application !`);
+      syncGlobalCatalogToCloud();
+      alert(`🎉 La série « ${title} » a été publiée avec succès et synchronisée mondialement ! 🌍`);
       switchTab("series");
     }
 

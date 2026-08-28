@@ -1116,7 +1116,8 @@
       }
     ];
 
-    function loadDynamicCatalog() {
+    async function loadDynamicCatalog() {
+      // 1. Instant local load
       const saved = localStorage.getItem("dramaxoxo_series_catalog");
       if (saved) {
         try {
@@ -1127,7 +1128,25 @@
         } catch(e) {}
       }
 
-      // Update hero banner dynamically with the first active series
+      applyCatalogToUI();
+
+      // 2. Fetch live worldwide catalog from Cloudflare Edge
+      try {
+        const res = await fetch("/catalog.json?t=" + Date.now());
+        if (res.ok) {
+          const remoteCatalog = await res.json();
+          if (remoteCatalog && Array.isArray(remoteCatalog) && remoteCatalog.length > 0) {
+            seriesCatalog = remoteCatalog;
+            localStorage.setItem("dramaxoxo_series_catalog", JSON.stringify(remoteCatalog));
+            applyCatalogToUI();
+          }
+        }
+      } catch(err) {
+        console.log("Offline or cache fallback active");
+      }
+    }
+
+    function applyCatalogToUI() {
       if (seriesCatalog.length > 0) {
         const hero = seriesCatalog[0];
         const heroImg = document.getElementById("home-hero-img");
