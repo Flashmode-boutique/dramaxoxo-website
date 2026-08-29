@@ -463,8 +463,11 @@
             <p class="text-xs text-slate-400">@StudioDRAMAXOXO</p>
           </div>
 
-          <!-- Right Side Actions -->
-          <div class="absolute right-3 bottom-10 flex flex-col items-center gap-4 z-20">
+            <button onclick="toggleEpisodesDrawer()" class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-rose-600/80 backdrop-blur-md flex items-center justify-center text-base text-white shadow-lg border border-white/20">📑</div>
+              <span class="text-[9px] font-bold text-rose-300 mt-1">Épisodes</span>
+            </button>
+
             <button onclick="toggleLike()" class="flex flex-col items-center">
               <div id="like-icon-wrap" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-xl text-white">🤍</div>
               <span class="text-[10px] font-bold text-white mt-1">14.2K</span>
@@ -479,6 +482,20 @@
               <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-base text-white">🚨</div>
               <span class="text-[8px] font-bold text-slate-400 mt-1">Signaler</span>
             </button>
+          </div>
+
+          <!-- DRAWER DES ÉPISODES (SPECTATEUR) -->
+          <div id="player-episodes-drawer" class="hidden absolute inset-x-0 bottom-0 z-40 bg-[#12121D]/95 backdrop-blur-2xl border-t border-white/10 rounded-t-3xl p-5 max-h-[60vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center pb-3 border-b border-white/10">
+              <div>
+                <h4 class="font-bold text-white text-sm" id="drawer-series-title">Épisodes</h4>
+                <p class="text-[10px] text-slate-400" id="drawer-ep-count">Sélectionnez un épisode à regarder</p>
+              </div>
+              <button onclick="toggleEpisodesDrawer()" class="w-7 h-7 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center font-bold text-xs">✕</button>
+            </div>
+            <div id="drawer-episodes-grid" class="grid grid-cols-4 sm:grid-cols-6 gap-2.5 pt-4 overflow-y-auto no-scrollbar">
+              <!-- Populated dynamically by JS -->
+            </div>
           </div>
         </div>
       </div>
@@ -1183,16 +1200,87 @@
       if (activeTab) activeTab.className = "flex flex-col items-center text-purple-500 font-bold text-[10px]";
     }
 
+    let currentPlayingSeries = null;
+    let currentPlayingEpisodeIndex = 0;
+
     function openPlayer(idx) {
       const s = seriesCatalog[idx] || seriesCatalog[0];
+      currentPlayingSeries = s;
       document.getElementById("screen-player").classList.remove("hidden");
-      videoEl.src = s.videoUrl;
-      videoEl.play().catch(() => {});
+      playEpisode(0);
+    }
+
+    function playEpisode(epIndex) {
+      if (!currentPlayingSeries) return;
+      const episodes = (currentPlayingSeries.episodes && currentPlayingSeries.episodes.length > 0)
+        ? currentPlayingSeries.episodes
+        : [{ id: 1, title: "Épisode 1", videoUrl: currentPlayingSeries.videoUrl, isFree: true }];
+
+      const ep = episodes[epIndex] || episodes[0];
+      currentPlayingEpisodeIndex = epIndex;
+
+      // Update titles
+      const metaSpan = document.querySelector("#screen-player .bottom-6 span");
+      if (metaSpan) metaSpan.innerText = `${(currentPlayingSeries.title || "DRAMA XOXO").toUpperCase()} • ÉPISODE ${epIndex + 1}`;
+      const titleH3 = document.querySelector("#screen-player .bottom-6 h3");
+      if (titleH3) titleH3.innerText = ep.title || `Épisode ${epIndex + 1}`;
+
+      // Check lock
+      if (!ep.isFree && !isVipUser) {
+        document.getElementById("locked-ep-title").innerText = `${currentPlayingSeries.title} • Épisode ${epIndex + 1}`;
+        document.getElementById("locked-overlay").classList.remove("hidden");
+        videoEl.pause();
+      } else {
+        document.getElementById("locked-overlay").classList.add("hidden");
+        if (ep.videoUrl) {
+          videoEl.src = ep.videoUrl;
+          videoEl.play().catch(() => {});
+        }
+      }
+
+      renderDrawerEpisodes();
+    }
+
+    function toggleEpisodesDrawer() {
+      const drawer = document.getElementById("player-episodes-drawer");
+      if (!drawer) return;
+      drawer.classList.toggle("hidden");
+      if (!drawer.classList.contains("hidden")) {
+        renderDrawerEpisodes();
+      }
+    }
+
+    function renderDrawerEpisodes() {
+      if (!currentPlayingSeries) return;
+      const grid = document.getElementById("drawer-episodes-grid");
+      const titleEl = document.getElementById("drawer-series-title");
+      const countEl = document.getElementById("drawer-ep-count");
+      if (titleEl) titleEl.innerText = `Épisodes : ${currentPlayingSeries.title}`;
+
+      const episodes = (currentPlayingSeries.episodes && currentPlayingSeries.episodes.length > 0)
+        ? currentPlayingSeries.episodes
+        : [{ id: 1, title: "Épisode 1", isFree: true }];
+
+      if (countEl) countEl.innerText = `${episodes.length} épisode${episodes.length > 1 ? 's' : ''} disponibles`;
+
+      if (!grid) return;
+      grid.innerHTML = episodes.map((ep, i) => {
+        const isCurrent = (i === currentPlayingEpisodeIndex);
+        const isLocked = (!ep.isFree && !isVipUser);
+        return `
+          <button onclick="playEpisode(${i}); toggleEpisodesDrawer();" class="p-3 rounded-2xl flex flex-col items-center justify-center font-bold text-xs transition border ${isCurrent ? 'bg-rose-600 text-white border-rose-400 shadow-lg' : 'bg-[#1D1D2C] text-slate-300 border-white/5 hover:bg-[#28283C] hover:border-white/20'}">
+            <span class="text-sm">${i + 1}</span>
+            <span class="text-[9px] mt-1 ${isLocked ? 'text-amber-400' : 'text-emerald-400'}">${isLocked ? '🔒 15🪙' : '▶ Gratuit'}</span>
+          </button>
+        `;
+      }).join("");
     }
 
     function closePlayer() {
       videoEl.pause();
       document.getElementById("screen-player").classList.add("hidden");
+      const drawer = document.getElementById("player-episodes-drawer");
+      if (drawer) drawer.classList.add("hidden");
     }
 
     function toggleMyListHero(e) {
