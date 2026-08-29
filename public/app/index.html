@@ -200,7 +200,7 @@
             </div>
 
             <!-- VIP Discount Crown Badge (Inspiré Dramabox -50% VIP) -->
-            <button onclick="openStoreModal()" class="flex-shrink-0 flex items-center gap-1 bg-gradient-to-r from-amber-500/20 to-amber-600/30 border border-amber-400/40 text-amber-300 font-extrabold text-[10px] px-2.5 py-1.5 rounded-full shadow hover:scale-105 transition" title="Pass VIP Réduction">
+            <button onclick="openMembershipModal()" class="flex-shrink-0 flex items-center gap-1 bg-gradient-to-r from-amber-500/20 to-amber-600/30 border border-amber-400/40 text-amber-300 font-extrabold text-[10px] px-2.5 py-1.5 rounded-full shadow hover:scale-105 transition" title="Pass VIP Réduction">
               <span>👑</span>
               <span class="text-[9px] bg-rose-600 text-white px-1 py-0.2 rounded font-black">-50%</span>
             </button>
@@ -602,6 +602,8 @@
             <p class="text-xs text-slate-400">@StudioDRAMAXOXO</p>
           </div>
 
+          <!-- Right Actions Column -->
+          <div class="absolute right-3 bottom-20 z-20 flex flex-col gap-4 items-center">
             <button onclick="toggleEpisodesDrawer()" class="flex flex-col items-center">
               <div class="w-10 h-10 rounded-full bg-rose-600/80 backdrop-blur-md flex items-center justify-center text-base text-white shadow-lg border border-white/20">📑</div>
               <span class="text-[9px] font-bold text-rose-300 mt-1">Épisodes</span>
@@ -772,7 +774,7 @@
                 <h4 class="font-black text-base leading-tight">Join Membership</h4>
                 <p class="text-[10px] text-white/90 mt-0.5">Enjoy these exclusive benefits:</p>
               </div>
-              <button onclick="openStoreModal()" class="bg-white hover:bg-slate-100 text-[#FF2E63] font-black text-xs px-4 py-1.5 rounded-full shadow-lg transition hover:scale-105">
+              <button onclick="openMembershipModal()" class="bg-white hover:bg-slate-100 text-[#FF2E63] font-black text-xs px-4 py-1.5 rounded-full shadow-lg transition hover:scale-105">
                 Join
               </button>
             </div>
@@ -884,7 +886,7 @@
         <span>Pour Vous</span>
       </button>
 
-      <button onclick="openStoreModal()" id="tab-member" class="flex flex-col items-center text-slate-400 hover:text-amber-400 text-[10px] transition">
+      <button onclick="openMembershipModal()" id="tab-member" class="flex flex-col items-center text-slate-400 hover:text-amber-400 text-[10px] transition">
         <span class="text-base leading-none mb-0.5">👑</span>
         <span>Pass VIP</span>
       </button>
@@ -918,6 +920,106 @@
           </button>
           <button onclick="closeRestorePurchasesModal()" class="w-full text-xs text-slate-400 py-1">Fermer</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL MEMBERSHIP (INSPIRÉ DRAMABOX SCREENSHOT 2) -->
+    <!-- ========================================== -->
+    <div id="membership-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex flex-col justify-end overflow-hidden">
+      <div class="relative bg-[#12121E] rounded-t-3xl border-t border-rose-500/30 p-5 max-h-[92%] overflow-y-auto no-scrollbar flex flex-col shadow-2xl">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-3 mb-2 border-b border-white/10">
+          <h3 class="text-base font-black text-white">Join Membership</h3>
+          <div class="flex items-center gap-3">
+            <button onclick="openRestorePurchasesModal()" class="text-xs text-slate-400 hover:text-white font-semibold">Restore</button>
+            <button onclick="closeMembershipModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm">✕</button>
+          </div>
+        </div>
+
+        <!-- Weekly Plan Card -->
+        <div class="p-3.5 bg-gradient-to-r from-rose-950/50 to-purple-950/50 rounded-2xl border-2 border-rose-500 relative mb-4">
+          <span class="absolute top-0 right-0 bg-[#6C5CE7] text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider">
+            Discount 23:59:55
+          </span>
+          <div class="flex items-center gap-3">
+            <div class="w-5 h-5 rounded-full bg-rose-600 flex items-center justify-center text-white text-xs font-bold shadow">✓</div>
+            <div>
+              <div class="flex items-baseline gap-2">
+                <span class="text-sm font-black text-white">Weekly Membership</span>
+                <span class="text-base font-black text-rose-400">$9.99</span>
+                <span class="text-xs text-slate-500 line-through">$19.99</span>
+              </div>
+              <p class="text-[11px] text-slate-300 mt-0.5">$9.99 for the first week, then $19.99/week</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why Join? Benefits List -->
+        <h4 class="text-xs font-black text-white uppercase tracking-wider mb-2.5">Why Join?</h4>
+        <div class="space-y-2.5 mb-5 text-xs text-slate-300">
+          <div class="flex items-center gap-2.5">
+            <span class="text-base">▶</span>
+            <span>Unlimited access to 16,000+ series</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-base">⬇️</span>
+            <span>Download for offline viewing</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-base">⚡</span>
+            <span>Daily member points (+50 free coins)</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-base">✨</span>
+            <span>Members-only exclusive dramas</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-base">📺</span>
+            <span>1080p Full HD crystal quality</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-base">🎟️</span>
+            <span>Gift dramas to friends (3 times weekly)</span>
+          </div>
+        </div>
+
+        <!-- Big Join Button -->
+        <button onclick="confirmVipPurchase()" class="w-full py-3.5 bg-gradient-to-r from-rose-600 to-[#FF2E63] hover:from-rose-500 hover:to-[#FF416C] text-white font-black text-sm rounded-full shadow-2xl active:scale-98 transition flex flex-col items-center justify-center">
+          <span>Join Now</span>
+          <span class="text-[9px] text-white/80 font-normal mt-0.5">Auto-renew · Cancel anytime</span>
+        </button>
+
+        <!-- FLOATING $10.00 OFF CELEBRATORY COUPON POPUP (Inspiré Dramabox Screenshot 2) -->
+        <div id="membership-coupon-dialog" class="absolute inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-20">
+          <div class="relative w-full max-w-xs bg-gradient-to-b from-[#F5A623] to-[#F8E71C] rounded-3xl p-5 text-center text-black shadow-2xl border-4 border-amber-300">
+            <p class="text-lg font-black italic tracking-wide text-white drop-shadow mb-2">✨ Congratulations ✨</p>
+            
+            <div class="bg-amber-100/95 rounded-2xl p-4 border border-dashed border-amber-600 mb-3 shadow-inner">
+              <p class="text-[11px] font-bold text-amber-900 mb-1">Coupon for a weekly member's first week</p>
+              <h3 class="text-2xl font-black text-rose-600 leading-tight">$10.00 OFF</h3>
+              <div class="flex items-center justify-center gap-2 mt-1">
+                <span class="text-base font-black text-black">$9.99</span>
+                <span class="text-xs text-slate-500 line-through">$19.99</span>
+              </div>
+            </div>
+
+            <p class="text-[11px] font-bold text-amber-950 mb-3">
+              Limited Time <span class="bg-black text-white px-1.5 py-0.5 rounded font-mono text-[10px]">23 : 59 : 55</span>
+            </p>
+
+            <button onclick="dismissCouponAndSelectPlan()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs rounded-full shadow-lg hover:scale-105 transition">
+              Subscribe Now
+            </button>
+
+            <!-- Close Dialog Button -->
+            <button onclick="document.getElementById('membership-coupon-dialog').classList.add('hidden')" class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-white/30 text-white font-bold flex items-center justify-center text-sm">
+              ✕
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1174,7 +1276,6 @@
         <p class="text-xs text-slate-300">Regardez la vidéo pour débloquer votre épisode.</p>
       </div>
     </div>
-
   </div>
 
   <script>
@@ -1389,23 +1490,45 @@
     const videoEl = document.getElementById("vertical-video");
 
     function switchTab(tabId) {
-      // Permission check: Viewer / Pending cannot open creator studio directly
+      // 1. Fermer et masquer impérativement le lecteur vidéo si actif
+      const player = document.getElementById("screen-player");
+      if (player) {
+        player.classList.add("hidden");
+        if (videoEl) videoEl.pause();
+      }
+      const drawer = document.getElementById("player-episodes-drawer");
+      if (drawer) drawer.classList.add("hidden");
+
+      // 2. Vérification des permissions pour le studio créateur
       if (tabId === "creator" && userRole !== "APPROVED_CREATOR" && userRole !== "ADMIN") {
         alert("🔒 Cet espace est réservé aux créateurs approuvés par Drama Xoxo.");
         return;
       }
 
+      // 3. Masquer tous les écrans
       ["home", "discover", "mylist", "profile", "creator"].forEach(id => {
         const scr = document.getElementById(`screen-${id}`);
         if (scr) scr.classList.add("hidden");
-        const tab = document.getElementById(`tab-${id}`) || document.getElementById(`tab-studio-btn`);
-        if (tab && id !== tabId) tab.className = "flex flex-col items-center text-slate-400 text-[10px] hover:text-white";
       });
 
+      // 4. Afficher l'écran demandé
       const activeScr = document.getElementById(`screen-${tabId}`);
-      if (activeScr) activeScr.classList.remove("hidden");
-      const activeTab = document.getElementById(`tab-${tabId}`) || (tabId === "creator" ? document.getElementById("tab-studio-btn") : null);
-      if (activeTab) activeTab.className = "flex flex-col items-center text-rose-500 font-bold text-[10px]";
+      if (activeScr) {
+        activeScr.classList.remove("hidden");
+        activeScr.scrollTop = 0;
+      }
+
+      // 5. Mettre à jour les couleurs des boutons du menu inférieur
+      ["home", "foryou", "member", "mylist", "profile"].forEach(id => {
+        const tab = document.getElementById(`tab-${id}`);
+        if (tab) {
+          if (id === tabId) {
+            tab.className = "flex flex-col items-center text-rose-500 font-bold text-[10px] transition";
+          } else {
+            tab.className = "flex flex-col items-center text-slate-400 hover:text-white text-[10px] transition";
+          }
+        }
+      });
     }
 
     // ==========================================
@@ -1626,6 +1749,10 @@
       const drawer = document.getElementById("player-episodes-drawer");
       if (drawer) drawer.classList.add("hidden");
 
+      // REDIRIGER STRICTEMENT VERS L'ÉCRAN D'ACCUEIL :
+      switchTab('home');
+      switchHomeSubTab('popular');
+
       if (shouldPopHistory) {
         try {
           if (history.state && history.state.playerOpen) {
@@ -1784,9 +1911,32 @@
 
     function openStoreModal() { document.getElementById("store-modal").classList.remove("hidden"); }
     function closeStoreModal() { document.getElementById("store-modal").classList.add("hidden"); }
+    
+    // Handlers Modal Membership VIP (Inspiré DramaBox Screenshot 2)
+    function openMembershipModal() {
+      const modal = document.getElementById("membership-modal");
+      if (modal) {
+        modal.classList.remove("hidden");
+        const coupon = document.getElementById("membership-coupon-dialog");
+        if (coupon) coupon.classList.remove("hidden");
+      }
+    }
+    function closeMembershipModal() {
+      const modal = document.getElementById("membership-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+    function dismissCouponAndSelectPlan() {
+      const coupon = document.getElementById("membership-coupon-dialog");
+      if (coupon) coupon.classList.add("hidden");
+    }
+    function confirmVipPurchase() {
+      isVipUser = true;
+      closeMembershipModal();
+      alert("👑 Félicitations !\n\nVous êtes désormais Membre VIP Illimité sur Drama Xoxo !\nToutes les séries et tous les épisodes sont débloqués.");
+    }
+
     function openCreatorApplicationModal() { document.getElementById("creator-app-modal").classList.remove("hidden"); }
     function closeCreatorApplicationModal() { document.getElementById("creator-app-modal").classList.add("hidden"); }
-
 
     function openReportModal() { document.getElementById("report-modal").classList.remove("hidden"); }
 
