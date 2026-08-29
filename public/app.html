@@ -6,6 +6,7 @@
   <title>DRAMA XOXO — Streaming Vertical</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
     tailwind.config = {
       darkMode: "class",
@@ -542,7 +543,7 @@
       </div>
 
       <!-- SCREEN 4: VERTICAL 9:16 SHORTS PLAYER -->
-      <div id="screen-player" class="hidden absolute inset-0 bg-black flex flex-col z-50">
+      <div id="screen-player" class="hidden absolute inset-0 bg-black flex flex-col z-50 select-none">
         
         <!-- SAFE-AREA TOP BAR (BIEN VISIBLE, JAMAIS MASQUÉ PAR L'ÎLE DYNAMIQUE / NOTCH) -->
         <div class="absolute top-0 inset-x-0 z-50 pt-10 pb-3 px-4 flex items-center justify-between bg-gradient-to-b from-black/85 via-black/40 to-transparent">
@@ -551,19 +552,42 @@
             <span>Accueil</span>
           </button>
 
-          <div class="flex-1 text-center px-2">
-            <p id="player-header-title" class="text-xs font-bold text-white truncate drop-shadow">DRAMA XOXO</p>
+          <div class="flex-1 text-center px-2 flex items-center justify-center gap-2">
+            <p id="player-header-title" class="text-xs font-bold text-white truncate drop-shadow max-w-[110px]">DRAMA XOXO</p>
+            <span class="text-[9px] bg-emerald-500/25 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/40 flex items-center gap-1 shadow">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="player-quality-tag">HLS 1080p</span>
+            </span>
           </div>
 
-          <button type="button" onclick="closePlayer()" class="w-9 h-9 rounded-full bg-black/75 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white text-sm shadow-2xl hover:bg-black/90 active:scale-95 transition" title="Fermer le lecteur">
-            ✕
-          </button>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="cyclePlaybackSpeed()" id="btn-player-speed" class="h-8 px-2.5 rounded-full bg-black/75 backdrop-blur-xl border border-white/20 text-white text-[10px] font-mono font-black shadow-2xl hover:bg-black/90 active:scale-95 transition" title="Vitesse de lecture">
+              <span id="player-speed-text">1.0x</span>
+            </button>
+            <button type="button" onclick="closePlayer()" class="w-9 h-9 rounded-full bg-black/75 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white text-sm shadow-2xl hover:bg-black/90 active:scale-95 transition" title="Fermer le lecteur">
+              ✕
+            </button>
+          </div>
         </div>
 
-        <div class="relative flex-1 w-full h-full bg-black flex items-center justify-center">
-          <video id="vertical-video" class="w-full h-full object-cover" playsinline loop controls></video>
+        <div class="relative flex-1 w-full h-full bg-black flex items-center justify-center overflow-hidden" onclick="handlePlayerScreenTap(event)">
+          <video id="vertical-video" class="w-full h-full object-cover" playsinline loop></video>
 
-          <div id="locked-overlay" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center z-20 overflow-y-auto no-scrollbar">
+          <!-- Tap Pause/Play Feedback Overlay -->
+          <div id="player-playpause-icon" class="pointer-events-none absolute inset-0 flex items-center justify-center z-20 opacity-0 transition-opacity duration-200">
+            <div class="w-16 h-16 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-2xl text-white shadow-2xl border border-white/20">
+              <span id="player-playpause-glyph">▶</span>
+            </div>
+          </div>
+
+          <!-- Swipe Gesture Notification Toast -->
+          <div id="player-swipe-toast" class="pointer-events-none absolute top-20 inset-x-0 flex justify-center z-40 opacity-0 transition-opacity duration-300">
+            <span class="px-4 py-1.5 bg-black/85 backdrop-blur-md text-white text-xs font-bold rounded-full border border-white/20 shadow-2xl" id="player-swipe-toast-text">
+              Épisode Suivant ▶
+            </span>
+          </div>
+
+          <div id="locked-overlay" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center z-20 overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
             <div class="w-12 h-12 rounded-full bg-rose-600/20 text-rose-500 flex items-center justify-center text-2xl mb-2 border border-rose-500/30">
               🔒
             </div>
@@ -599,6 +623,18 @@
             <p class="text-[11px] text-amber-400 font-semibold mt-3">
               Votre solde : <span id="player-coin-balance">195</span> pièces
             </p>
+          </div>
+
+          <!-- Slim Interactive Video Progress Bar -->
+          <div class="absolute bottom-0 inset-x-0 z-30 px-3 pb-2 pt-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent" onclick="event.stopPropagation()">
+            <div id="player-progress-container" onclick="seekVideoProgress(event)" class="w-full h-1.5 bg-white/20 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden">
+              <div id="player-progress-bar" class="h-full bg-gradient-to-r from-rose-500 to-purple-500 rounded-full w-0 transition-all"></div>
+            </div>
+            <div class="flex justify-between text-[9px] font-mono text-slate-400 mt-1">
+              <span id="player-current-time">0:00</span>
+              <span class="text-[8px] text-slate-500 uppercase tracking-wider">Swipe ↑ pour suivant</span>
+              <span id="player-duration-time">0:00</span>
+            </div>
           </div>
 
           <!-- Bottom Info -->
@@ -2311,7 +2347,145 @@
       }
     });
 
-    // Détection de glissement (Swipe) vers le bas ou vers la droite pour fermer naturellement le lecteur
+    // ==========================================
+    // LECTEUR VIDÉO HLS & EXPÉRIENCE DE STREAMING 9:16 (ÉTAPE 2)
+    // ==========================================
+    let currentHlsInstance = null;
+    let currentPlaybackSpeed = 1.0;
+    const speedOptions = [1.0, 1.25, 1.5, 2.0];
+    let speedIndex = 0;
+
+    function cyclePlaybackSpeed() {
+      speedIndex = (speedIndex + 1) % speedOptions.length;
+      currentPlaybackSpeed = speedOptions[speedIndex];
+      if (videoEl) videoEl.playbackRate = currentPlaybackSpeed;
+      const spdText = document.getElementById("player-speed-text");
+      if (spdText) spdText.innerText = `${currentPlaybackSpeed}x`;
+    }
+
+    function handlePlayerScreenTap(e) {
+      if (e.target.closest("button") || e.target.closest("#locked-overlay") || e.target.closest("#player-progress-container")) return;
+      if (!videoEl) return;
+
+      const iconWrap = document.getElementById("player-playpause-icon");
+      const glyph = document.getElementById("player-playpause-glyph");
+
+      if (videoEl.paused) {
+        videoEl.play().catch(() => {});
+        if (glyph) glyph.innerText = "▶";
+      } else {
+        videoEl.pause();
+        if (glyph) glyph.innerText = "❚❚";
+      }
+
+      if (iconWrap) {
+        iconWrap.style.opacity = "1";
+        setTimeout(() => { iconWrap.style.opacity = "0"; }, 400);
+      }
+    }
+
+    function loadVideoSource(url) {
+      if (currentHlsInstance) {
+        currentHlsInstance.destroy();
+        currentHlsInstance = null;
+      }
+
+      const qTag = document.getElementById("player-quality-tag");
+      const isHls = url && (url.includes(".m3u8") || url.includes("cloudflarestream.com") || url.includes("/manifest/"));
+
+      if (isHls && window.Hls && Hls.isSupported()) {
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 90
+        });
+        hls.loadSource(url);
+        hls.attachMedia(videoEl);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          if (qTag) qTag.innerText = "HLS 1080p";
+          if (videoEl) {
+            videoEl.playbackRate = currentPlaybackSpeed;
+            videoEl.play().catch(() => {});
+          }
+        });
+        currentHlsInstance = hls;
+      } else if (videoEl && videoEl.canPlayType('application/vnd.apple.mpegurl') && isHls) {
+        // Native HLS for Safari (iOS & macOS)
+        if (qTag) qTag.innerText = "Apple HLS";
+        videoEl.src = url;
+        videoEl.playbackRate = currentPlaybackSpeed;
+        videoEl.play().catch(() => {});
+      } else {
+        // Direct MP4 / WebM streaming fallback
+        if (qTag) qTag.innerText = "Full HD";
+        videoEl.src = url;
+        videoEl.playbackRate = currentPlaybackSpeed;
+        videoEl.play().catch(() => {});
+      }
+    }
+
+    function seekVideoProgress(e) {
+      const container = document.getElementById("player-progress-container");
+      if (!container || !videoEl || !videoEl.duration) return;
+      const rect = container.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const fraction = Math.max(0, Math.min(1, clickX / rect.width));
+      videoEl.currentTime = fraction * videoEl.duration;
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds) || seconds < 0) return "0:00";
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    if (videoEl) {
+      videoEl.addEventListener("timeupdate", () => {
+        if (!videoEl.duration) return;
+        const percent = (videoEl.currentTime / videoEl.duration) * 100;
+        const bar = document.getElementById("player-progress-bar");
+        if (bar) bar.style.width = `${percent}%`;
+
+        const cur = document.getElementById("player-current-time");
+        if (cur) cur.innerText = formatTime(videoEl.currentTime);
+
+        const dur = document.getElementById("player-duration-time");
+        if (dur) dur.innerText = formatTime(videoEl.duration);
+      });
+    }
+
+    function goToNextEpisode() {
+      if (!currentPlayingSeries || !currentPlayingSeries.episodes) return;
+      if (currentPlayingEpisodeIndex < currentPlayingSeries.episodes.length - 1) {
+        showSwipeToast(`Épisode ${currentPlayingEpisodeIndex + 2} ▶`);
+        playEpisode(currentPlayingEpisodeIndex + 1);
+      } else {
+        showSwipeToast("Dernier épisode 🏁");
+      }
+    }
+
+    function goToPrevEpisode() {
+      if (!currentPlayingSeries || !currentPlayingSeries.episodes) return;
+      if (currentPlayingEpisodeIndex > 0) {
+        showSwipeToast(`Épisode ${currentPlayingEpisodeIndex} ◀`);
+        playEpisode(currentPlayingEpisodeIndex - 1);
+      } else {
+        showSwipeToast("Premier épisode 🎬");
+      }
+    }
+
+    function showSwipeToast(msg) {
+      const toast = document.getElementById("player-swipe-toast");
+      const text = document.getElementById("player-swipe-toast-text");
+      if (text) text.innerText = msg;
+      if (toast) {
+        toast.style.opacity = "1";
+        setTimeout(() => { toast.style.opacity = "0"; }, 700);
+      }
+    }
+
+    // Détection de glissement (Swipe) vertical pour changer d'épisode façon TikTok / Shorts
     (function initPlayerGestures() {
       let touchStartX = 0;
       let touchStartY = 0;
@@ -2326,9 +2500,27 @@
       playerEl.addEventListener("touchend", (e) => {
         const diffX = e.changedTouches[0].clientX - touchStartX;
         const diffY = e.changedTouches[0].clientY - touchStartY;
-        // Glissement vers la droite depuis le bord gauche (> 70px) ou glissement vers le bas (> 130px)
-        if ((touchStartX < 60 && diffX > 70) || (diffY > 130 && Math.abs(diffX) < 100)) {
+
+        // Glissement vers la droite depuis le bord gauche (> 70px) : Fermer le lecteur
+        if (touchStartX < 60 && diffX > 70) {
           closePlayer(true);
+          return;
+        }
+
+        // Glissement vertical : Swipe Up -> Épisode Suivant
+        if (diffY < -75 && Math.abs(diffX) < 90) {
+          goToNextEpisode();
+          return;
+        }
+
+        // Glissement vertical : Swipe Down -> Épisode Précédent (ou quitter si 1er épisode)
+        if (diffY > 85 && Math.abs(diffX) < 90) {
+          if (currentPlayingEpisodeIndex > 0) {
+            goToPrevEpisode();
+          } else {
+            closePlayer(true);
+          }
+          return;
         }
       }, { passive: true });
     })();
@@ -2356,8 +2548,7 @@
       } else {
         document.getElementById("locked-overlay").classList.add("hidden");
         if (ep.videoUrl) {
-          videoEl.src = ep.videoUrl;
-          videoEl.play().catch(() => {});
+          loadVideoSource(ep.videoUrl);
         }
       }
 
