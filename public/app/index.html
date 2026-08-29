@@ -536,10 +536,23 @@
       </div>
 
       <!-- SCREEN 4: VERTICAL 9:16 SHORTS PLAYER -->
-      <div id="screen-player" class="hidden absolute inset-0 bg-black flex flex-col z-30">
-        <button onclick="closePlayer()" class="absolute top-4 left-4 z-40 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-white text-xl">
-          ‹
-        </button>
+      <div id="screen-player" class="hidden absolute inset-0 bg-black flex flex-col z-50">
+        
+        <!-- SAFE-AREA TOP BAR (BIEN VISIBLE, JAMAIS MASQUÉ PAR L'ÎLE DYNAMIQUE / NOTCH) -->
+        <div class="absolute top-0 inset-x-0 z-50 pt-10 pb-3 px-4 flex items-center justify-between bg-gradient-to-b from-black/85 via-black/40 to-transparent">
+          <button type="button" onclick="closePlayer()" class="h-9 px-3 rounded-full bg-black/75 backdrop-blur-xl border border-white/20 flex items-center gap-1.5 text-white font-black text-xs shadow-2xl hover:bg-black/90 active:scale-95 transition" title="Retour à l'accueil">
+            <span class="text-base leading-none">‹</span>
+            <span>Accueil</span>
+          </button>
+
+          <div class="flex-1 text-center px-2">
+            <p id="player-header-title" class="text-xs font-bold text-white truncate drop-shadow">DRAMA XOXO</p>
+          </div>
+
+          <button type="button" onclick="closePlayer()" class="w-9 h-9 rounded-full bg-black/75 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white text-sm shadow-2xl hover:bg-black/90 active:scale-95 transition" title="Fermer le lecteur">
+            ✕
+          </button>
+        </div>
 
         <div class="relative flex-1 w-full h-full bg-black flex items-center justify-center">
           <video id="vertical-video" class="w-full h-full object-cover" playsinline loop controls></video>
@@ -607,6 +620,14 @@
             <button onclick="openReportModal()" class="flex flex-col items-center">
               <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-base text-white">🚨</div>
               <span class="text-[8px] font-bold text-slate-400 mt-1">Signaler</span>
+            </button>
+
+            <!-- BOUTON RETOUR ACCUEIL IMMÉDIAT (PORTÉE DU POUCE) -->
+            <button onclick="closePlayer()" class="flex flex-col items-center mt-1 group" title="Retour à l'accueil">
+              <div class="w-11 h-11 rounded-full bg-rose-600 hover:bg-rose-500 active:scale-95 text-white flex items-center justify-center text-lg shadow-2xl border-2 border-white/30 transition">
+                🏠
+              </div>
+              <span class="text-[9px] font-black text-rose-300 mt-0.5 group-hover:text-white transition">Quitter</span>
             </button>
           </div>
 
@@ -1586,9 +1607,62 @@
     function openPlayer(idx) {
       const s = seriesCatalog[idx] || seriesCatalog[0];
       currentPlayingSeries = s;
+      const headerTitle = document.getElementById("player-header-title");
+      if (headerTitle) headerTitle.innerText = s.title || "DRAMA XOXO";
+
       document.getElementById("screen-player").classList.remove("hidden");
       playEpisode(0);
+
+      // Intégration historique pour que le geste Retour ou bouton Retour du téléphone quitte le lecteur
+      try {
+        history.pushState({ playerOpen: true }, "");
+      } catch (e) {}
     }
+
+    function closePlayer(shouldPopHistory = false) {
+      if (videoEl) videoEl.pause();
+      const player = document.getElementById("screen-player");
+      if (player) player.classList.add("hidden");
+      const drawer = document.getElementById("player-episodes-drawer");
+      if (drawer) drawer.classList.add("hidden");
+
+      if (shouldPopHistory) {
+        try {
+          if (history.state && history.state.playerOpen) {
+            history.back();
+          }
+        } catch (e) {}
+      }
+    }
+
+    window.addEventListener("popstate", (e) => {
+      const player = document.getElementById("screen-player");
+      if (player && !player.classList.contains("hidden")) {
+        closePlayer(false);
+      }
+    });
+
+    // Détection de glissement (Swipe) vers le bas ou vers la droite pour fermer naturellement le lecteur
+    (function initPlayerGestures() {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      const playerEl = document.getElementById("screen-player");
+      if (!playerEl) return;
+
+      playerEl.addEventListener("touchstart", (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      playerEl.addEventListener("touchend", (e) => {
+        const diffX = e.changedTouches[0].clientX - touchStartX;
+        const diffY = e.changedTouches[0].clientY - touchStartY;
+        // Glissement vers la droite depuis le bord gauche (> 70px) ou glissement vers le bas (> 130px)
+        if ((touchStartX < 60 && diffX > 70) || (diffY > 130 && Math.abs(diffX) < 100)) {
+          closePlayer(true);
+        }
+      }, { passive: true });
+    })();
 
     function playEpisode(epIndex) {
       if (!currentPlayingSeries) return;
@@ -1656,12 +1730,7 @@
       }).join("");
     }
 
-    function closePlayer() {
-      videoEl.pause();
-      document.getElementById("screen-player").classList.add("hidden");
-      const drawer = document.getElementById("player-episodes-drawer");
-      if (drawer) drawer.classList.add("hidden");
-    }
+
 
     function toggleMyListHero(e) {
       e.stopPropagation();
