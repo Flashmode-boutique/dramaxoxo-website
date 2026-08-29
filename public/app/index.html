@@ -709,84 +709,142 @@
           </div>
         </div>
       </div>
-      <!-- SCREEN 5: PROFIL SPECTATEUR (100% FONCTIONNEL & SANS CREATOR STUDIO) -->
-      <div id="screen-profile" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-20">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-14 h-14 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-xl">M</div>
-          <div>
-            <h3 class="font-bold text-white text-base">Marie Stanley</h3>
-            <p class="text-xs text-slate-400">user@dramaxoxo.app</p>
-            <span class="text-[10px] bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block">SPECTATEUR</span>
-          </div>
-        </div>
-
-        <!-- Wallet Card -->
-        <div class="bg-[#161622] border border-white/10 p-4 rounded-2xl mb-4 flex justify-between items-center">
-          <div>
-            <p class="text-xs text-slate-400">Solde Total</p>
-            <h4 class="text-xl font-bold text-amber-400"><span id="profile-coins">195</span> Pièces</h4>
-          </div>
-          <button onclick="openStoreModal()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow">
-            + Recharger
+      <!-- SCREEN 5: PROFIL SPECTATEUR (CONFORME EXACTEMENT À LA CAPTURE D'ÉCRAN DRAMABOX) -->
+      <div id="screen-profile" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar pb-24 bg-[#0A0A12]">
+        
+        <!-- Top Bar: Notifications 🔔 and Settings ⚙️ -->
+        <div class="safe-top-padding flex justify-end items-center gap-2.5 px-4 pt-3 pb-2">
+          <button onclick="alert('🔔 Notifications :\n1. +15 pièces quotidiennes disponibles !\n2. Nouveaux épisodes de « Amour Interdit » disponibles.')" class="w-9 h-9 rounded-full bg-[#181828] text-slate-300 hover:text-white flex items-center justify-center border border-white/5 transition shadow" title="Notifications">
+            <span class="text-base">🔔</span>
+          </button>
+          <button onclick="openPrivacyModal()" class="w-9 h-9 rounded-full bg-[#181828] text-slate-300 hover:text-white flex items-center justify-center border border-white/5 transition shadow" title="Paramètres">
+            <span class="text-base">⚙️</span>
           </button>
         </div>
 
-        <!-- Apply to become creator banner -->
-        <div class="mb-4">
-          <button onclick="openCreatorApplicationModal()" class="w-full bg-gradient-to-r from-purple-950 to-indigo-950 hover:from-purple-900 hover:to-indigo-900 p-3.5 rounded-2xl border border-purple-500/40 flex items-center justify-between text-left shadow-lg transition">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">🎬</span>
-              <div>
-                <p id="apply-cta-title" class="text-xs font-bold text-white">Devenir Créateur DRAMA XOXO</p>
-                <p id="apply-cta-sub" class="text-[10px] text-purple-200">Publiez vos mini-séries et gagnez des royalties sur Drama Xoxo.</p>
-              </div>
+        <!-- User Info Row (Avatar M + Name + ID + Copy + Following) -->
+        <div class="flex items-center gap-3 px-4 mb-4">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-rose-500 text-white font-black text-2xl flex items-center justify-center shadow-lg border-2 border-white/20 flex-shrink-0">
+            M
+          </div>
+          <div class="flex-1">
+            <h3 class="text-white font-black text-base leading-tight">Marie Stanley soeur</h3>
+            <div class="flex items-center gap-2 text-[11px] text-slate-400 mt-1">
+              <span>ID 241253839</span>
+              <button onclick="navigator.clipboard.writeText('241253839'); alert('✓ ID 241253839 copié !');" class="text-slate-400 hover:text-white transition" title="Copier l'ID">
+                📋
+              </button>
+              <span>|</span>
+              <span>Following 0</span>
             </div>
-            <span id="apply-cta-badge" class="text-purple-300 text-xs font-bold bg-purple-500/20 px-2 py-1 rounded-lg">Postuler ›</span>
+          </div>
+        </div>
+
+        <!-- Membership Card: "Join Membership" + 50% off + 4 benefits strip -->
+        <div class="mx-4 mb-4 rounded-3xl overflow-hidden shadow-2xl border border-rose-500/30">
+          <div class="relative bg-gradient-to-r from-[#FF2E63] via-[#FF3B6F] to-[#FF4F7C] p-4 text-white">
+            <span class="absolute top-0 right-0 bg-[#6C5CE7] text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider shadow">
+              50% off
+            </span>
+            <div class="flex justify-between items-center pr-10">
+              <div>
+                <h4 class="font-black text-base leading-tight">Join Membership</h4>
+                <p class="text-[10px] text-white/90 mt-0.5">Enjoy these exclusive benefits:</p>
+              </div>
+              <button onclick="openStoreModal()" class="bg-white hover:bg-slate-100 text-[#FF2E63] font-black text-xs px-4 py-1.5 rounded-full shadow-lg transition hover:scale-105">
+                Join
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom 4 Perks Bar -->
+          <div class="bg-[#181827] border-t border-white/10 px-3 py-2.5 grid grid-cols-4 gap-1 text-center text-slate-300">
+            <div class="flex flex-col items-center">
+              <span class="text-sm">🎬</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">16K+ series</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-sm">⚡</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">Daily points</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-sm">⬇️</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">Download</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-sm">📺</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">1080p quality</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Group 1 (Top Up, My Wallet, Earn Rewards, History, Download) -->
+        <div class="mx-4 mb-3 bg-[#151523] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs text-white shadow-lg">
+          <button onclick="openStoreModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">Top Up</span>
+            <span class="text-slate-500 font-bold">›</span>
+          </button>
+
+          <button onclick="openStoreModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">My Wallet</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-amber-400 font-black text-xs flex items-center gap-1">
+                <span>🪙</span> <span id="profile-coins">195</span>
+              </span>
+              <span class="text-slate-500 font-bold">›</span>
+            </div>
+          </button>
+
+          <button onclick="triggerDailyReward()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">Earn Rewards</span>
+            <div class="flex items-center gap-1.5">
+              <span class="bg-rose-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full">+15</span>
+              <span class="text-slate-500 font-bold">›</span>
+            </div>
+          </button>
+
+          <button onclick="alert('Historique : 3 épisodes visionnés récemment.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">History</span>
+            <span class="text-slate-500 font-bold">›</span>
+          </button>
+
+          <button onclick="alert('Téléchargements : 0 vidéo enregistrée hors-ligne.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">Download</span>
+            <span class="text-slate-500 font-bold">›</span>
           </button>
         </div>
 
-        <!-- Actions & Politiques Spectateur (100% Opérationnelles) -->
-        <div class="bg-[#161622] rounded-2xl border border-white/5 overflow-hidden text-xs text-slate-200 divide-y divide-[#202030] mb-4">
-          <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] text-emerald-400 font-semibold transition">
-            <span class="flex items-center gap-2.5">
-              <span>🔄</span>
-              <span>Restaurer les Achats (StoreKit / IAP)</span>
-            </span>
-            <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">DEMO</span>
+        <!-- Menu Group 2 (Language, Help & feedback, Legal) -->
+        <div class="mx-4 mb-4 bg-[#151523] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs text-white shadow-lg">
+          <button onclick="alert('Langues disponibles : Français (Actif), Kreyòl Ayisyen, English.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">Language</span>
+            <div class="flex items-center gap-1">
+              <span class="text-slate-400 text-xs">Français / English</span>
+              <span class="text-slate-500 font-bold">›</span>
+            </div>
           </button>
 
-          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] transition">
-            <span class="flex items-center gap-2.5">
-              <span>📜</span>
-              <span>Conditions Générales d'Utilisation (CGU)</span>
-            </span>
-            <span class="text-slate-500">›</span>
+          <button onclick="alert('Aide & Support : Contactez-nous à support@dramaxoxo.com')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold">Help & feedback</span>
+            <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openPrivacyModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] transition">
-            <span class="flex items-center gap-2.5">
-              <span>🔒</span>
-              <span>Politique de Confidentialité</span>
-            </span>
-            <span class="text-slate-500">›</span>
+          <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-emerald-400 font-semibold transition">
+            <span>Restaurer les Achats (StoreKit)</span>
+            <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openCopyrightPolicyModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] transition">
-            <span class="flex items-center gap-2.5">
-              <span>⚖️</span>
-              <span>Politique Copyright & Propriété Intellectuelle</span>
-            </span>
-            <span class="text-slate-500">›</span>
+          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-slate-400 transition">
+            <span>Conditions Générales (CGU) & Confidentialité</span>
+            <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center text-left hover:bg-[#1E1E2C] text-rose-500 font-bold transition">
-            <span class="flex items-center gap-2.5">
-              <span>🗑️</span>
-              <span>Supprimer mon compte</span>
-            </span>
-            <span class="text-slate-500">›</span>
+          <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-rose-500 font-bold transition">
+            <span>Supprimer mon compte</span>
+            <span class="text-slate-500 font-bold">›</span>
           </button>
         </div>
+
       </div>
 
     </div>
