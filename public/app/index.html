@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>DRAMA XOXO — Streaming Vertical</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -18,7 +18,7 @@
               rose: "#E11D48",
               dark: "#08080C",
               card: "#12121A",
-              border: "#20202E"
+              border: "#262638"
             }
           }
         }
@@ -28,7 +28,7 @@
   <style>
     body { background-color: #050508; color: #F3F4F6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .phone-mockup {
       width: 410px;
       height: 860px;
@@ -36,7 +36,12 @@
       border-radius: 44px;
     }
     .safe-top-padding {
-      padding-top: max(env(safe-area-inset-top, 0px), 14px);
+      padding-top: max(env(safe-area-inset-top, 0px), 48px);
+    }
+    @media (min-width: 640px) {
+      .safe-top-padding {
+        padding-top: 14px;
+      }
     }
     .hero-title-shadow {
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.8);
@@ -91,6 +96,7 @@
       .phone-mockup {
         width: 100vw;
         height: 100vh;
+        height: 100dvh;
         border-radius: 0;
         box-shadow: none;
       }
@@ -158,7 +164,7 @@
     </div>
 
     <!-- APP CONTENT (Dynamic Screen Switcher) -->
-    <div id="screen-container" class="flex-1 relative overflow-hidden flex flex-col z-10">
+    <div id="screen-container" class="flex-1 min-h-0 h-full relative overflow-hidden flex flex-col z-10">
       
       <!-- SCREEN 1: VIEWER STREAMING HOME -->
       <div id="screen-home" class="flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20">
@@ -733,15 +739,15 @@
         </div>
       </div>
       <!-- SCREEN 5: PROFIL SPECTATEUR (CONFORME EXACTEMENT À LA CAPTURE D'ÉCRAN DRAMABOX) -->
-      <div id="screen-profile" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar pb-24 bg-[#0A0A12]">
+      <div id="screen-profile" class="hidden flex-1 min-h-0 h-full flex flex-col overflow-y-auto no-scrollbar pb-36 bg-[#0A0A12]" style="-webkit-overflow-scrolling: touch; touch-action: pan-y; overscroll-behavior-y: contain;">
         
         <!-- Top Bar: Notifications 🔔 and Settings ⚙️ -->
         <div class="safe-top-padding flex justify-end items-center gap-2.5 px-4 pt-3 pb-2">
-          <button onclick="alert('🔔 Notifications :\n1. +15 pièces quotidiennes disponibles !\n2. Nouveaux épisodes de « Amour Interdit » disponibles.')" class="w-9 h-9 rounded-full bg-[#181828] text-slate-300 hover:text-white flex items-center justify-center border border-white/5 transition shadow" title="Notifications">
-            <span class="text-base">🔔</span>
+          <button onclick="alert('🔔 Notifications :\n1. +15 pièces quotidiennes disponibles !\n2. Nouveaux épisodes de « Amour Interdit » disponibles.')" class="w-9 h-9 rounded-full bg-[#181828] text-white hover:text-rose-400 flex items-center justify-center border border-white/10 transition shadow active:scale-95" title="Notifications">
+            <i data-lucide="bell" class="w-4 h-4 text-white"></i>
           </button>
-          <button onclick="openPrivacyModal()" class="w-9 h-9 rounded-full bg-[#181828] text-slate-300 hover:text-white flex items-center justify-center border border-white/5 transition shadow" title="Paramètres">
-            <span class="text-base">⚙️</span>
+          <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full bg-[#181828] text-white hover:text-rose-400 flex items-center justify-center border border-white/10 transition shadow active:scale-95" title="Réglages">
+            <i data-lucide="settings" class="w-4 h-4 text-white"></i>
           </button>
         </div>
 
@@ -863,9 +869,9 @@
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-slate-400 transition">
-            <span id="prof-item-cgu">Conditions Générales (CGU) & Confidentialité</span>
-            <span class="text-slate-500 font-bold">›</span>
+          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-white transition">
+            <span class="font-bold text-slate-100 text-xs" id="prof-item-cgu">Conditions Générales (CGU) & Confidentialité</span>
+            <span class="text-slate-400 font-bold">›</span>
           </button>
 
           <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-rose-500 font-bold transition">
@@ -1295,6 +1301,194 @@
           Votre choix est sauvegardé pour toute votre navigation.
         </p>
 
+      </div>
+    </div>
+
+    <!-- MODAL 1B: RÉGLAGES & PRÉFÉRENCES (POLITIQUES, ABOUT US, CLEAR CACHE, RATE US GOOGLE PLAY) -->
+    <div id="settings-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div class="bg-[#141422] rounded-3xl border border-white/10 p-5 w-full max-w-sm max-h-[88%] flex flex-col text-xs text-slate-300 shadow-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-3 border-b border-white/10 mb-3">
+          <h3 class="text-base font-black text-white flex items-center gap-2">
+            <span class="text-lg">⚙️</span> <span id="settings-modal-title">Réglages & Préférences</span>
+          </h3>
+          <button onclick="closeSettingsModal()" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center transition">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-0.5">
+          
+          <!-- SECTION 1: POLITIQUES & LÉGAL (TOUTES LES POLITIQUES) -->
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2" id="settings-sec-legal">POLITIQUES & LÉGAL</p>
+            <div class="bg-[#1C1C2E] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden">
+              <button onclick="openCguModal()" class="w-full p-3 flex justify-between items-center hover:bg-[#25253D] transition text-left">
+                <span class="flex items-center gap-2.5 text-white font-semibold">
+                  <span>📜</span>
+                  <span id="settings-item-cgu">Conditions Générales d'Utilisation (CGU)</span>
+                </span>
+                <span class="text-slate-500 font-bold">›</span>
+              </button>
+
+              <button onclick="openPrivacyModal()" class="w-full p-3 flex justify-between items-center hover:bg-[#25253D] transition text-left">
+                <span class="flex items-center gap-2.5 text-white font-semibold">
+                  <span>🔒</span>
+                  <span id="settings-item-privacy">Politique de Confidentialité</span>
+                </span>
+                <span class="text-slate-500 font-bold">›</span>
+              </button>
+
+              <button onclick="openCopyrightPolicyModal()" class="w-full p-3 flex justify-between items-center hover:bg-[#25253D] transition text-left">
+                <span class="flex items-center gap-2.5 text-white font-semibold">
+                  <span>⚖️</span>
+                  <span id="settings-item-copyright">Copyright & Propriété Intellectuelle (DMCA)</span>
+                </span>
+                <span class="text-slate-500 font-bold">›</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- SECTION 2: APPLICATION & SYSTÈME (CLEAR CACHE & RATE US) -->
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2" id="settings-sec-app">APPLICATION & SYSTÈME</p>
+            <div class="bg-[#1C1C2E] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden">
+              
+              <!-- CLEAR CACHE -->
+              <div class="p-3 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-base">🧹</span>
+                  <div>
+                    <p class="text-white font-semibold" id="settings-item-cache-title">Vider le Cache</p>
+                    <p class="text-[10px] text-slate-400" id="settings-cache-desc">Espace temporaire : <span id="app-cache-size" class="text-purple-300 font-bold">14.8 Mo</span></p>
+                  </div>
+                </div>
+                <button onclick="clearAppCache()" id="btn-clear-cache" class="px-2.5 py-1 bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-400/40 rounded-xl text-[11px] font-bold transition active:scale-95">
+                  Nettoyer
+                </button>
+              </div>
+
+              <!-- RATE US ON GOOGLE PLAY STORE -->
+              <button onclick="openRateUsModal()" class="w-full p-3 flex justify-between items-center hover:bg-[#25253D] transition text-left">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-base">⭐</span>
+                  <div>
+                    <p class="text-white font-semibold flex items-center gap-1.5">
+                      <span id="settings-item-rate">Avis Google Play Store</span>
+                      <span class="bg-amber-500/20 text-amber-300 text-[9px] font-black px-1.5 py-0.2 rounded border border-amber-500/30">Rate Us</span>
+                    </p>
+                    <p class="text-[10px] text-amber-400/90 flex items-center gap-0.5">
+                      <span>★★★★★</span>
+                      <span class="text-slate-400 ml-1">Notez Drama Xoxo</span>
+                    </p>
+                  </div>
+                </div>
+                <span class="text-slate-500 font-bold">›</span>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- SECTION 3: À PROPOS (ABOUT US) -->
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2" id="settings-sec-about">À PROPOS</p>
+            <div class="bg-[#1C1C2E] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden">
+              <button onclick="openAboutUsModal()" class="w-full p-3 flex justify-between items-center hover:bg-[#25253D] transition text-left">
+                <span class="flex items-center gap-2.5 text-white font-semibold">
+                  <span>ℹ️</span>
+                  <span id="settings-item-about">À Propos de DRAMA XOXO (About Us)</span>
+                </span>
+                <span class="text-slate-500 font-bold">›</span>
+              </button>
+
+              <div class="p-3 flex justify-between items-center text-[11px] text-slate-400">
+                <span>Version de l'Application</span>
+                <span class="text-purple-300 font-mono font-bold">v2.4.0 (Build 2026)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button onclick="closeSettingsModal()" class="w-full bg-[#202035] hover:bg-[#252540] text-slate-200 font-bold py-2.5 rounded-xl text-xs mt-3 transition">
+          Fermer
+        </button>
+
+      </div>
+    </div>
+
+    <!-- MODAL 1C: ABOUT US PAGE -->
+    <div id="about-us-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div class="bg-[#141422] rounded-3xl border border-purple-500/40 p-5 w-full max-w-sm max-h-[88%] flex flex-col text-xs text-slate-300 shadow-2xl overflow-hidden">
+        <div class="flex justify-between items-center pb-2.5 border-b border-white/10 mb-3">
+          <h3 class="text-base font-black text-white flex items-center gap-2">
+            <span>ℹ️</span> <span id="about-modal-title">À Propos de DRAMA XOXO</span>
+          </h3>
+          <button onclick="closeAboutUsModal()" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center transition">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto no-scrollbar space-y-3.5 pr-0.5 text-[11px] leading-relaxed">
+          <!-- Logo & Brand Header -->
+          <div class="text-center py-2 bg-gradient-to-b from-purple-950/40 to-transparent rounded-2xl border border-purple-500/20 p-3">
+            <h2 class="text-xl font-black tracking-wider">
+              <span class="text-rose-500">DRAMA</span> <span class="text-purple-400">XOXO</span>
+            </h2>
+            <p class="text-[10px] text-purple-200 mt-1">La Révolution du Streaming Vertical 9:16</p>
+            <span class="inline-block mt-1.5 px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded text-[9px] font-bold">Version 2.4.0 Official</span>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-white mb-1">🎬 Notre Mission</h4>
+            <p class="text-slate-300">DRAMA XOXO est la première plateforme dédiée aux mini-séries verticales ultra-captivantes. Chaque épisode dure entre 1 et 2 minutes : un concentré d'émotions, de rebondissements, de romance et de suspense adapté aux smartphones.</p>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-white mb-1">🌍 Une Plateforme Multilingue & Inclusive</h4>
+            <p class="text-slate-300">Accessible en <strong>Français</strong>, <strong>Kreyòl Ayisyen</strong> et <strong>English</strong> pour mettre en valeur les talents, les créateurs caribéens et internationaux.</p>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-white mb-1">👑 Programme Créateur & Monétisation</h4>
+            <p class="text-slate-300">Nous redistribuons <strong>jusqu'à 70% de royalties nettes</strong> aux producteurs et créateurs de contenu indépendants.</p>
+          </div>
+
+          <div class="p-3 bg-[#1B1B2D] rounded-xl border border-white/5 space-y-1 text-[10px]">
+            <p class="text-white font-bold">📧 Contact & Support :</p>
+            <p class="text-slate-300">Email : <span class="text-purple-300">support@dramaxoxo.com</span></p>
+            <p class="text-slate-300">Site Web : <a href="https://dramaxoxo.com" target="_blank" class="text-rose-400 hover:underline">https://dramaxoxo.com</a></p>
+            <p class="text-slate-400 text-[9px] mt-1">© 2026 DRAMA XOXO Inc. Tous droits réservés.</p>
+          </div>
+        </div>
+
+        <button onclick="closeAboutUsModal()" class="w-full bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-500 hover:to-rose-500 text-white font-bold py-2.5 rounded-xl text-xs mt-3 transition shadow">
+          Fermer
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 1D: AVIS GOOGLE PLAY STORE (RATE US) -->
+    <div id="rate-us-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div class="bg-[#141422] rounded-3xl border border-amber-500/40 p-5 w-full max-w-sm flex flex-col text-xs text-slate-300 shadow-2xl text-center">
+        <div class="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl mx-auto mb-3 border border-amber-500/40 shadow-lg">
+          ⭐
+        </div>
+        <h3 class="text-base font-black text-white mb-1" id="rate-modal-title">Vous aimez DRAMA XOXO ?</h3>
+        <p class="text-xs text-slate-300 mb-3" id="rate-modal-sub">Donnez-nous 5 étoiles sur Google Play Store pour soutenir nos créateurs et le développement de nouvelles séries !</p>
+
+        <!-- Star Rating Visual Selector -->
+        <div class="flex justify-center items-center gap-2 text-2xl text-amber-400 my-2 cursor-pointer" id="rate-stars-container">
+          <span onclick="setRating(1)" class="hover:scale-125 transition">★</span>
+          <span onclick="setRating(2)" class="hover:scale-125 transition">★</span>
+          <span onclick="setRating(3)" class="hover:scale-125 transition">★</span>
+          <span onclick="setRating(4)" class="hover:scale-125 transition">★</span>
+          <span onclick="setRating(5)" class="hover:scale-125 transition">★</span>
+        </div>
+
+        <button onclick="submitGooglePlayRating()" class="w-full bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white font-black py-2.5 rounded-xl text-xs mt-2 shadow-lg transition active:scale-95">
+          ⭐ Noter sur Google Play Store
+        </button>
+        <button onclick="closeRateUsModal()" class="w-full text-slate-400 text-xs py-2 mt-1 hover:text-white transition">
+          Plus tard
+        </button>
       </div>
     </div>
 
@@ -1862,6 +2056,7 @@
         activeScr.classList.remove("hidden");
         activeScr.scrollTop = 0;
         if (tabId === "mylist") renderMyList();
+        if (window.lucide) lucide.createIcons();
       }
 
       // 5. Mettre à jour les couleurs des boutons du menu inférieur
@@ -2302,6 +2497,58 @@
     function openCopyrightPolicyModal() { document.getElementById("copyright-modal").classList.remove("hidden"); }
     function closeCopyrightPolicyModal() { document.getElementById("copyright-modal").classList.add("hidden"); }
 
+    function openSettingsModal() { 
+      document.getElementById("settings-modal").classList.remove("hidden"); 
+      if (window.lucide) lucide.createIcons();
+    }
+    function closeSettingsModal() { document.getElementById("settings-modal").classList.add("hidden"); }
+
+    function openAboutUsModal() { document.getElementById("about-us-modal").classList.remove("hidden"); }
+    function closeAboutUsModal() { document.getElementById("about-us-modal").classList.add("hidden"); }
+
+    function openRateUsModal() { document.getElementById("rate-us-modal").classList.remove("hidden"); }
+    function closeRateUsModal() { document.getElementById("rate-us-modal").classList.add("hidden"); }
+
+    let currentStarRating = 5;
+    function setRating(stars) {
+      currentStarRating = stars;
+      const container = document.getElementById("rate-stars-container");
+      if (container) {
+        container.innerHTML = [1,2,3,4,5].map(i => 
+          `<span onclick="setRating(${i})" class="hover:scale-125 transition ${i <= stars ? 'text-amber-400' : 'text-slate-600'}">★</span>`
+        ).join("");
+      }
+    }
+
+    function submitGooglePlayRating() {
+      closeRateUsModal();
+      const msg = currentLang === 'ht'
+        ? "⭐ Mèsi anpil pou evalyasyon w lan sou Google Play Store ! Sa ede DRAMA XOXO anpil pou sipòte kreyatè yo."
+        : (currentLang === 'en'
+          ? "⭐ Thank you so much for your review on Google Play Store! Your support helps DRAMA XOXO grow and support creators."
+          : "⭐ Merci infiniment pour votre avis sur Google Play Store ! Votre soutien aide nos créateurs et le développement de Drama Xoxo."
+        );
+      alert(msg);
+      window.open("https://play.google.com/store/apps", "_blank");
+    }
+
+    function clearAppCache() {
+      const cacheEl = document.getElementById("app-cache-size");
+      if (cacheEl) cacheEl.innerText = "0 Ko (Vidé !)";
+      const btn = document.getElementById("btn-clear-cache");
+      if (btn) {
+        btn.innerText = "✓ Nettoyé";
+        btn.className = "px-2.5 py-1 bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-[11px] font-bold";
+      }
+      const msg = currentLang === 'ht'
+        ? "✓ Cach aplikasyon an vide avèk siksè ! Tout fichye tanporè yo netwaye."
+        : (currentLang === 'en'
+          ? "✓ App cache cleared successfully! Temporary files removed."
+          : "✓ Cache de l'application vidé avec succès ! Les fichiers temporaires ont été nettoyés."
+        );
+      alert(msg);
+    }
+
     function openDeleteAccountModal() { 
       document.getElementById("delete-confirm-input").value = "";
       document.getElementById("delete-modal").classList.remove("hidden"); 
@@ -2724,6 +2971,16 @@
       if (el("prof-item-delete")) el("prof-item-delete").innerText = dict.prof_delete;
       if (el("floating-ai-btn-text")) el("floating-ai-btn-text").innerText = lang === 'ht' ? "Sipò IA" : (lang === 'en' ? "AI Support" : "Support IA");
       if (el("profile-lang-display")) el("profile-lang-display").innerText = dict.lang_display;
+
+      // Réglages & Préférences (Settings Modal)
+      if (el("settings-modal-title")) el("settings-modal-title").innerText = lang === 'ht' ? "Règlaj & Preferans" : (lang === 'en' ? "Settings & Preferences" : "Réglages & Préférences");
+      if (el("settings-sec-legal")) el("settings-sec-legal").innerText = lang === 'ht' ? "POLITIK & LEGAL" : (lang === 'en' ? "POLICIES & LEGAL" : "POLITIQUES & LÉGAL");
+      if (el("settings-sec-app")) el("settings-sec-app").innerText = lang === 'ht' ? "APLIKASYON & SISTÈM" : (lang === 'en' ? "APPLICATION & SYSTEM" : "APPLICATION & SYSTÈME");
+      if (el("settings-sec-about")) el("settings-sec-about").innerText = lang === 'ht' ? "SOU NOU" : (lang === 'en' ? "ABOUT US" : "À PROPOS");
+      if (el("settings-item-cgu")) el("settings-item-cgu").innerText = dict.prof_cgu;
+      if (el("settings-item-cache-title")) el("settings-item-cache-title").innerText = lang === 'ht' ? "Vide Cach la" : (lang === 'en' ? "Clear Cache" : "Vider le Cache");
+      if (el("settings-item-rate")) el("settings-item-rate").innerText = lang === 'ht' ? "Bay Avi sou Google Play" : (lang === 'en' ? "Rate on Google Play" : "Avis Google Play Store");
+      if (el("settings-item-about")) el("settings-item-about").innerText = lang === 'ht' ? "Sou DRAMA XOXO (About Us)" : (lang === 'en' ? "About DRAMA XOXO" : "À Propos de DRAMA XOXO (About Us)");
 
       // 7. Modale VIP & Formulaire
       if (el("vip-modal-title")) el("vip-modal-title").innerText = dict.vip_modal_title;
