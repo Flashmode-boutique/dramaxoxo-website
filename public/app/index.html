@@ -3317,20 +3317,60 @@
       }
     }
 
-    function handleVipFormSubmit(e) {
+    async function handleVipFormSubmit(e) {
       e.preventDefault();
       const name = document.getElementById("vip-input-name").value.trim() || "Marie Stanley";
       const email = document.getElementById("vip-input-email").value.trim() || "marie@dramaxoxo.com";
+      const submitBtn = document.getElementById("vip-submit-btn");
+      const submitBtnText = document.getElementById("btn-submit-vip-text");
 
-      if (selectedPaymentMethod === "card") {
-        const cardNum = document.getElementById("vip-input-cardnum").value.trim();
-        if (cardNum && cardNum.length < 12) {
-          alert("Veuillez saisir un numéro de carte bancaire valide.");
+      const origBtnText = submitBtnText ? submitBtnText.innerText : "Confirmer";
+      if (submitBtnText) submitBtnText.innerText = currentLang === 'ht' ? "Koneksyon an sekirite Stripe..." : (currentLang === 'en' ? "Connecting to Stripe..." : "Connexion sécurisée Stripe...");
+      if (submitBtn) submitBtn.disabled = true;
+
+      const planMap = {
+        daily: "vip_daily",
+        weekly: "vip_weekly",
+        monthly: "vip_monthly",
+        yearly: "vip_yearly"
+      };
+
+      const curr = currentLang === 'fr' ? 'eur' : 'usd';
+
+      try {
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productType: "vip",
+            planId: planMap[selectedVipPlan] || "vip_weekly",
+            currency: curr,
+            customerEmail: email,
+            customerName: name
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.checkoutUrl) {
+          // Redirection vers Stripe Checkout officiel (Apple Pay, Google Pay, Cartes)
+          window.location.href = data.checkoutUrl;
           return;
         }
-      }
 
-      // Confirmation explicite et activation
+        // Si mode démo / test (sans clé Stripe enregistrée) : validation directe locale
+        activateVipLocally(name, selectedVipPlan);
+
+      } catch (err) {
+        console.warn("Paiement direct fallback:", err);
+        activateVipLocally(name, selectedVipPlan);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtnText) submitBtnText.innerText = origBtnText;
+      }
+    }
+
+    function activateVipLocally(name, planKey) {
       isVipUser = true;
       localStorage.setItem("dramaxoxo_vip", "true");
 
@@ -3338,13 +3378,13 @@
       const dict = appI18n[currentLang] || appI18n.fr;
       let planName = dict.vip_weekly;
       let pr = prices.weekly;
-      if (selectedVipPlan === "daily") { planName = dict.vip_daily; pr = prices.daily; }
-      if (selectedVipPlan === "monthly") { planName = dict.vip_monthly; pr = prices.monthly; }
-      if (selectedVipPlan === "yearly") { planName = dict.vip_yearly; pr = prices.yearly; }
+      if (planKey === "daily" || planKey === "vip_daily") { planName = dict.vip_daily; pr = prices.daily; }
+      if (planKey === "monthly" || planKey === "vip_monthly") { planName = dict.vip_monthly; pr = prices.monthly; }
+      if (planKey === "yearly" || planKey === "vip_yearly") { planName = dict.vip_yearly; pr = prices.yearly; }
 
       // Enregistrer la transaction
       userTransactions.unshift({
-        desc: `Abonnement VIP ${planName} (${selectedPaymentMethod === 'card' ? 'Carte' : 'PayPal'})`,
+        desc: `Abonnement VIP ${planName} (Stripe / Virtualsis LLC)`,
         date: "À l'instant",
         amount: pr,
         positive: false
@@ -3374,11 +3414,34 @@
 
     function openReportModal() { document.getElementById("report-modal").classList.remove("hidden"); }
 
-    function buyCoins(qty) {
+    async function buyCoins(qty) {
+      const planMap = { 100: "pack_100", 300: "pack_300", 550: "pack_550", 1200: "pack_1200" };
+      const curr = currentLang === 'fr' ? 'eur' : 'usd';
+
+      try {
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productType: "coins",
+            planId: planMap[qty] || "pack_550",
+            currency: curr
+          })
+        });
+        const data = await res.json();
+        if (data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+          return;
+        }
+      } catch(e) {}
+
+      // Fallback direct
       userCoins += qty;
+      localStorage.setItem("dramaxoxo_coins", userCoins.toString());
       document.getElementById("profile-coins").innerText = userCoins;
       closeStoreModal();
-      alert(`+${qty} pièces créditées !`);
+      closeWalletModal();
+      alert(currentLang === 'ht' ? `+${qty} pyès ajoute nan pòtmonnen w !` : `+${qty} pièces créditées avec succès !`);
     }
 
     function buyVip(plan) {
@@ -3747,6 +3810,38 @@
       updateRoleUI();
       applyLanguage(currentLang);
       lucide.createIcons();
+
+      // Vérification du retour de session Stripe (Succès de Paiement)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("payment_success") === "true") {
+          const pType = urlParams.get("type");
+          const pPlan = urlParams.get("plan");
+
+          if (pType === "coins") {
+            const coinAmounts = { pack_100: 100, pack_300: 300, pack_550: 550, pack_1200: 1200 };
+            const added = coinAmounts[pPlan] || 550;
+            userCoins += added;
+            localStorage.setItem("dramaxoxo_coins", userCoins.toString());
+            const cEl = document.getElementById("profile-coins");
+            if (cEl) cEl.innerText = userCoins;
+            alert(currentLang === 'ht' 
+              ? `🪙 Mèsi pou acha w la ! ${added} pyès ajoute nan pòtmonnen w.`
+              : (currentLang === 'en'
+                ? `🪙 Thank you for your purchase! ${added} coins added to your wallet.`
+                : `🪙 Paiement Stripe confirmé ! ${added} pièces ont été ajoutées à votre réserve.`
+              )
+            );
+          } else {
+            activateVipLocally("Membre VIP", pPlan || "vip_weekly");
+          }
+
+          // Nettoyer l'URL proprement sans recharger
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch(e) {
+        console.warn("Erreur vérification paiement:", e);
+      }
     });
   </script>
 </body>

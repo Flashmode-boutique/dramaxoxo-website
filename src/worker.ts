@@ -4,6 +4,8 @@ export interface Env {
   };
   RESEND_API_KEY?: string;
   ADMIN_EMAIL?: string;
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_PUBLISHABLE_KEY?: string;
 }
 
 // In-memory or state storage for active OTPs
@@ -136,6 +138,95 @@ export default {
         return new Response(JSON.stringify({ success: true, verified: true }), {
           headers: { 'Content-Type': 'application/json' },
         });
+      } catch (err: any) {
+        return new Response(JSON.stringify({ success: false, error: err.message }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    // API: Create Stripe Checkout Session (Abonnements VIP & Packs de Pièces)
+    if (url.pathname === '/api/create-checkout-session' && request.method === 'POST') {
+      try {
+        const body = (await request.json()) as {
+          productType: 'vip' | 'coins';
+          planId: string;
+          currency?: string;
+          customerEmail?: string;
+          customerName?: string;
+        };
+
+        const origin = url.origin || 'https://dramaxoxo.com';
+        const stripeKey = env.STRIPE_SECRET_KEY || '';
+
+        // Définition des produits et prix officiels (en centimes)
+        const catalogPrices: Record<string, { name: string; amount: number; desc: string }> = {
+          // Abonnements VIP
+          vip_daily: { name: "DRAMA XOXO — Pass VIP 24H", amount: 199, desc: "Accès illimité à 100% des séries pendant 24 heures sans publicité." },
+          vip_weekly: { name: "DRAMA XOXO — Pass VIP Hebdomadaire (Promo -50%)", amount: 499, desc: "Accès illimité pendant 7 jours sans publicité." },
+          vip_monthly: { name: "DRAMA XOXO — Pass VIP Mensuel", amount: 999, desc: "Abonnement VIP 1 mois illimité." },
+          vip_yearly: { name: "DRAMA XOXO — Pass VIP Annuel", amount: 5999, desc: "Accès VIP 1 an complet à tout le catalogue." },
+          // Packs de Pièces
+          pack_100: { name: "DRAMA XOXO — 100 Pièces (+10 offertes)", amount: 499, desc: "100 pièces pour débloquer environ 7 épisodes." },
+          pack_300: { name: "DRAMA XOXO — 300 Pièces (+40 offertes)", amount: 1299, desc: "300 pièces pour vos séries préférées." },
+          pack_550: { name: "DRAMA XOXO — 550 Pièces (Pack Populaire +100 offertes)", amount: 1999, desc: "550 pièces pour débloquer jusqu'à 35 épisodes." },
+          pack_1200: { name: "DRAMA XOXO — 1200 Pièces (Super VIP Pack +300 offertes)", amount: 3999, desc: "1200 pièces pour un déblocage massif." },
+        };
+
+        const item = catalogPrices[body.planId] || catalogPrices.vip_weekly;
+        const curr = (body.currency || 'usd').toLowerCase();
+
+        // Si une clé secrète Stripe réelle est configurée
+        if (stripeKey && !stripeKey.includes('placeholder')) {
+          const params = new URLSearchParams();
+          params.append('payment_method_types[]', 'card');
+          params.append('mode', 'payment');
+          params.append('line_items[0][price_data][currency]', curr);
+          params.append('line_items[0][price_data][unit_amount]', item.amount.toString());
+          params.append('line_items[0][price_data][product_data][name]', item.name);
+          params.append('line_items[0][price_data][product_data][description]', item.desc);
+          if (body.customerEmail) {
+            params.append('customer_email', body.customerEmail);
+          }
+          params.append('success_url', `${origin}/app?payment_success=true&type=${body.productType}&plan=${body.planId}&session_id={CHECKOUT_SESSION_ID}`);
+          params.append('cancel_url', `${origin}/app?payment_cancelled=true`);
+
+          const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${stripeKey}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString(),
+          });
+
+          if (stripeRes.ok) {
+            const session = (await stripeRes.json()) as { url: string; id: string };
+            return new Response(JSON.stringify({ success: true, checkoutUrl: session.url, id: session.id }), {
+              headers: { 'Content-Type': 'application/json' },
+            });
+          } else {
+            const err = await stripeRes.text();
+            console.error("Stripe API error:", err);
+            return new Response(JSON.stringify({ success: false, error: err }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+        }
+
+        // Mode Test / Démo direct (si la clé Stripe n'est pas encore enregistrée dans Cloudflare)
+        return new Response(JSON.stringify({
+          success: true,
+          demoMode: true,
+          message: "Mode Démo / Test actif (Prêt pour vos clés Stripe)",
+          item,
+          redirectUrl: `${origin}/app?payment_success=true&type=${body.productType}&plan=${body.planId}&demo=true`
+        }), {
+          headers: { 'Content-Type': 'application/json' },
+        });
+
       } catch (err: any) {
         return new Response(JSON.stringify({ success: false, error: err.message }), {
           status: 400,
