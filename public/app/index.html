@@ -519,7 +519,7 @@
 
       <!-- SCREEN 3: MA LISTE (FAVORIS DU SPECTATEUR) -->
       <div id="screen-mylist" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-20">
-        <h2 class="text-lg font-bold text-white mb-3">➕ Ma Liste (Mes Séries Favorites)</h2>
+        <h2 id="screen-mylist-title" class="text-lg font-bold text-white mb-3">➕ Ma Liste (Mes Séries Favorites)</h2>
         <div id="mylist-container" class="space-y-2.5">
           <div onclick="openPlayer(0)" class="flex items-center justify-between p-3 bg-[#161622] rounded-2xl border border-white/5 cursor-pointer">
             <div class="flex items-center gap-3">
@@ -1757,6 +1757,7 @@
       if (activeScr) {
         activeScr.classList.remove("hidden");
         activeScr.scrollTop = 0;
+        if (tabId === "mylist") renderMyList();
       }
 
       // 5. Mettre à jour les couleurs des boutons du menu inférieur
@@ -2102,17 +2103,81 @@
 
 
 
+    // ==========================================
+    // GESTION DYNAMIQUE ET MULTILINGUE DE "MA LISTE"
+    // ==========================================
+    let userMyList = [
+      { id: "s1", title: "Amour Interdit", coverUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200", genre: "Romance", epCount: 30, progress: 5 }
+    ];
+    try {
+      const storedList = JSON.parse(localStorage.getItem("dramaxoxo_mylist"));
+      if (Array.isArray(storedList)) userMyList = storedList;
+    } catch (e) {}
+
+    function renderMyList() {
+      const container = document.getElementById("mylist-container");
+      if (!container) return;
+
+      if (userMyList.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-400">
+            <span class="text-3xl block mb-2">🔖</span>
+            <p class="text-xs font-semibold">${currentLang === 'ht' ? 'Ou poko ajoute okenn seri nan lis ou a.' : (currentLang === 'en' ? 'No dramas in your list yet.' : 'Aucune série enregistrée dans votre liste.')}</p>
+            <button onclick="switchTab('home');" class="mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold shadow">
+              ${currentLang === 'ht' ? 'Dekouvri Seri yo' : (currentLang === 'en' ? 'Explore Dramas' : 'Découvrir les Séries')}
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = userMyList.map((item, i) => `
+        <div onclick="openPlayer(0)" class="flex items-center justify-between p-3 bg-[#161622] rounded-2xl border border-white/5 hover:border-purple-500/40 cursor-pointer transition">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <img src="${item.coverUrl}" class="w-12 h-16 object-cover rounded-xl shadow flex-shrink-0" />
+            <div class="truncate">
+              <p class="font-bold text-xs text-white truncate">${item.title}</p>
+              <p class="text-[10px] text-purple-300">${item.genre} • ${item.epCount} ${currentLang === 'ht' ? 'epizòd' : (currentLang === 'en' ? 'episodes' : 'épisodes')}</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">${currentLang === 'ht' ? 'Pwogresyon : Epizòd' : (currentLang === 'en' ? 'Progress : Episode' : 'Progression : Épisode')} ${item.progress || 1}</p>
+            </div>
+          </div>
+          <span class="text-purple-400 hover:text-purple-300 font-bold text-xs flex-shrink-0 transition">
+            ${currentLang === 'ht' ? '▶ Kontinye' : (currentLang === 'en' ? '▶ Continue' : '▶ Continuer')}
+          </span>
+        </div>
+      `).join("");
+    }
+
     function toggleMyListHero(e) {
       e.stopPropagation();
       const btn = document.getElementById("btn-hero-mylist");
-      if (btn.innerText.includes("+")) {
-        btn.innerHTML = `<span>✓</span> <span>Dans Ma Liste</span>`;
-        btn.className = "flex-1 bg-purple-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition";
-        alert("✓ « Amour Interdit » a été ajouté à votre liste !");
+      const dict = appI18n[currentLang] || appI18n.fr;
+
+      const idx = userMyList.findIndex(s => s.title === "Amour Interdit");
+      if (idx === -1) {
+        userMyList.unshift({
+          id: "s1",
+          title: "Amour Interdit",
+          coverUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
+          genre: "Romance",
+          epCount: 30,
+          progress: 1
+        });
+        localStorage.setItem("dramaxoxo_mylist", JSON.stringify(userMyList));
+        if (btn) {
+          btn.className = "flex-1 bg-purple-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition";
+          btn.innerHTML = `<span>✓</span> <span id="btn-hero-mylist-text">${currentLang === 'ht' ? 'Nan Lis Ou' : (currentLang === 'en' ? 'In My List' : 'Dans Ma Liste')}</span>`;
+        }
+        alert(currentLang === 'ht' ? '✓ « Amour Interdit » ajoute nan lis ou a !' : (currentLang === 'en' ? '✓ "Amour Interdit" added to your list!' : '✓ « Amour Interdit » a été ajouté à votre liste !'));
       } else {
-        btn.innerHTML = `<span>+</span> <span>Ma Liste</span>`;
-        btn.className = "flex-1 bg-[#1A1A28]/80 hover:bg-[#252538] text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 border border-white/20 backdrop-blur-sm shadow transition";
+        userMyList.splice(idx, 1);
+        localStorage.setItem("dramaxoxo_mylist", JSON.stringify(userMyList));
+        if (btn) {
+          btn.className = "flex-1 bg-[#1A1A28]/80 hover:bg-[#252538] text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 border border-white/20 backdrop-blur-sm shadow transition";
+          btn.innerHTML = `<span>+</span> <span id="btn-hero-mylist-text">${dict.hero_mylist}</span>`;
+        }
       }
+      renderMyList();
     }
 
     // Modal Handlers (100% Fonctionnels)
@@ -2578,6 +2643,7 @@
       if (el("wallet-consumed-title")) el("wallet-consumed-title").innerText = dict.wallet_bonus;
       if (el("wallet-currency-tag")) el("wallet-currency-tag").innerText = dict.currencyTag;
       renderWalletPacks();
+      renderMyList();
 
       // 10. Historique
       if (el("history-modal-title")) el("history-modal-title").innerText = dict.hist_title;
