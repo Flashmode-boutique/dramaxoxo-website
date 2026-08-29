@@ -1,0 +1,26 @@
+{
+  "name": "DRAMA XOXO — Streaming Vertical",
+  "short_name": "DRAMA XOXO",
+  "description": "La 1ère plateforme de mini-séries verticales (9:16) courtes, intenses et immersives.",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#08080C",
+  "theme_color": "#FF2E63",
+  "orientation": "portrait",
+  "lang": "fr",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "entertainment",
+    "video",
+    "movies"
+  ]
+}

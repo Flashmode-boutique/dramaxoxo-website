@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>DRAMA XOXO — Streaming Vertical</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DRAMA XOXO" />
+  <meta name="theme-color" content="#08080C" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -167,6 +174,23 @@
     <!-- APP CONTENT (Dynamic Screen Switcher) -->
     <div id="screen-container" class="flex-1 min-h-0 h-full relative overflow-hidden flex flex-col z-10">
       
+      <!-- PWA SMART BANNER (Visible sur mobile navigateur, masqué en mode app installée) -->
+      <div id="pwa-smart-banner" class="hidden bg-gradient-to-r from-purple-950/95 via-[#181828]/95 to-rose-950/95 border-b border-purple-500/30 px-3 py-2 flex items-center justify-between z-30 transition shadow-lg flex-shrink-0">
+        <div class="flex items-center gap-2">
+          <img src="/favicon.svg" class="w-7 h-7 rounded-lg shadow" alt="Icon" />
+          <div>
+            <p class="text-[11px] font-black text-white leading-tight">Installer DRAMA XOXO</p>
+            <p class="text-[9px] text-slate-300">Plein écran & accès direct</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="triggerPwaInstall()" class="px-2.5 py-1 bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-500 hover:to-rose-500 text-white font-black text-[10px] rounded-xl shadow active:scale-95 transition">
+            Installer
+          </button>
+          <button onclick="dismissPwaBanner()" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 text-xs font-bold flex items-center justify-center">✕</button>
+        </div>
+      </div>
+
       <!-- SCREEN 1: VIEWER STREAMING HOME -->
       <div id="screen-home" class="flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20">
         
@@ -1421,6 +1445,21 @@
                 <span class="text-slate-500 font-bold">›</span>
               </button>
 
+              <!-- INSTALL PWA APP BUTTON -->
+              <button onclick="triggerPwaInstall()" class="w-full p-3 flex justify-between items-center hover:bg-[#25253D] transition text-left">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-base">📲</span>
+                  <div>
+                    <p class="text-white font-semibold flex items-center gap-1.5">
+                      <span id="settings-item-install">Installer l'Application</span>
+                      <span class="bg-purple-500/20 text-purple-300 text-[9px] font-black px-1.5 py-0.2 rounded border border-purple-500/30">PWA</span>
+                    </p>
+                    <p class="text-[10px] text-slate-400" id="settings-install-sub">Ajouter à l'écran d'accueil iPhone / Android</p>
+                  </div>
+                </div>
+                <span class="text-slate-500 font-bold">›</span>
+              </button>
+
             </div>
           </div>
 
@@ -1524,6 +1563,46 @@
         </button>
         <button onclick="closeRateUsModal()" class="w-full text-slate-400 text-xs py-2 mt-1 hover:text-white transition">
           Plus tard
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 1E: PWA INSTALLATION GUIDE (IPHONE & ANDROID) -->
+    <div id="pwa-install-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div class="bg-[#141422] rounded-3xl border border-purple-500/40 p-5 w-full max-w-sm flex flex-col text-xs text-slate-300 shadow-2xl text-center">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-600 to-purple-600 p-0.5 mx-auto mb-3 shadow-xl">
+          <img src="/favicon.svg" alt="DRAMA XOXO" class="w-full h-full rounded-2xl" />
+        </div>
+        <h3 class="text-base font-black text-white mb-1">Installer DRAMA XOXO</h3>
+        <p class="text-xs text-slate-300 mb-3">Profitez du streaming vertical en plein écran, comme une vraie application sur votre téléphone !</p>
+
+        <!-- Android Direct Button -->
+        <div id="pwa-android-install-box" class="hidden my-2">
+          <button onclick="installPwaDirect()" class="w-full bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-500 hover:to-rose-500 text-white font-black py-3 rounded-2xl text-xs shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
+            <span>📲</span>
+            <span>Installer l'application en 1 clic</span>
+          </button>
+        </div>
+
+        <!-- iOS Safari Instructions -->
+        <div id="pwa-ios-instructions" class="bg-[#1C1C2E] rounded-2xl p-3.5 border border-white/5 text-left space-y-2.5 my-2">
+          <p class="text-[11px] font-bold text-white text-center">Sur iPhone (Safari) :</p>
+          <div class="flex items-center gap-2.5 text-[11px] text-slate-200">
+            <span class="w-6 h-6 rounded-full bg-purple-600/30 text-purple-300 flex items-center justify-center font-black flex-shrink-0 text-xs">1</span>
+            <span>Touchez le bouton de partage <strong class="text-white">Partager [↑]</strong> en bas de Safari.</span>
+          </div>
+          <div class="flex items-center gap-2.5 text-[11px] text-slate-200">
+            <span class="w-6 h-6 rounded-full bg-purple-600/30 text-purple-300 flex items-center justify-center font-black flex-shrink-0 text-xs">2</span>
+            <span>Faites défiler et choisissez <strong class="text-rose-400">« Sur l'écran d'accueil » (➕)</strong>.</span>
+          </div>
+          <div class="flex items-center gap-2.5 text-[11px] text-slate-200">
+            <span class="w-6 h-6 rounded-full bg-purple-600/30 text-purple-300 flex items-center justify-center font-black flex-shrink-0 text-xs">3</span>
+            <span>Touchez <strong class="text-white">Ajouter</strong> en haut à droite. C'est prêt !</span>
+          </div>
+        </div>
+
+        <button onclick="closePwaInstallModal()" class="w-full bg-[#202035] hover:bg-[#252540] text-slate-300 font-bold py-2.5 rounded-xl text-xs mt-2 transition">
+          Fermer
         </button>
       </div>
     </div>
@@ -2738,6 +2817,99 @@
           : "✓ Cache de l'application vidé avec succès ! Les fichiers temporaires ont été nettoyés."
         );
       alert(msg);
+    }
+
+    // ==========================================
+    // SYSTÈME PWA (INSTALLATION MOBILE ÉCRAN D'ACCUEIL)
+    // ==========================================
+    let deferredPwaPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      const banner = document.getElementById("pwa-smart-banner");
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      const dismissed = localStorage.getItem("dramaxoxo_pwa_dismissed");
+      if (banner && !isStandalone && !dismissed) {
+        banner.classList.remove("hidden");
+      }
+      const directBox = document.getElementById("pwa-android-install-box");
+      if (directBox) directBox.classList.remove("hidden");
+    });
+
+    function isPwaInstalled() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function checkPwaStatus() {
+      if (isPwaInstalled()) {
+        const banner = document.getElementById("pwa-smart-banner");
+        if (banner) banner.classList.add("hidden");
+        const installLabel = document.getElementById("settings-item-install");
+        if (installLabel) installLabel.innerText = "Application Installée ✓";
+        const installSub = document.getElementById("settings-install-sub");
+        if (installSub) installSub.innerText = "Mode plein écran actif";
+      } else {
+        const dismissed = localStorage.getItem("dramaxoxo_pwa_dismissed");
+        const banner = document.getElementById("pwa-smart-banner");
+        if (banner && !dismissed) {
+          banner.classList.remove("hidden");
+        }
+      }
+    }
+
+    function triggerPwaInstall() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt.userChoice.then((choice) => {
+          if (choice.outcome === "accepted") {
+            const banner = document.getElementById("pwa-smart-banner");
+            if (banner) banner.classList.add("hidden");
+          }
+          deferredPwaPrompt = null;
+        });
+      } else {
+        openPwaInstallModal();
+      }
+    }
+
+    function installPwaDirect() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt.userChoice.then((choice) => {
+          if (choice.outcome === "accepted") {
+            closePwaInstallModal();
+          }
+          deferredPwaPrompt = null;
+        });
+      } else {
+        alert("Suivez les instructions pour ajouter DRAMA XOXO sur votre écran d'accueil.");
+      }
+    }
+
+    function openPwaInstallModal() {
+      const modal = document.getElementById("pwa-install-modal");
+      if (modal) modal.classList.remove("hidden");
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const iosBox = document.getElementById("pwa-ios-instructions");
+      const androidBox = document.getElementById("pwa-android-install-box");
+      if (isIos && iosBox) {
+        iosBox.classList.remove("hidden");
+      }
+      if (deferredPwaPrompt && androidBox) {
+        androidBox.classList.remove("hidden");
+      }
+    }
+
+    function closePwaInstallModal() {
+      const modal = document.getElementById("pwa-install-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function dismissPwaBanner() {
+      const banner = document.getElementById("pwa-smart-banner");
+      if (banner) banner.classList.add("hidden");
+      localStorage.setItem("dramaxoxo_pwa_dismissed", "true");
     }
 
     function openDeleteAccountModal() { 
@@ -4001,6 +4173,12 @@
       updateRoleUI();
       applyLanguage(currentLang);
       lucide.createIcons();
+
+      // Enregistrement PWA Service Worker & statut d'installation
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch((err) => console.log('SW registration:', err));
+      }
+      checkPwaStatus();
 
       // Vérification du retour de session Stripe (Succès de Paiement)
       try {
