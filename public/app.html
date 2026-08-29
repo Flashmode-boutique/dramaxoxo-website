@@ -858,14 +858,6 @@
             </div>
           </button>
 
-          <button onclick="openCreatorApplicationModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] bg-gradient-to-r from-purple-950/40 to-indigo-950/20 text-purple-300 font-bold transition">
-            <span class="flex items-center gap-2">
-              <span class="text-base">🎬</span>
-              <span id="prof-item-creator">Devenir créateur & gagner jusqu'à 70% de royalties</span>
-            </span>
-            <span class="text-purple-400 font-bold">›</span>
-          </button>
-
           <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-emerald-400 font-semibold transition">
             <span id="prof-item-restore">Restaurer les Achats (StoreKit)</span>
             <span class="text-slate-500 font-bold">›</span>
@@ -2730,7 +2722,6 @@
       if (el("prof-item-restore")) el("prof-item-restore").innerText = dict.prof_restore;
       if (el("prof-item-cgu")) el("prof-item-cgu").innerText = dict.prof_cgu;
       if (el("prof-item-delete")) el("prof-item-delete").innerText = dict.prof_delete;
-      if (el("prof-item-creator")) el("prof-item-creator").innerText = dict.prof_creator_title || "Devenir créateur & gagner jusqu'à 70% de royalties";
       if (el("floating-ai-btn-text")) el("floating-ai-btn-text").innerText = lang === 'ht' ? "Sipò IA" : (lang === 'en' ? "AI Support" : "Support IA");
       if (el("profile-lang-display")) el("profile-lang-display").innerText = dict.lang_display;
 
