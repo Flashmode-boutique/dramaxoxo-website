@@ -801,30 +801,39 @@
       <!-- SCREEN 5: PROFIL SPECTATEUR (CONFORME EXACTEMENT À LA CAPTURE D'ÉCRAN DRAMABOX) -->
       <div id="screen-profile" class="hidden flex-1 min-h-0 h-full flex flex-col overflow-y-auto no-scrollbar pb-36 bg-[#0A0A12]" style="-webkit-overflow-scrolling: touch; touch-action: pan-y; overscroll-behavior-y: contain;">
         
-        <!-- Top Bar: Notifications 🔔 and Settings ⚙️ -->
-        <div class="safe-top-padding flex justify-end items-center gap-2.5 px-4 pt-3 pb-2">
-          <button onclick="alert('🔔 Notifications :\n1. +15 pièces quotidiennes disponibles !\n2. Nouveaux épisodes de « Amour Interdit » disponibles.')" class="w-9 h-9 rounded-full bg-[#181828] text-white hover:text-rose-400 flex items-center justify-center border border-white/10 transition shadow active:scale-95" title="Notifications">
-            <i data-lucide="bell" class="w-4 h-4 text-white"></i>
-          </button>
-          <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full bg-[#181828] text-white hover:text-rose-400 flex items-center justify-center border border-white/10 transition shadow active:scale-95" title="Réglages">
-            <i data-lucide="settings" class="w-4 h-4 text-white"></i>
-          </button>
+        <!-- Top Bar: Header Title + Notifications 🔔 and Settings ⚙️ -->
+        <div class="safe-top-padding flex justify-between items-center px-4 pt-3 pb-2">
+          <h2 class="text-xl font-black text-white" id="prof-header-title">Mon Profil</h2>
+          <div class="flex items-center gap-2.5">
+            <button onclick="alert('🔔 Notifications :\n1. +15 pièces quotidiennes disponibles !\n2. Nouveaux épisodes de « Amour Interdit » disponibles.')" class="w-9 h-9 rounded-full bg-[#181828] text-white hover:text-rose-400 flex items-center justify-center border border-white/10 transition shadow active:scale-95 text-sm" title="Notifications">
+              <span>🔔</span>
+            </button>
+            <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full bg-[#181828] text-white hover:text-rose-400 flex items-center justify-center border border-white/10 transition shadow active:scale-95 text-sm" title="Réglages">
+              <span>⚙️</span>
+            </button>
+          </div>
         </div>
 
-        <!-- User Info Row (Avatar M + Name + ID + Copy + Following) -->
-        <div class="flex items-center gap-3 px-4 mb-4">
+        <!-- User Info Row (Avatar M + Name + Role Badge + Email + ID + Copy + Following) -->
+        <div class="flex items-center gap-3.5 px-4 mb-4">
           <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-rose-500 text-white font-black text-2xl flex items-center justify-center shadow-lg border-2 border-white/20 flex-shrink-0">
             M
           </div>
-          <div class="flex-1">
-            <h3 class="text-white font-black text-base leading-tight">Marie Stanley soeur</h3>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <h3 class="text-white font-black text-base leading-tight truncate">Marie Stanley soeur</h3>
+              <span id="profile-role-badge" class="text-[9px] bg-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded-full border border-white/10 uppercase flex-shrink-0">
+                SPECTATEUR
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5 truncate" id="profile-user-email">mariestanley@virtualsis.com</p>
             <div class="flex items-center gap-2 text-[11px] text-slate-400 mt-1">
               <span>ID 241253839</span>
-              <button onclick="navigator.clipboard.writeText('241253839'); alert('✓ ID 241253839 copié !');" class="text-slate-400 hover:text-white transition" title="Copier l'ID">
+              <button onclick="navigator.clipboard.writeText('241253839'); alert('✓ ID 241253839 copié !');" class="text-slate-400 hover:text-white transition text-xs" title="Copier l'ID">
                 📋
               </button>
               <span>|</span>
-              <span>Following 0</span>
+              <span id="prof-following">0 abonnement</span>
             </div>
           </div>
         </div>
@@ -832,8 +841,8 @@
         <!-- Membership Card: "Devenir Membre VIP" + 50% off + 4 benefits strip -->
         <div class="mx-4 mb-4 rounded-3xl overflow-hidden shadow-2xl border border-rose-500/30">
           <div class="relative bg-gradient-to-r from-[#FF2E63] via-[#FF3B6F] to-[#FF4F7C] p-4 text-white">
-            <span class="absolute top-0 right-0 bg-[#6C5CE7] text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider shadow">
-              50% off
+            <span id="prof-card-discount" class="absolute top-0 right-0 bg-[#6C5CE7] text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider shadow">
+              -50% PROMO
             </span>
             <div class="flex justify-between items-center pr-10">
               <div>
@@ -850,92 +859,121 @@
           <div class="bg-[#181827] border-t border-white/10 px-3 py-2.5 grid grid-cols-4 gap-1 text-center text-slate-300">
             <div class="flex flex-col items-center">
               <span class="text-sm">🎬</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-1">16K+ séries</span>
+              <span class="text-[9px] mt-0.5 text-slate-300 font-semibold" id="prof-perk-1">16K+ séries</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-sm">⚡</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-2">Points quotidiens</span>
+              <span class="text-[9px] mt-0.5 text-slate-300 font-semibold" id="prof-perk-2">Points quotidiens</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-sm">⬇️</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-3">Téléchargement</span>
+              <span class="text-[9px] mt-0.5 text-slate-300 font-semibold" id="prof-perk-3">Téléchargement</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-sm">📺</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-4">Qualité 1080p</span>
+              <span class="text-[9px] mt-0.5 text-slate-300 font-semibold" id="prof-perk-4">Qualité 1080p</span>
             </div>
           </div>
         </div>
 
         <!-- Menu Group 1 (Top Up, Mes Pièces, Gagner Récompenses, Historique, Téléchargements) -->
         <div class="mx-4 mb-3 bg-[#151523] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs text-white shadow-lg">
-          <button onclick="openWalletModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold" id="prof-item-topup">Recharger mes pièces</span>
+          <button onclick="openWalletModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs" id="prof-item-topup">Recharger mes pièces</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-topup-sub">Acheter des pièces instantanément</p>
+            </div>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openWalletModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold" id="prof-item-wallet">Mes Pièces</span>
+          <button onclick="openWalletModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs" id="prof-item-wallet">Mes Pièces</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-wallet-sub">Solde en réserve disponible</p>
+            </div>
             <div class="flex items-center gap-1.5">
-              <span class="text-amber-400 font-black text-xs flex items-center gap-1">
+              <span class="text-amber-400 font-black text-xs flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20">
                 <span>🪙</span> <span id="profile-coins">195</span>
               </span>
               <span class="text-slate-500 font-bold">›</span>
             </div>
           </button>
 
-          <button onclick="triggerDailyReward()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold" id="prof-item-rewards">Gagner des Récompenses</span>
+          <button onclick="triggerDailyReward()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs" id="prof-item-rewards">Gagner des Récompenses</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-rewards-sub">Points de fidélité quotidiens</p>
+            </div>
             <div class="flex items-center gap-1.5">
-              <span class="bg-rose-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full">+15</span>
+              <span class="bg-rose-600 text-white font-black text-[10px] px-2 py-0.5 rounded-full shadow">+15</span>
               <span class="text-slate-500 font-bold">›</span>
             </div>
           </button>
 
-          <button onclick="openHistoryModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold" id="prof-item-history">Historique de Visionnage</span>
+          <button onclick="openHistoryModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs" id="prof-item-history">Historique de Visionnage</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-history-sub">Vos séries et épisodes récents</p>
+            </div>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="alert('Téléchargements : 0 vidéo enregistrée hors-ligne.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold" id="prof-item-download">Téléchargements</span>
+          <button onclick="alert('Téléchargements : 0 vidéo enregistrée hors-ligne.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs" id="prof-item-download">Téléchargements</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-download-sub">Vidéos enregistrées hors-ligne</p>
+            </div>
             <span class="text-slate-500 font-bold">›</span>
           </button>
         </div>
 
         <!-- Menu Group 2 (Langue, Aide & Support, Légal) -->
         <div class="mx-4 mb-4 bg-[#151523] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs text-white shadow-lg">
-          <button onclick="openLanguageModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold" id="prof-item-lang">Langue</span>
+          <button onclick="openLanguageModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs" id="prof-item-lang">Langue</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-lang-sub">Changer la langue d'affichage</p>
+            </div>
             <div class="flex items-center gap-1">
-              <span class="text-slate-400 text-xs" id="profile-lang-display">🇫🇷 Français</span>
+              <span class="text-slate-300 text-xs font-semibold" id="profile-lang-display">🇫🇷 Français</span>
               <span class="text-slate-500 font-bold">›</span>
             </div>
           </button>
 
-          <button onclick="openAiSupportModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold flex items-center gap-2">
-              <span>💬</span>
-              <span id="prof-item-help">Aide & Support Client</span>
-            </span>
+          <button onclick="openAiSupportModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition text-left">
+            <div>
+              <p class="font-bold text-white text-xs flex items-center gap-1.5">
+                <span>💬</span> <span id="prof-item-help">Aide & Support Client</span>
+              </p>
+              <p class="text-[10px] text-slate-400" id="prof-item-help-sub">Assistance IA 24h/24 et contact</p>
+            </div>
             <div class="flex items-center gap-1.5">
               <span class="bg-gradient-to-r from-purple-600 to-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow">🤖 IA 24/7</span>
               <span class="text-slate-500 font-bold">›</span>
             </div>
           </button>
 
-          <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-emerald-400 font-semibold transition">
-            <span id="prof-item-restore">Restaurer les Achats (StoreKit)</span>
+          <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-emerald-400 font-semibold transition text-left">
+            <div>
+              <p class="text-xs font-bold text-emerald-400" id="prof-item-restore">Restaurer les Achats (StoreKit)</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-restore-sub">Récupérer un abonnement Apple / Google</p>
+            </div>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-white transition">
-            <span class="font-bold text-slate-100 text-xs" id="prof-item-cgu">Conditions Générales (CGU) & Confidentialité</span>
+          <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-white transition text-left">
+            <div>
+              <p class="font-bold text-slate-100 text-xs" id="prof-item-cgu">Conditions Générales (CGU) & Confidentialité</p>
+              <p class="text-[10px] text-slate-400" id="prof-item-cgu-sub">Politiques d'usage, respect de la vie privée & DMCA</p>
+            </div>
             <span class="text-slate-400 font-bold">›</span>
           </button>
 
-          <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-rose-500 font-bold transition">
-            <span id="prof-item-delete">Supprimer mon compte</span>
+          <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-rose-500 font-bold transition text-left">
+            <div>
+              <p class="text-xs font-bold text-rose-500" id="prof-item-delete">Supprimer mon compte</p>
+              <p class="text-[10px] text-rose-400/70" id="prof-item-delete-sub">Action irréversible (Conformité RGPD)</p>
+            </div>
             <span class="text-slate-500 font-bold">›</span>
           </button>
         </div>
@@ -1972,8 +2010,13 @@
           ctaBadge.className = "text-purple-200 text-xs font-black bg-purple-600/30 hover:bg-purple-600/50 px-3 py-1.5 rounded-xl border border-purple-400/40 flex-shrink-0 transition";
         }
         if (profileRoleBadge) {
-          profileRoleBadge.innerText = currentLang === 'ht' ? "SPEKTATÈ" : (currentLang === 'en' ? "VIEWER" : "SPECTATEUR");
-          profileRoleBadge.className = "text-[10px] bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block";
+          if (isVipUser) {
+            profileRoleBadge.innerText = currentLang === 'ht' ? "👑 MANM VIP" : (currentLang === 'en' ? "👑 VIP MEMBER" : "👑 MEMBRE VIP");
+            profileRoleBadge.className = "text-[9px] bg-gradient-to-r from-amber-500/20 to-rose-500/20 text-amber-300 border border-amber-500/40 font-black px-2 py-0.5 rounded-full uppercase inline-block";
+          } else {
+            profileRoleBadge.innerText = currentLang === 'ht' ? "SPEKTATÈ" : (currentLang === 'en' ? "VIEWER" : "SPECTATEUR");
+            profileRoleBadge.className = "text-[9px] bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded-full border border-white/10 uppercase inline-block";
+          }
         }
       }
     }
@@ -2987,6 +3030,9 @@
         player_home: "Accueil",
         player_quit: "Quitter",
         // Profil
+        prof_header_title: "Mon Profil",
+        prof_following: "0 abonnement",
+        prof_card_discount: "-50% PROMO",
         prof_title: "Devenir Membre VIP",
         prof_sub: "Profitez de tous les avantages exclusifs :",
         prof_join: "Rejoindre",
@@ -2995,17 +3041,27 @@
         prof_p3: "Téléchargement",
         prof_p4: "Qualité 1080p",
         prof_topup: "Recharger mes pièces",
+        prof_topup_sub: "Acheter des pièces instantanément",
         prof_wallet: "Mes Pièces",
+        prof_wallet_sub: "Solde en réserve disponible",
         prof_rewards: "Gagner des Récompenses",
+        prof_rewards_sub: "Points de fidélité quotidiens",
         prof_history: "Historique de Visionnage",
+        prof_history_sub: "Vos séries et épisodes récents",
         prof_download: "Téléchargements",
+        prof_download_sub: "Vidéos enregistrées hors-ligne",
         prof_lang: "Langue",
+        prof_lang_sub: "Changer la langue d'affichage",
         prof_help: "Aide & Support",
+        prof_help_sub: "Assistance IA 24h/24 et contact",
         prof_restore: "Restaurer les Achats (StoreKit)",
+        prof_restore_sub: "Récupérer un abonnement Apple / Google",
         prof_cgu: "Conditions Générales (CGU) & Confidentialité",
+        prof_cgu_sub: "Politiques d'usage, respect de la vie privée & DMCA",
         prof_delete: "Supprimer mon compte",
-        prof_creator_title: "Devenir Créateur & Gagner des Royalties",
-        prof_creator_sub: "Publiez vos mini-séries et touchez des revenus",
+        prof_delete_sub: "Action irréversible (Conformité RGPD)",
+        prof_creator_title: "Devenir Créateur & Gagner jusqu'à 70% de Royalties",
+        prof_creator_sub: "Publiez vos mini-séries et monétisez vos créations",
         prof_creator_btn: "Postuler ›",
         lang_display: "🇫🇷 Français",
         // Modale d'Abonnement VIP
@@ -3077,6 +3133,9 @@
         mylist_title: "➕ Lis Mwen (Seri Mwen Renmen)",
         player_home: "Kay",
         player_quit: "Kite",
+        prof_header_title: "Pwofil Mwen",
+        prof_following: "0 abònman",
+        prof_card_discount: "-50% RABAIS",
         prof_title: "Vin Manm VIP",
         prof_sub: "Jwi tout avantaj eksklizif yo :",
         prof_join: "Antre",
@@ -3085,16 +3144,26 @@
         prof_p3: "Telechaje",
         prof_p4: "Kalite 1080p",
         prof_topup: "Rechaje pyès mwen yo",
+        prof_topup_sub: "Achte pyès touswit",
         prof_wallet: "Pyès Mwen yo",
+        prof_wallet_sub: "Kantite pyès ou gen nan rezèv",
         prof_rewards: "Genyen Pyès Kado",
+        prof_rewards_sub: "Pwen kado chak jou",
         prof_history: "Istorik Videyo",
+        prof_history_sub: "Seri ak epizòd ou sot gade",
         prof_download: "Telechajman",
+        prof_download_sub: "Videyo telechaje san entènèt",
         prof_lang: "Lang",
+        prof_lang_sub: "Chanje lang aplikasyon an",
         prof_help: "Èd & Sipò",
+        prof_help_sub: "Asistans entèlijan 24/7 ak kontak",
         prof_restore: "Retabli Acha yo (StoreKit)",
+        prof_restore_sub: "Rekipere abonman Apple / Google ou",
         prof_cgu: "Kondisyon Jeneral & Konfidansyalite",
+        prof_cgu_sub: "Règ itilizasyon, vi prive ak copyright",
         prof_delete: "Efase kont mwen",
-        prof_creator_title: "Vin Kreyatè & Fè Kòb (Royalties)",
+        prof_delete_sub: "Aksyon definitif (Konfòmite done)",
+        prof_creator_title: "Vin Kreyatè & Fè jiska 70% Royalties",
         prof_creator_sub: "Pibliye mini-seri pa w epi touche revni sou Drama Xoxo",
         prof_creator_btn: "Postile ›",
         lang_display: "🇭🇹 Kreyòl Ayisyen",
@@ -3164,6 +3233,9 @@
         mylist_title: "➕ My List (Saved Dramas)",
         player_home: "Home",
         player_quit: "Exit",
+        prof_header_title: "My Profile",
+        prof_following: "Following 0",
+        prof_card_discount: "50% OFF",
         prof_title: "Join Membership",
         prof_sub: "Enjoy these exclusive benefits:",
         prof_join: "Join",
@@ -3172,17 +3244,27 @@
         prof_p3: "Download",
         prof_p4: "1080p quality",
         prof_topup: "Top Up Coins",
+        prof_topup_sub: "Buy coins instantly",
         prof_wallet: "My Coins",
+        prof_wallet_sub: "Active balance in reserve",
         prof_rewards: "Earn Rewards",
+        prof_rewards_sub: "Daily member points",
         prof_history: "Watch History",
+        prof_history_sub: "Recently watched dramas",
         prof_download: "Downloads",
+        prof_download_sub: "Offline saved videos",
         prof_lang: "Language",
+        prof_lang_sub: "Change display language",
         prof_help: "Help & Feedback",
+        prof_help_sub: "24/7 AI Assistance & contact",
         prof_restore: "Restore Purchases (StoreKit)",
+        prof_restore_sub: "Recover Apple / Google subscription",
         prof_cgu: "Terms of Use & Privacy",
+        prof_cgu_sub: "Terms of use, privacy & DMCA",
         prof_delete: "Delete My Account",
-        prof_creator_title: "Become a Creator & Earn Royalties",
-        prof_creator_sub: "Publish your mini-series and earn royalties",
+        prof_delete_sub: "Irreversible action (Data compliance)",
+        prof_creator_title: "Become a Creator & Earn up to 70% Royalties",
+        prof_creator_sub: "Publish your mini-series and monetize your content",
         prof_creator_btn: "Apply ›",
         lang_display: "🇺🇸 English",
         vip_modal_title: "Join Membership",
@@ -3315,25 +3397,42 @@
       if (el("player-quit-btn-text")) el("player-quit-btn-text").innerText = dict.player_quit;
 
       // 6. Écran Profil
-      if (el("prof-card-title")) el("prof-card-title").innerText = dict.prof_title;
-      if (el("prof-card-sub")) el("prof-card-sub").innerText = dict.prof_sub;
-      if (el("prof-card-btn")) el("prof-card-btn").innerText = dict.prof_join;
+      if (el("prof-header-title")) el("prof-header-title").innerText = dict.prof_header_title;
+      if (el("prof-following")) el("prof-following").innerText = dict.prof_following;
+      if (el("prof-card-discount")) el("prof-card-discount").innerText = dict.prof_card_discount;
+      if (el("prof-card-title")) el("prof-card-title").innerText = isVipUser ? (lang === 'ht' ? "👑 Abonman VIP Aktif" : (lang === 'en' ? "👑 Active VIP Pass" : "👑 Abonnement VIP Actif")) : dict.prof_title;
+      if (el("prof-card-sub")) el("prof-card-sub").innerText = isVipUser ? (lang === 'ht' ? "Aksè san limit sou tout seri yo san restriksyon" : (lang === 'en' ? "Unlimited access to all dramas without restrictions" : "Accès illimité à 100% des séries sans aucune restriction")) : dict.prof_sub;
+      if (el("prof-card-btn")) el("prof-card-btn").innerText = isVipUser ? (lang === 'ht' ? "Jere" : (lang === 'en' ? "Manage" : "Gérer")) : dict.prof_join;
       if (el("prof-perk-1")) el("prof-perk-1").innerText = dict.prof_p1;
       if (el("prof-perk-2")) el("prof-perk-2").innerText = dict.prof_p2;
       if (el("prof-perk-3")) el("prof-perk-3").innerText = dict.prof_p3;
       if (el("prof-perk-4")) el("prof-perk-4").innerText = dict.prof_p4;
       if (el("prof-item-topup")) el("prof-item-topup").innerText = dict.prof_topup;
+      if (el("prof-item-topup-sub")) el("prof-item-topup-sub").innerText = dict.prof_topup_sub;
       if (el("prof-item-wallet")) el("prof-item-wallet").innerText = dict.prof_wallet;
+      if (el("prof-item-wallet-sub")) el("prof-item-wallet-sub").innerText = dict.prof_wallet_sub;
       if (el("prof-item-rewards")) el("prof-item-rewards").innerText = dict.prof_rewards;
+      if (el("prof-item-rewards-sub")) el("prof-item-rewards-sub").innerText = dict.prof_rewards_sub;
       if (el("prof-item-history")) el("prof-item-history").innerText = dict.prof_history;
+      if (el("prof-item-history-sub")) el("prof-item-history-sub").innerText = dict.prof_history_sub;
       if (el("prof-item-download")) el("prof-item-download").innerText = dict.prof_download;
+      if (el("prof-item-download-sub")) el("prof-item-download-sub").innerText = dict.prof_download_sub;
       if (el("prof-item-lang")) el("prof-item-lang").innerText = dict.prof_lang;
+      if (el("prof-item-lang-sub")) el("prof-item-lang-sub").innerText = dict.prof_lang_sub;
       if (el("prof-item-help")) el("prof-item-help").innerText = dict.prof_help;
+      if (el("prof-item-help-sub")) el("prof-item-help-sub").innerText = dict.prof_help_sub;
       if (el("prof-item-restore")) el("prof-item-restore").innerText = dict.prof_restore;
+      if (el("prof-item-restore-sub")) el("prof-item-restore-sub").innerText = dict.prof_restore_sub;
       if (el("prof-item-cgu")) el("prof-item-cgu").innerText = dict.prof_cgu;
+      if (el("prof-item-cgu-sub")) el("prof-item-cgu-sub").innerText = dict.prof_cgu_sub;
       if (el("prof-item-delete")) el("prof-item-delete").innerText = dict.prof_delete;
+      if (el("prof-item-delete-sub")) el("prof-item-delete-sub").innerText = dict.prof_delete_sub;
+      if (el("apply-cta-title")) el("apply-cta-title").innerText = dict.prof_creator_title;
+      if (el("apply-cta-sub")) el("apply-cta-sub").innerText = dict.prof_creator_sub;
+      if (el("apply-cta-badge")) el("apply-cta-badge").innerText = dict.prof_creator_btn;
       if (el("floating-ai-btn-text")) el("floating-ai-btn-text").innerText = lang === 'ht' ? "Sipò IA" : (lang === 'en' ? "AI Support" : "Support IA");
       if (el("profile-lang-display")) el("profile-lang-display").innerText = dict.lang_display;
+      updateRoleUI();
 
       // Réglages & Préférences (Settings Modal)
       if (el("settings-modal-title")) el("settings-modal-title").innerText = lang === 'ht' ? "Règlaj & Preferans" : (lang === 'en' ? "Settings & Preferences" : "Réglages & Préférences");
