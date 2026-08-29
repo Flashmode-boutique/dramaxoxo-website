@@ -868,6 +868,24 @@
           </button>
         </div>
 
+        <!-- DEVENIR CRÉATEUR & GAGNER DES ROYALTIES (FORMULAIRE ORIGINAL) -->
+        <div id="profile-creator-apply-container" class="mx-4 mb-6">
+          <div onclick="openCreatorApplicationModal()" class="cursor-pointer p-4 bg-gradient-to-r from-purple-900/50 via-indigo-900/40 to-[#151523] rounded-2xl border border-purple-500/30 hover:border-purple-500/60 transition shadow-xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-600/25 text-purple-300 border border-purple-500/40 flex items-center justify-center text-xl flex-shrink-0 shadow">
+                🎬
+              </div>
+              <div>
+                <p id="apply-cta-title" class="font-black text-xs text-white">Devenir Créateur & Gagner des Royalties</p>
+                <p id="apply-cta-sub" class="text-[10px] text-purple-200">Publiez vos mini-séries et touchez des revenus</p>
+              </div>
+            </div>
+            <span id="apply-cta-badge" class="text-purple-200 text-xs font-black bg-purple-600/30 hover:bg-purple-600/50 px-3 py-1.5 rounded-xl border border-purple-400/40 flex-shrink-0 transition">
+              Postuler ›
+            </span>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -1525,28 +1543,29 @@
     let currentCreatorStudio = localStorage.getItem("dramaxoxo_creator_studio_name") || "@MonStudio";
 
     function updateRoleUI() {
-      const applyContainer = document.getElementById("profile-creator-apply-container") || document.getElementById("apply-cta-title")?.closest(".mb-4");
+      const applyContainer = document.getElementById("profile-creator-apply-container");
       const ctaTitle = document.getElementById("apply-cta-title");
       const ctaSub = document.getElementById("apply-cta-sub");
       const ctaBadge = document.getElementById("apply-cta-badge");
       const profileRoleBadge = document.getElementById("profile-role-badge") || document.querySelector("#screen-profile span.bg-slate-800");
+      const dict = (typeof appI18n !== "undefined" && appI18n[currentLang]) ? appI18n[currentLang] : (typeof appI18n !== "undefined" ? appI18n.fr : {});
 
       if (userRole === "CREATOR_PENDING") {
-        if (ctaTitle) ctaTitle.innerText = "Candidature en cours d'examen";
-        if (ctaSub) ctaSub.innerText = "Votre dossier est en cours d'examen par l'équipe Drama Xoxo.";
+        if (ctaTitle) ctaTitle.innerText = currentLang === 'ht' ? "Kandidati ap egzamine" : (currentLang === 'en' ? "Application Under Review" : "Candidature en cours d'examen");
+        if (ctaSub) ctaSub.innerText = currentLang === 'ht' ? "Ekip Drama Xoxo ap egzamine dosye w la kounye a." : (currentLang === 'en' ? "Your application is currently being reviewed." : "Votre dossier est en cours d'examen par l'équipe Drama Xoxo.");
         if (ctaBadge) {
-          ctaBadge.innerText = "En Examen ⏳";
+          ctaBadge.innerText = currentLang === 'ht' ? "Nan Egzamen ⏳" : (currentLang === 'en' ? "In Review ⏳" : "En Examen ⏳");
           ctaBadge.className = "text-amber-300 text-xs font-bold bg-amber-500/20 px-2 py-1 rounded-lg border border-amber-500/30";
         }
         if (profileRoleBadge) {
-          profileRoleBadge.innerText = "CANDIDAT CRÉATEUR";
+          profileRoleBadge.innerText = currentLang === 'ht' ? "KANDIDA KREYATÈ" : (currentLang === 'en' ? "CREATOR CANDIDATE" : "CANDIDAT CRÉATEUR");
           profileRoleBadge.className = "text-[10px] bg-amber-500/20 text-amber-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block";
         }
       } else if (userRole === "APPROVED_CREATOR") {
         // Hide "Devenir Créateur" banner completely
         if (applyContainer) applyContainer.style.display = "none";
         if (profileRoleBadge) {
-          profileRoleBadge.innerText = "CRÉATEUR APPROUVÉ";
+          profileRoleBadge.innerText = currentLang === 'ht' ? "KREYATÈ APROUVE" : (currentLang === 'en' ? "APPROVED CREATOR" : "CRÉATEUR APPROUVÉ");
           profileRoleBadge.className = "text-[10px] bg-purple-500/20 text-purple-300 font-bold px-2 py-0.5 rounded mt-1 inline-block";
         }
         // Change profile tab / bottom tab or show Studio CTA
@@ -1554,14 +1573,14 @@
       } else {
         // VIEWER
         if (applyContainer) applyContainer.style.display = "block";
-        if (ctaTitle) ctaTitle.innerText = "Devenir Créateur DRAMA XOXO";
-        if (ctaSub) ctaSub.innerText = "Publiez vos mini-séries et gagnez des royalties sur Drama Xoxo.";
+        if (ctaTitle) ctaTitle.innerText = dict.prof_creator_title || "Devenir Créateur & Gagner des Royalties";
+        if (ctaSub) ctaSub.innerText = dict.prof_creator_sub || "Publiez vos mini-séries et touchez des revenus";
         if (ctaBadge) {
-          ctaBadge.innerText = "Postuler ›";
-          ctaBadge.className = "text-purple-300 text-xs font-bold bg-purple-500/20 px-2 py-1 rounded-lg";
+          ctaBadge.innerText = dict.prof_creator_btn || "Postuler ›";
+          ctaBadge.className = "text-purple-200 text-xs font-black bg-purple-600/30 hover:bg-purple-600/50 px-3 py-1.5 rounded-xl border border-purple-400/40 flex-shrink-0 transition";
         }
         if (profileRoleBadge) {
-          profileRoleBadge.innerText = "SPECTATEUR";
+          profileRoleBadge.innerText = currentLang === 'ht' ? "SPEKTATÈ" : (currentLang === 'en' ? "VIEWER" : "SPECTATEUR");
           profileRoleBadge.className = "text-[10px] bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded mt-1 inline-block";
         }
       }
@@ -2290,6 +2309,9 @@
         prof_restore: "Restaurer les Achats (StoreKit)",
         prof_cgu: "Conditions Générales (CGU) & Confidentialité",
         prof_delete: "Supprimer mon compte",
+        prof_creator_title: "Devenir Créateur & Gagner des Royalties",
+        prof_creator_sub: "Publiez vos mini-séries et touchez des revenus",
+        prof_creator_btn: "Postuler ›",
         lang_display: "🇫🇷 Français",
         // Modale d'Abonnement VIP
         vip_modal_title: "Devenir Membre VIP",
@@ -2377,6 +2399,9 @@
         prof_restore: "Retabli Acha yo (StoreKit)",
         prof_cgu: "Kondisyon Jeneral & Konfidansyalite",
         prof_delete: "Efase kont mwen",
+        prof_creator_title: "Vin Kreyatè & Fè Kòb (Royalties)",
+        prof_creator_sub: "Pibliye mini-seri pa w epi touche revni sou Drama Xoxo",
+        prof_creator_btn: "Postile ›",
         lang_display: "🇭🇹 Kreyòl Ayisyen",
         vip_modal_title: "Vin Manm VIP",
         vip_modal_sub: "Aksè san limit sou tout seri yo",
@@ -2461,6 +2486,9 @@
         prof_restore: "Restore Purchases (StoreKit)",
         prof_cgu: "Terms of Use & Privacy",
         prof_delete: "Delete My Account",
+        prof_creator_title: "Become a Creator & Earn Royalties",
+        prof_creator_sub: "Publish your mini-series and earn royalties",
+        prof_creator_btn: "Apply ›",
         lang_display: "🇺🇸 English",
         vip_modal_title: "Join Membership",
         vip_modal_sub: "Unlimited access to all dramas",
@@ -2644,6 +2672,7 @@
       if (el("wallet-currency-tag")) el("wallet-currency-tag").innerText = dict.currencyTag;
       renderWalletPacks();
       renderMyList();
+      updateRoleUI();
 
       // 10. Historique
       if (el("history-modal-title")) el("history-modal-title").innerText = dict.hist_title;
