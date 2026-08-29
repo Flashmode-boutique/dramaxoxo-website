@@ -763,7 +763,7 @@
           </div>
         </div>
 
-        <!-- Membership Card: "Join Membership" + 50% off + 4 benefits strip -->
+        <!-- Membership Card: "Devenir Membre VIP" + 50% off + 4 benefits strip -->
         <div class="mx-4 mb-4 rounded-3xl overflow-hidden shadow-2xl border border-rose-500/30">
           <div class="relative bg-gradient-to-r from-[#FF2E63] via-[#FF3B6F] to-[#FF4F7C] p-4 text-white">
             <span class="absolute top-0 right-0 bg-[#6C5CE7] text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider shadow">
@@ -771,11 +771,11 @@
             </span>
             <div class="flex justify-between items-center pr-10">
               <div>
-                <h4 class="font-black text-base leading-tight">Join Membership</h4>
-                <p class="text-[10px] text-white/90 mt-0.5">Enjoy these exclusive benefits:</p>
+                <h4 class="font-black text-base leading-tight" id="prof-card-title">Devenir Membre VIP</h4>
+                <p class="text-[10px] text-white/90 mt-0.5" id="prof-card-sub">Profitez de tous les avantages exclusifs :</p>
               </div>
-              <button onclick="openMembershipModal()" class="bg-white hover:bg-slate-100 text-[#FF2E63] font-black text-xs px-4 py-1.5 rounded-full shadow-lg transition hover:scale-105">
-                Join
+              <button onclick="openMembershipModal()" class="bg-white hover:bg-slate-100 text-[#FF2E63] font-black text-xs px-4 py-1.5 rounded-full shadow-lg transition hover:scale-105" id="prof-card-btn">
+                Rejoindre
               </button>
             </div>
           </div>
@@ -784,32 +784,32 @@
           <div class="bg-[#181827] border-t border-white/10 px-3 py-2.5 grid grid-cols-4 gap-1 text-center text-slate-300">
             <div class="flex flex-col items-center">
               <span class="text-sm">🎬</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">16K+ series</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-1">16K+ séries</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-sm">⚡</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">Daily points</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-2">Points quotidiens</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-sm">⬇️</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">Download</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-3">Téléchargement</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-sm">📺</span>
-              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold">1080p quality</span>
+              <span class="text-[9px] mt-0.5 text-slate-400 font-semibold" id="prof-perk-4">Qualité 1080p</span>
             </div>
           </div>
         </div>
 
-        <!-- Menu Group 1 (Top Up, My Wallet, Earn Rewards, History, Download) -->
+        <!-- Menu Group 1 (Top Up, Mes Pièces, Gagner Récompenses, Historique, Téléchargements) -->
         <div class="mx-4 mb-3 bg-[#151523] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs text-white shadow-lg">
-          <button onclick="openStoreModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">Top Up</span>
+          <button onclick="openWalletModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold" id="prof-item-topup">Recharger mes pièces</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
-          <button onclick="openStoreModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">My Wallet</span>
+          <button onclick="openWalletModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold" id="prof-item-wallet">Mes Pièces</span>
             <div class="flex items-center gap-1.5">
               <span class="text-amber-400 font-black text-xs flex items-center gap-1">
                 <span>🪙</span> <span id="profile-coins">195</span>
@@ -819,51 +819,51 @@
           </button>
 
           <button onclick="triggerDailyReward()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">Earn Rewards</span>
+            <span class="font-bold" id="prof-item-rewards">Gagner des Récompenses</span>
             <div class="flex items-center gap-1.5">
               <span class="bg-rose-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full">+15</span>
               <span class="text-slate-500 font-bold">›</span>
             </div>
           </button>
 
-          <button onclick="alert('Historique : 3 épisodes visionnés récemment.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">History</span>
+          <button onclick="openHistoryModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold" id="prof-item-history">Historique de Visionnage</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
           <button onclick="alert('Téléchargements : 0 vidéo enregistrée hors-ligne.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">Download</span>
+            <span class="font-bold" id="prof-item-download">Téléchargements</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
         </div>
 
-        <!-- Menu Group 2 (Language, Help & feedback, Legal) -->
+        <!-- Menu Group 2 (Langue, Aide & Support, Légal) -->
         <div class="mx-4 mb-4 bg-[#151523] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs text-white shadow-lg">
-          <button onclick="alert('Langues disponibles : Français (Actif), Kreyòl Ayisyen, English.')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">Language</span>
+          <button onclick="openLanguageModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold" id="prof-item-lang">Langue</span>
             <div class="flex items-center gap-1">
-              <span class="text-slate-400 text-xs">Français / English</span>
+              <span class="text-slate-400 text-xs" id="profile-lang-display">🇫🇷 Français</span>
               <span class="text-slate-500 font-bold">›</span>
             </div>
           </button>
 
-          <button onclick="alert('Aide & Support : Contactez-nous à support@dramaxoxo.com')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
-            <span class="font-bold">Help & feedback</span>
+          <button onclick="alert('Aide & Support DRAMA XOXO : Contactez notre équipe sur support@dramaxoxo.com')" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] transition">
+            <span class="font-bold" id="prof-item-help">Aide & Support</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
           <button onclick="openRestorePurchasesModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-emerald-400 font-semibold transition">
-            <span>Restaurer les Achats (StoreKit)</span>
+            <span id="prof-item-restore">Restaurer les Achats (StoreKit)</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
           <button onclick="openCguModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-slate-400 transition">
-            <span>Conditions Générales (CGU) & Confidentialité</span>
+            <span id="prof-item-cgu">Conditions Générales (CGU) & Confidentialité</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
 
           <button onclick="openDeleteAccountModal()" class="w-full p-3.5 flex justify-between items-center hover:bg-[#1C1C2E] text-rose-500 font-bold transition">
-            <span>Supprimer mon compte</span>
+            <span id="prof-item-delete">Supprimer mon compte</span>
             <span class="text-slate-500 font-bold">›</span>
           </button>
         </div>
@@ -924,93 +924,151 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODAL MEMBERSHIP (INSPIRÉ DRAMABOX SCREENSHOT 2) -->
+    <!-- MODAL 1: MEMBERSHIP VIP AVEC FORMULAIRE & PAIEMENTS (DAILY, WEEKLY, MONTHLY, YEARLY) -->
     <!-- ========================================== -->
     <div id="membership-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex flex-col justify-end overflow-hidden">
       <div class="relative bg-[#12121E] rounded-t-3xl border-t border-rose-500/30 p-5 max-h-[92%] overflow-y-auto no-scrollbar flex flex-col shadow-2xl">
         
         <!-- Header -->
         <div class="flex justify-between items-center pb-3 mb-2 border-b border-white/10">
-          <h3 class="text-base font-black text-white">Join Membership</h3>
+          <div>
+            <h3 class="text-base font-black text-white" id="vip-modal-title">Devenir Membre VIP</h3>
+            <p class="text-[10px] text-purple-300" id="vip-modal-sub">Accès illimité à l'intégralité du catalogue</p>
+          </div>
           <div class="flex items-center gap-3">
-            <button onclick="openRestorePurchasesModal()" class="text-xs text-slate-400 hover:text-white font-semibold">Restore</button>
+            <button onclick="openRestorePurchasesModal()" class="text-xs text-slate-400 hover:text-white font-semibold" id="vip-modal-restore">Restaurer</button>
             <button onclick="closeMembershipModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm">✕</button>
           </div>
         </div>
 
-        <!-- Weekly Plan Card -->
-        <div class="p-3.5 bg-gradient-to-r from-rose-950/50 to-purple-950/50 rounded-2xl border-2 border-rose-500 relative mb-4">
-          <span class="absolute top-0 right-0 bg-[#6C5CE7] text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider">
-            Discount 23:59:55
-          </span>
-          <div class="flex items-center gap-3">
-            <div class="w-5 h-5 rounded-full bg-rose-600 flex items-center justify-center text-white text-xs font-bold shadow">✓</div>
+        <!-- 1. SÉLECTION DE LA FORMULE D'ABONNEMENT -->
+        <p class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+          <span>1️⃣</span> <span id="vip-step1-title">Choisissez votre formule :</span>
+        </p>
+
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <!-- Journalier -->
+          <div onclick="selectVipPlan('daily')" id="plan-card-daily" class="cursor-pointer p-3 rounded-2xl border bg-[#181829] border-white/10 hover:border-rose-500/50 flex flex-col transition relative">
+            <span class="text-[10px] font-bold text-slate-400" id="plan-daily-label">Journalier (24h)</span>
+            <span class="text-base font-black text-white mt-0.5" id="plan-daily-price">1,99 €</span>
+            <span class="text-[9px] text-slate-500" id="plan-daily-sub">Accès 1 jour</span>
+          </div>
+
+          <!-- Hebdomadaire (Sélectionné par défaut) -->
+          <div onclick="selectVipPlan('weekly')" id="plan-card-weekly" class="cursor-pointer p-3 rounded-2xl border-2 border-rose-500 bg-rose-950/30 flex flex-col transition relative shadow-lg">
+            <span class="absolute -top-2.5 right-2 bg-rose-600 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase shadow">
+              PROMO -50%
+            </span>
+            <span class="text-[10px] font-bold text-rose-300" id="plan-weekly-label">Hebdomadaire (7j)</span>
+            <span class="text-base font-black text-rose-400 mt-0.5" id="plan-weekly-price">4,99 €</span>
+            <span class="text-[9px] text-slate-400 line-through" id="plan-weekly-oldprice">9,99 €</span>
+          </div>
+
+          <!-- Mensuel -->
+          <div onclick="selectVipPlan('monthly')" id="plan-card-monthly" class="cursor-pointer p-3 rounded-2xl border bg-[#181829] border-white/10 hover:border-rose-500/50 flex flex-col transition relative">
+            <span class="text-[10px] font-bold text-slate-400" id="plan-monthly-label">Mensuel (1 mois)</span>
+            <span class="text-base font-black text-white mt-0.5" id="plan-monthly-price">9,99 €</span>
+            <span class="text-[9px] text-slate-500" id="plan-monthly-sub">Renouvelable</span>
+          </div>
+
+          <!-- Annuel -->
+          <div onclick="selectVipPlan('yearly')" id="plan-card-yearly" class="cursor-pointer p-3 rounded-2xl border bg-[#181829] border-white/10 hover:border-rose-500/50 flex flex-col transition relative">
+            <span class="absolute -top-2.5 right-2 bg-amber-500 text-black text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase shadow">
+              BEST VALUE
+            </span>
+            <span class="text-[10px] font-bold text-amber-300" id="plan-yearly-label">Annuel (1 an)</span>
+            <span class="text-base font-black text-amber-400 mt-0.5" id="plan-yearly-price">59,99 €</span>
+            <span class="text-[9px] text-slate-500" id="plan-yearly-sub">Économisez 50%</span>
+          </div>
+        </div>
+
+        <!-- 2. MOYEN DE PAIEMENT SÉCURISÉ -->
+        <p class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+          <span>2️⃣</span> <span id="vip-step2-title">Moyen de paiement sécurisé :</span>
+        </p>
+
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <button type="button" onclick="selectPaymentMethod('card')" id="pay-btn-card" class="p-2.5 rounded-xl border-2 border-rose-500 bg-rose-950/20 flex items-center justify-center gap-2 text-xs font-bold text-white transition">
+            <span>💳</span> <span>Carte Bancaire</span>
+          </button>
+          <button type="button" onclick="selectPaymentMethod('paypal')" id="pay-btn-paypal" class="p-2.5 rounded-xl border border-white/10 bg-[#181829] flex items-center justify-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition">
+            <span class="text-blue-400 font-black">🅿️</span> <span>PayPal</span>
+          </button>
+        </div>
+
+        <!-- 3. FORMULAIRE CLIENT & COORDONNÉES -->
+        <form id="vip-checkout-form" onsubmit="handleVipFormSubmit(event)" class="space-y-3 mb-4">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1" id="label-vip-name">Nom complet du titulaire</label>
+            <input type="text" id="vip-input-name" required placeholder="Marie Stanley" class="w-full bg-[#181828] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" />
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-1" id="label-vip-email">Adresse Email (pour le reçu et vos accès)</label>
+            <input type="email" id="vip-input-email" required placeholder="marie@dramaxoxo.com" class="w-full bg-[#181828] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" />
+          </div>
+
+          <!-- Group Carte Bancaire -->
+          <div id="card-fields-group" class="space-y-2">
             <div>
-              <div class="flex items-baseline gap-2">
-                <span class="text-sm font-black text-white">Weekly Membership</span>
-                <span class="text-base font-black text-rose-400">$9.99</span>
-                <span class="text-xs text-slate-500 line-through">$19.99</span>
+              <label class="block text-[10px] font-bold text-slate-400 mb-1" id="label-vip-cardnum">Numéro de Carte Bancaire</label>
+              <input type="text" id="vip-input-cardnum" maxlength="19" placeholder="4532 •••• •••• 8892" class="w-full bg-[#181828] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 font-mono" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 mb-1" id="label-vip-exp">Expiration</label>
+                <input type="text" id="vip-input-exp" maxlength="5" placeholder="MM/AA" class="w-full bg-[#181828] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 text-center font-mono" />
               </div>
-              <p class="text-[11px] text-slate-300 mt-0.5">$9.99 for the first week, then $19.99/week</p>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 mb-1">CVC / CVV</label>
+                <input type="password" id="vip-input-cvc" maxlength="4" placeholder="•••" class="w-full bg-[#181828] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 text-center font-mono" />
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Why Join? Benefits List -->
-        <h4 class="text-xs font-black text-white uppercase tracking-wider mb-2.5">Why Join?</h4>
-        <div class="space-y-2.5 mb-5 text-xs text-slate-300">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">▶</span>
-            <span>Unlimited access to 16,000+ series</span>
+          <!-- Group PayPal -->
+          <div id="paypal-fields-group" class="hidden p-3 bg-blue-950/20 border border-blue-500/30 rounded-xl text-center">
+            <p class="text-xs text-blue-200 font-semibold mb-2">Paiement en 1 clic via votre compte PayPal</p>
+            <input type="email" id="vip-paypal-email" placeholder="compte-paypal@email.com" class="w-full bg-[#181828] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
           </div>
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">⬇️</span>
-            <span>Download for offline viewing</span>
-          </div>
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">⚡</span>
-            <span>Daily member points (+50 free coins)</span>
-          </div>
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">✨</span>
-            <span>Members-only exclusive dramas</span>
-          </div>
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">📺</span>
-            <span>1080p Full HD crystal quality</span>
-          </div>
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">🎟️</span>
-            <span>Gift dramas to friends (3 times weekly)</span>
-          </div>
-        </div>
 
-        <!-- Big Join Button -->
-        <button onclick="confirmVipPurchase()" class="w-full py-3.5 bg-gradient-to-r from-rose-600 to-[#FF2E63] hover:from-rose-500 hover:to-[#FF416C] text-white font-black text-sm rounded-full shadow-2xl active:scale-98 transition flex flex-col items-center justify-center">
-          <span>Join Now</span>
-          <span class="text-[9px] text-white/80 font-normal mt-0.5">Auto-renew · Cancel anytime</span>
-        </button>
+          <!-- Checkbox Conditions -->
+          <label class="flex items-center gap-2 text-[10px] text-slate-400 cursor-pointer pt-1">
+            <input type="checkbox" required checked class="rounded border-white/20 bg-slate-800 text-rose-600" />
+            <span id="vip-terms-text">J'accepte les conditions de l'abonnement renouvelable sans engagement.</span>
+          </label>
 
-        <!-- FLOATING $10.00 OFF CELEBRATORY COUPON POPUP (Inspiré Dramabox Screenshot 2) -->
+          <!-- Bouton de Validation avec Formulaire -->
+          <button type="submit" id="btn-submit-vip" class="w-full py-3.5 bg-gradient-to-r from-rose-600 to-[#FF2E63] hover:from-rose-500 hover:to-[#FF416C] text-white font-black text-sm rounded-full shadow-2xl active:scale-98 transition flex items-center justify-center gap-2">
+            <span>🔒</span>
+            <span id="btn-submit-vip-text">Confirmer et Payer 4,99 €</span>
+          </button>
+        </form>
+
+        <p class="text-[9px] text-center text-slate-500">
+          Chiffrement bancaire SSL 256-bit • Annulation libre en 1 clic depuis votre profil
+        </p>
+
+        <!-- FLOATING $10.00 OFF CELEBRATORY COUPON POPUP -->
         <div id="membership-coupon-dialog" class="absolute inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-20">
           <div class="relative w-full max-w-xs bg-gradient-to-b from-[#F5A623] to-[#F8E71C] rounded-3xl p-5 text-center text-black shadow-2xl border-4 border-amber-300">
             <p class="text-lg font-black italic tracking-wide text-white drop-shadow mb-2">✨ Congratulations ✨</p>
             
             <div class="bg-amber-100/95 rounded-2xl p-4 border border-dashed border-amber-600 mb-3 shadow-inner">
-              <p class="text-[11px] font-bold text-amber-900 mb-1">Coupon for a weekly member's first week</p>
-              <h3 class="text-2xl font-black text-rose-600 leading-tight">$10.00 OFF</h3>
+              <p class="text-[11px] font-bold text-amber-900 mb-1" id="coupon-dialog-title">Coupon de réduction pour votre première semaine</p>
+              <h3 class="text-2xl font-black text-rose-600 leading-tight" id="coupon-dialog-discount">-50% OFF</h3>
               <div class="flex items-center justify-center gap-2 mt-1">
-                <span class="text-base font-black text-black">$9.99</span>
-                <span class="text-xs text-slate-500 line-through">$19.99</span>
+                <span class="text-base font-black text-black" id="coupon-dialog-newprice">4,99 €</span>
+                <span class="text-xs text-slate-500 line-through" id="coupon-dialog-oldprice">9,99 €</span>
               </div>
             </div>
 
             <p class="text-[11px] font-bold text-amber-950 mb-3">
-              Limited Time <span class="bg-black text-white px-1.5 py-0.5 rounded font-mono text-[10px]">23 : 59 : 55</span>
+              Offre limitée <span class="bg-black text-white px-1.5 py-0.5 rounded font-mono text-[10px]">23 : 59 : 55</span>
             </p>
 
-            <button onclick="dismissCouponAndSelectPlan()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs rounded-full shadow-lg hover:scale-105 transition">
-              Subscribe Now
+            <button onclick="dismissCouponAndSelectPlan()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs rounded-full shadow-lg hover:scale-105 transition" id="coupon-dialog-btn">
+              Appliquer le Coupon & Remplir le Formulaire
             </button>
 
             <!-- Close Dialog Button -->
@@ -1019,6 +1077,190 @@
             </button>
           </div>
         </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1B: MES PIÈCES (WALLET, ACHATS, TRANSACTIONS, BONUS) -->
+    <!-- ========================================== -->
+    <div id="wallet-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex flex-col justify-end overflow-hidden">
+      <div class="relative bg-[#12121E] rounded-t-3xl border-t border-amber-500/30 p-5 max-h-[92%] overflow-y-auto no-scrollbar flex flex-col shadow-2xl">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-3 mb-3 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🪙</span>
+            <div>
+              <h3 class="text-base font-black text-white" id="wallet-modal-title">Mes Pièces & Portefeuille</h3>
+              <p class="text-[10px] text-slate-400" id="wallet-modal-sub">Gérez vos pièces, rechargements et bonus</p>
+            </div>
+          </div>
+          <button onclick="closeWalletModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm">✕</button>
+        </div>
+
+        <!-- 1. SOLDE EN RÉSERVE -->
+        <div class="p-4 bg-gradient-to-r from-amber-950/40 via-[#1F1A12] to-amber-950/40 border border-amber-500/40 rounded-2xl mb-4 text-center shadow-lg">
+          <p class="text-xs text-amber-300 font-semibold mb-0.5" id="wallet-balance-label">Pièces Actives en Réserve</p>
+          <div class="text-3xl font-black text-amber-400 flex items-center justify-center gap-2">
+            <span>🪙</span>
+            <span id="wallet-modal-balance">195</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1" id="wallet-balance-hint">Permet de débloquer environ 13 épisodes à la demande</p>
+        </div>
+
+        <!-- 2. OPTION ACHETER DES PIÈCES EN DESSOUS -->
+        <div class="mb-5">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-xs font-black text-white uppercase tracking-wider" id="wallet-buy-title">Acheter des Pièces</h4>
+            <span class="text-[10px] text-emerald-400 font-bold" id="wallet-currency-tag">Devise : EUR (€)</span>
+          </div>
+
+          <div class="space-y-2" id="wallet-coin-packs-container">
+            <!-- Packs populated dynamically by JS -->
+          </div>
+
+          <!-- Checkout Form for Coins -->
+          <div id="coin-purchase-checkout" class="hidden mt-3 p-3.5 bg-[#171726] rounded-2xl border border-rose-500/40">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-bold text-white" id="selected-pack-label">Pack sélectionné</span>
+              <span class="text-xs font-black text-rose-400" id="selected-pack-price">4,99 €</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mb-3">
+              <button type="button" onclick="selectCoinPayMethod('card')" id="coin-pay-card-btn" class="py-1.5 px-2 bg-rose-600 text-white rounded-xl text-[10px] font-bold">💳 Carte Bancaire</button>
+              <button type="button" onclick="selectCoinPayMethod('paypal')" id="coin-pay-paypal-btn" class="py-1.5 px-2 bg-[#222238] text-slate-300 rounded-xl text-[10px] font-bold">🅿️ PayPal</button>
+            </div>
+
+            <button type="button" onclick="confirmCoinPurchase()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg transition">
+              ✓ Valider le Rechargement Immédiat
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. HISTORIQUE DES TRANSACTIONS -->
+        <div class="mb-4">
+          <h4 class="text-xs font-black text-white uppercase tracking-wider mb-2 flex items-center justify-between">
+            <span id="wallet-transactions-title">Transactions Récentes</span>
+            <span class="text-[9px] text-slate-500">Dernières opérations</span>
+          </h4>
+          <div id="wallet-transactions-list" class="space-y-2 text-xs">
+            <div class="p-2.5 bg-[#171726] rounded-xl border border-white/5 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-white">Rechargement Initial (Bienvenue)</p>
+                <p class="text-[10px] text-slate-400">Solde de départ offert</p>
+              </div>
+              <span class="text-emerald-400 font-bold font-mono">+195 🪙</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. PIÈCES EN BONUS DÉJÀ CONSOMMÉES -->
+        <div>
+          <h4 class="text-xs font-black text-white uppercase tracking-wider mb-2 flex items-center justify-between">
+            <span id="wallet-consumed-title">Pièces & Bonus Consommés</span>
+            <span class="text-[9px] text-rose-400">Suivi d'utilisation</span>
+          </h4>
+          <div id="wallet-consumed-list" class="space-y-2 text-xs">
+            <div class="p-2.5 bg-[#171726] rounded-xl border border-white/5 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-slate-300">Bonus Quotidien Réclamé</p>
+                <p class="text-[10px] text-slate-500">Cadeau quotidien actif</p>
+              </div>
+              <span class="text-amber-400 font-bold font-mono">+15 🪙 réclamé</span>
+            </div>
+            <div class="p-2.5 bg-[#171726] rounded-xl border border-white/5 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-slate-300">Épisodes Débloqués</p>
+                <p class="text-[10px] text-slate-500">Accès individuel aux épisodes</p>
+              </div>
+              <span class="text-slate-400 font-bold font-mono">15 🪙 / ép.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1C: HISTORIQUE DE VISIONNAGE (SÉRIES VISITÉES) -->
+    <!-- ========================================== -->
+    <div id="history-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex flex-col justify-end overflow-hidden">
+      <div class="relative bg-[#12121E] rounded-t-3xl border-t border-purple-500/30 p-5 max-h-[85%] overflow-y-auto no-scrollbar flex flex-col shadow-2xl">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-3 mb-3 border-b border-white/10">
+          <div>
+            <h3 class="text-base font-black text-white" id="history-modal-title">Historique de Visionnage</h3>
+            <p class="text-[10px] text-slate-400" id="history-modal-sub">Retrouvez les séries et épisodes que vous avez explorés</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="clearWatchHistory()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold" id="history-clear-btn">Effacer</button>
+            <button onclick="closeHistoryModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm">✕</button>
+          </div>
+        </div>
+
+        <div id="history-list-container" class="space-y-2.5">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1D: CHOIX DE LANGUE (FRANÇAIS, KREYÒL, ENGLISH) -->
+    <!-- ========================================== -->
+    <div id="language-modal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div class="relative bg-[#161626] rounded-3xl border border-white/10 p-5 w-full max-w-sm flex flex-col shadow-2xl">
+        
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-base font-black text-white flex items-center gap-2">
+            <span>🌐</span> <span id="lang-modal-title">Choisir votre Langue</span>
+          </h3>
+          <button onclick="closeLanguageModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm">✕</button>
+        </div>
+
+        <div class="space-y-2.5 mb-2">
+          <!-- Français -->
+          <button onclick="selectAppLanguage('fr')" id="lang-opt-fr" class="w-full p-3.5 rounded-2xl border border-rose-500 bg-rose-950/20 flex items-center justify-between transition text-left">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🇫🇷</span>
+              <div>
+                <p class="font-black text-white text-xs">Français</p>
+                <p class="text-[10px] text-slate-400">Devise : Euro (€)</p>
+              </div>
+            </div>
+            <span class="text-rose-500 font-bold text-sm lang-check" id="check-fr">✓</span>
+          </button>
+
+          <!-- Kreyòl Ayisyen -->
+          <button onclick="selectAppLanguage('ht')" id="lang-opt-ht" class="w-full p-3.5 rounded-2xl border border-white/10 bg-[#141420] flex items-center justify-between transition text-left">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🇭🇹</span>
+              <div>
+                <p class="font-black text-white text-xs">Kreyòl Ayisyen</p>
+                <p class="text-[10px] text-slate-400">Lajan : Goud (HTG)</p>
+              </div>
+            </div>
+            <span class="text-rose-500 font-bold text-sm lang-check hidden" id="check-ht">✓</span>
+          </button>
+
+          <!-- English -->
+          <button onclick="selectAppLanguage('en')" id="lang-opt-en" class="w-full p-3.5 rounded-2xl border border-white/10 bg-[#141420] flex items-center justify-between transition text-left">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🇺🇸</span>
+              <div>
+                <p class="font-black text-white text-xs">English</p>
+                <p class="text-[10px] text-slate-400">Currency : USD ($)</p>
+              </div>
+            </div>
+            <span class="text-rose-500 font-bold text-sm lang-check hidden" id="check-en">✓</span>
+          </button>
+        </div>
+
+        <p class="text-[10px] text-slate-400 text-center mt-2" id="lang-modal-hint">
+          Votre choix est sauvegardé pour toute votre navigation.
+        </p>
 
       </div>
     </div>
@@ -1733,6 +1975,7 @@
       const headerTitle = document.getElementById("player-header-title");
       if (headerTitle) headerTitle.innerText = s.title || "DRAMA XOXO";
 
+      recordWatchHistory(s, 0);
       document.getElementById("screen-player").classList.remove("hidden");
       playEpisode(0);
 
@@ -1820,6 +2063,7 @@
       }
 
       renderDrawerEpisodes();
+      recordWatchHistory(currentPlayingSeries, epIndex);
     }
 
     function toggleEpisodesDrawer() {
@@ -1909,10 +2153,506 @@
       switchTab("home");
     }
 
-    function openStoreModal() { document.getElementById("store-modal").classList.remove("hidden"); }
-    function closeStoreModal() { document.getElementById("store-modal").classList.add("hidden"); }
-    
-    // Handlers Modal Membership VIP (Inspiré DramaBox Screenshot 2)
+    function openStoreModal() { openWalletModal(); }
+    function closeStoreModal() { closeWalletModal(); }
+
+    // ==========================================
+    // SYSTÈME MULTILINGUE (I18N) AVEC PERSISTANCE LOCALSTORAGE
+    // Langues supportées : fr (Français), ht (Kreyòl Ayisyen), en (English)
+    // ==========================================
+    let currentLang = localStorage.getItem("dramaxoxo_lang") || "fr";
+
+    const appI18n = {
+      fr: {
+        currency: "€",
+        currencyTag: "Devise : EUR (€)",
+        tab_home: "Accueil",
+        tab_foryou: "Pour Vous",
+        tab_member: "Pass VIP",
+        tab_mylist: "Ma Liste",
+        tab_profile: "Profil",
+        sub_popular: "Populaire",
+        sub_new: "Nouveautés",
+        sub_rankings: "Classement",
+        sub_categories: "Catégories",
+        sub_vip: "VIP",
+        search_placeholder: "Rechercher une série, acteur...",
+        prof_title: "Devenir Membre VIP",
+        prof_sub: "Profitez de tous les avantages exclusifs :",
+        prof_join: "Rejoindre",
+        prof_p1: "16K+ séries",
+        prof_p2: "Points quotidiens",
+        prof_p3: "Téléchargement",
+        prof_p4: "Qualité 1080p",
+        prof_topup: "Recharger mes pièces",
+        prof_wallet: "Mes Pièces",
+        prof_rewards: "Gagner des Récompenses",
+        prof_history: "Historique de Visionnage",
+        prof_download: "Téléchargements",
+        prof_lang: "Langue",
+        prof_help: "Aide & Support",
+        prof_restore: "Restaurer les Achats (StoreKit)",
+        prof_cgu: "Conditions Générales (CGU) & Confidentialité",
+        prof_delete: "Supprimer mon compte",
+        lang_display: "🇫🇷 Français",
+        vip_title: "Devenir Membre VIP",
+        vip_sub: "Accès illimité à l'intégralité du catalogue",
+        vip_step1: "1️⃣ Choisissez votre formule :",
+        vip_step2: "2️⃣ Moyen de paiement sécurisé :",
+        vip_daily: "Journalier (24h)",
+        vip_weekly: "Hebdomadaire (7j)",
+        vip_monthly: "Mensuel (1 mois)",
+        vip_yearly: "Annuel (1 an)",
+        vip_confirm: "Confirmer et Payer",
+        wallet_title: "Mes Pièces & Portefeuille",
+        wallet_sub: "Gérez vos pièces, rechargements et bonus",
+        wallet_balance_label: "Pièces Actives en Réserve",
+        wallet_buy: "Acheter des Pièces",
+        wallet_trans: "Transactions Récentes",
+        wallet_bonus: "Pièces & Bonus Consommés",
+        hist_title: "Historique de Visionnage",
+        hist_sub: "Retrouvez les séries et épisodes que vous avez explorés",
+        hist_clear: "Effacer",
+        hist_empty: "Aucun historique pour le moment. Explorez nos mini-séries !"
+      },
+      ht: {
+        currency: "HTG",
+        currencyTag: "Lajan : Goud (HTG)",
+        tab_home: "Kay",
+        tab_foryou: "Pou Ou",
+        tab_member: "Manm VIP",
+        tab_mylist: "Lis Mwen",
+        tab_profile: "Pwofil",
+        sub_popular: "Popilè",
+        sub_new: "Nouvote",
+        sub_rankings: "Klasman",
+        sub_categories: "Kategori",
+        sub_vip: "VIP",
+        search_placeholder: "Chèche yon seri, aktè...",
+        prof_title: "Vin Manm VIP",
+        prof_sub: "Jwi tout avantaj eksklizif yo :",
+        prof_join: "Antre",
+        prof_p1: "16K+ seri",
+        prof_p2: "Pwen chak jou",
+        prof_p3: "Telechaje",
+        prof_p4: "Kalite 1080p",
+        prof_topup: "Rechaje pyès mwen yo",
+        prof_wallet: "Mes Pièces (Pyès Mwen)",
+        prof_rewards: "Genyen Pyès Kado",
+        prof_history: "Istorik Videyo",
+        prof_download: "Telechajman",
+        prof_lang: "Lang",
+        prof_help: "Èd & Sipò",
+        prof_restore: "Retabli Acha yo (StoreKit)",
+        prof_cgu: "Kondisyon Jeneral & Konfidansyalite",
+        prof_delete: "Efase kont mwen",
+        lang_display: "🇭🇹 Kreyòl Ayisyen",
+        vip_title: "Vin Manm VIP",
+        vip_sub: "Aksè san limit sou tout seri yo",
+        vip_step1: "1️⃣ Chwazi plan pa w la :",
+        vip_step2: "2️⃣ Mwayen peman an sekirite :",
+        vip_daily: "Chak jou (24è)",
+        vip_weekly: "Chak semèn (7j)",
+        vip_monthly: "Chak mwa (1 mwa)",
+        vip_yearly: "Chak ane (1 an)",
+        vip_confirm: "Konfime epi Peye",
+        wallet_title: "Pyès Mwen & Pòtmonnen",
+        wallet_sub: "Jere pyès ou, rechajman ak bonis",
+        wallet_balance_label: "Pyès Aktif nan Rezèv ou",
+        wallet_buy: "Achte Pyès",
+        wallet_trans: "Dènye Operasyon yo",
+        wallet_bonus: "Pyès & Bonis Konsome",
+        hist_title: "Istorik Videyo",
+        hist_sub: "Jwenn seri ak epizòd ou te gade deja yo",
+        hist_clear: "Efase",
+        hist_empty: "Ou poko gade okenn seri. Kòmanse gade kounye a !"
+      },
+      en: {
+        currency: "$",
+        currencyTag: "Currency : USD ($)",
+        tab_home: "Home",
+        tab_foryou: "For You",
+        tab_member: "VIP Pass",
+        tab_mylist: "My List",
+        tab_profile: "Profile",
+        sub_popular: "Popular",
+        sub_new: "New",
+        sub_rankings: "Rankings",
+        sub_categories: "Categories",
+        sub_vip: "VIP",
+        search_placeholder: "Search drama, actor...",
+        prof_title: "Join Membership",
+        prof_sub: "Enjoy these exclusive benefits:",
+        prof_join: "Join",
+        prof_p1: "16K+ series",
+        prof_p2: "Daily points",
+        prof_p3: "Download",
+        prof_p4: "1080p quality",
+        prof_topup: "Top Up Coins",
+        prof_wallet: "My Coins",
+        prof_rewards: "Earn Rewards",
+        prof_history: "Watch History",
+        prof_download: "Downloads",
+        prof_lang: "Language",
+        prof_help: "Help & Feedback",
+        prof_restore: "Restore Purchases (StoreKit)",
+        prof_cgu: "Terms of Use & Privacy",
+        prof_delete: "Delete My Account",
+        lang_display: "🇺🇸 English",
+        vip_title: "Join Membership",
+        vip_sub: "Unlimited access to all dramas",
+        vip_step1: "1️⃣ Choose your subscription plan:",
+        vip_step2: "2️⃣ Secure payment method:",
+        vip_daily: "Daily (24h)",
+        vip_weekly: "Weekly (7 days)",
+        vip_monthly: "Monthly (1 month)",
+        vip_yearly: "Annual (1 year)",
+        vip_confirm: "Confirm & Pay",
+        wallet_title: "My Coins & Wallet",
+        wallet_sub: "Manage your coins, reloads and bonuses",
+        wallet_balance_label: "Active Coins in Reserve",
+        wallet_buy: "Top Up Coins",
+        wallet_trans: "Recent Transactions",
+        wallet_bonus: "Consumed Bonus & Coins",
+        hist_title: "Watch History",
+        hist_sub: "Explore all the series you have watched",
+        hist_clear: "Clear",
+        hist_empty: "No watch history yet. Start watching now!"
+      }
+    };
+
+    const priceTable = {
+      fr: {
+        symbol: "€",
+        daily: "1,99 €",
+        weekly: "4,99 €",
+        weeklyOld: "9,99 €",
+        monthly: "9,99 €",
+        yearly: "59,99 €",
+        packs: [
+          { coins: 100, bonus: "+10 bonus", price: "4,99 €" },
+          { coins: 300, bonus: "+40 bonus", price: "12,99 €" },
+          { coins: 550, bonus: "+100 bonus (Populaire)", price: "19,99 €", popular: true },
+          { coins: 1200, bonus: "+300 bonus (VIP Pack)", price: "39,99 €" }
+        ]
+      },
+      ht: {
+        symbol: "HTG",
+        daily: "250 HTG",
+        weekly: "650 HTG",
+        weeklyOld: "1 300 HTG",
+        monthly: "1 300 HTG",
+        yearly: "7 800 HTG",
+        packs: [
+          { coins: 100, bonus: "+10 bonis", price: "650 HTG" },
+          { coins: 300, bonus: "+40 bonis", price: "1 700 HTG" },
+          { coins: 550, bonus: "+100 bonis (Popilè)", price: "2 600 HTG", popular: true },
+          { coins: 1200, bonus: "+300 bonis (Pack VIP)", price: "5 200 HTG" }
+        ]
+      },
+      en: {
+        symbol: "$",
+        daily: "$1.99",
+        weekly: "$4.99",
+        weeklyOld: "$9.99",
+        monthly: "$9.99",
+        yearly: "$59.99",
+        packs: [
+          { coins: 100, bonus: "+10 bonus", price: "$4.99" },
+          { coins: 300, bonus: "+40 bonus", price: "$12.99" },
+          { coins: 550, bonus: "+100 bonus (Popular)", price: "$19.99", popular: true },
+          { coins: 1200, bonus: "+300 bonus (VIP Pack)", price: "$39.99" }
+        ]
+      }
+    };
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem("dramaxoxo_lang", lang);
+      const dict = appI18n[lang] || appI18n.fr;
+      const prices = priceTable[lang] || priceTable.fr;
+
+      // Bottom Tabs
+      const th = document.querySelector("#tab-home span:last-child"); if (th) th.innerText = dict.tab_home;
+      const tf = document.querySelector("#tab-foryou span:last-child"); if (tf) tf.innerText = dict.tab_foryou;
+      const tm = document.querySelector("#tab-member span:last-child"); if (tm) tm.innerText = dict.tab_member;
+      const tl = document.querySelector("#tab-mylist span:last-child"); if (tl) tl.innerText = dict.tab_mylist;
+      const tp = document.querySelector("#tab-profile span:last-child"); if (tp) tp.innerText = dict.tab_profile;
+
+      // Subtabs
+      const sPop = document.querySelector("#subtab-popular span:last-child"); if (sPop) sPop.innerText = dict.sub_popular;
+      const sNew = document.querySelector("#subtab-new span:last-child"); if (sNew) sNew.innerText = dict.sub_new;
+      const sRnk = document.querySelector("#subtab-rankings span:last-child"); if (sRnk) sRnk.innerText = dict.sub_rankings;
+      const sCat = document.querySelector("#subtab-categories span:last-child"); if (sCat) sCat.innerText = dict.sub_categories;
+
+      // Search input
+      const searchInp = document.getElementById("top-search-input");
+      if (searchInp) searchInp.placeholder = dict.search_placeholder;
+
+      // Profile Screen Elements
+      const pTitle = document.getElementById("prof-card-title"); if (pTitle) pTitle.innerText = dict.prof_title;
+      const pSub = document.getElementById("prof-card-sub"); if (pSub) pSub.innerText = dict.prof_sub;
+      const pBtn = document.getElementById("prof-card-btn"); if (pBtn) pBtn.innerText = dict.prof_join;
+      const pk1 = document.getElementById("prof-perk-1"); if (pk1) pk1.innerText = dict.prof_p1;
+      const pk2 = document.getElementById("prof-perk-2"); if (pk2) pk2.innerText = dict.prof_p2;
+      const pk3 = document.getElementById("prof-perk-3"); if (pk3) pk3.innerText = dict.prof_p3;
+      const pk4 = document.getElementById("prof-perk-4"); if (pk4) pk4.innerText = dict.prof_p4;
+      const pTopup = document.getElementById("prof-item-topup"); if (pTopup) pTopup.innerText = dict.prof_topup;
+      const pWallet = document.getElementById("prof-item-wallet"); if (pWallet) pWallet.innerText = dict.prof_wallet;
+      const pRew = document.getElementById("prof-item-rewards"); if (pRew) pRew.innerText = dict.prof_rewards;
+      const pHist = document.getElementById("prof-item-history"); if (pHist) pHist.innerText = dict.prof_history;
+      const pDown = document.getElementById("prof-item-download"); if (pDown) pDown.innerText = dict.prof_download;
+      const pLang = document.getElementById("prof-item-lang"); if (pLang) pLang.innerText = dict.prof_lang;
+      const pHelp = document.getElementById("prof-item-help"); if (pHelp) pHelp.innerText = dict.prof_help;
+      const pRest = document.getElementById("prof-item-restore"); if (pRest) pRest.innerText = dict.prof_restore;
+      const pCgu = document.getElementById("prof-item-cgu"); if (pCgu) pCgu.innerText = dict.prof_cgu;
+      const pDel = document.getElementById("prof-item-delete"); if (pDel) pDel.innerText = dict.prof_delete;
+      const pDisp = document.getElementById("profile-lang-display"); if (pDisp) pDisp.innerText = dict.lang_display;
+
+      // VIP Modal Pricing
+      const pDaily = document.getElementById("plan-daily-price"); if (pDaily) pDaily.innerText = prices.daily;
+      const pWeekly = document.getElementById("plan-weekly-price"); if (pWeekly) pWeekly.innerText = prices.weekly;
+      const pWeeklyOld = document.getElementById("plan-weekly-oldprice"); if (pWeeklyOld) pWeeklyOld.innerText = prices.weeklyOld;
+      const pMonthly = document.getElementById("plan-monthly-price"); if (pMonthly) pMonthly.innerText = prices.monthly;
+      const pYearly = document.getElementById("plan-yearly-price"); if (pYearly) pYearly.innerText = prices.yearly;
+      updateVipSubmitBtnText();
+
+      // Wallet Currency
+      const wCur = document.getElementById("wallet-currency-tag"); if (wCur) wCur.innerText = dict.currencyTag;
+      renderWalletPacks();
+
+      // Checkmarks in language modal
+      ["fr", "ht", "en"].forEach(code => {
+        const check = document.getElementById(`check-${code}`);
+        const opt = document.getElementById(`lang-opt-${code}`);
+        if (check) check.classList.toggle("hidden", code !== lang);
+        if (opt) {
+          if (code === lang) {
+            opt.className = "w-full p-3.5 rounded-2xl border border-rose-500 bg-rose-950/20 flex items-center justify-between transition text-left";
+          } else {
+            opt.className = "w-full p-3.5 rounded-2xl border border-white/10 bg-[#141420] flex items-center justify-between transition text-left";
+          }
+        }
+      });
+    }
+
+    function openLanguageModal() {
+      const modal = document.getElementById("language-modal");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function closeLanguageModal() {
+      const modal = document.getElementById("language-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function selectAppLanguage(lang) {
+      applyLanguage(lang);
+      closeLanguageModal();
+    }
+
+    // ==========================================
+    // HISTORIQUE DE VISIONNAGE (SÉRIES VISITÉES / VISUALISÉES)
+    // ==========================================
+    let userWatchHistory = [];
+    try {
+      userWatchHistory = JSON.parse(localStorage.getItem("dramaxoxo_watch_history") || "[]");
+    } catch (e) {
+      userWatchHistory = [];
+    }
+
+    function recordWatchHistory(series, epIndex) {
+      if (!series) return;
+      userWatchHistory = userWatchHistory.filter(h => h.id !== series.id && h.title !== series.title);
+      userWatchHistory.unshift({
+        id: series.id,
+        title: series.title,
+        coverUrl: series.coverUrl,
+        genre: series.genre || "Romance",
+        epIndex: epIndex || 0,
+        date: new Date().toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : (currentLang === 'ht' ? 'fr-FR' : 'en-US'), {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        })
+      });
+      if (userWatchHistory.length > 30) userWatchHistory = userWatchHistory.slice(0, 30);
+      localStorage.setItem("dramaxoxo_watch_history", JSON.stringify(userWatchHistory));
+    }
+
+    function openHistoryModal() {
+      const modal = document.getElementById("history-modal");
+      if (!modal) return;
+      renderWatchHistory();
+      modal.classList.remove("hidden");
+    }
+
+    function closeHistoryModal() {
+      const modal = document.getElementById("history-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function renderWatchHistory() {
+      const container = document.getElementById("history-list-container");
+      if (!container) return;
+      const dict = appI18n[currentLang] || appI18n.fr;
+
+      if (userWatchHistory.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-400">
+            <span class="text-3xl block mb-2">🎬</span>
+            <p class="text-xs font-semibold">${dict.hist_empty}</p>
+            <button onclick="closeHistoryModal(); switchTab('home');" class="mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold shadow">
+              Découvrir les Séries
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = userWatchHistory.map((item, i) => `
+        <div class="p-3 bg-[#171726] rounded-2xl border border-white/5 flex items-center justify-between gap-3 hover:border-purple-500/40 transition">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <img src="${item.coverUrl}" class="w-12 h-16 object-cover rounded-xl shadow flex-shrink-0" />
+            <div class="truncate">
+              <h4 class="font-black text-xs text-white truncate">${item.title}</h4>
+              <p class="text-[10px] text-purple-300">${item.genre} • Épisode ${item.epIndex + 1}</p>
+              <p class="text-[9px] text-slate-500 mt-0.5">Vu le : ${item.date}</p>
+            </div>
+          </div>
+          <button onclick="closeHistoryModal(); resumeFromHistory(${i});" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-black px-3 py-2 rounded-xl flex-shrink-0 shadow transition">
+            ▶ Continuer
+          </button>
+        </div>
+      `).join("");
+    }
+
+    function resumeFromHistory(historyIndex) {
+      const item = userWatchHistory[historyIndex];
+      if (!item) return;
+      const foundIdx = seriesCatalog.findIndex(s => s.id === item.id || s.title === item.title);
+      if (foundIdx !== -1) {
+        openPlayer(foundIdx);
+        playEpisode(item.epIndex || 0);
+      } else {
+        openPlayer(0);
+      }
+    }
+
+    function clearWatchHistory() {
+      if (confirm("Voulez-vous vraiment effacer tout votre historique de visionnage ?")) {
+        userWatchHistory = [];
+        localStorage.removeItem("dramaxoxo_watch_history");
+        renderWatchHistory();
+      }
+    }
+
+    // ==========================================
+    // MES PIÈCES (WALLET, ACHATS, TRANSACTIONS, BONUS)
+    // ==========================================
+    let userTransactions = [
+      { desc: "Rechargement Initial (Bienvenue)", date: "Aujourd'hui", amount: "+195 🪙", positive: true }
+    ];
+    let selectedCoinPack = 0;
+    let selectedCoinPayMethod = "card";
+
+    function openWalletModal() {
+      const modal = document.getElementById("wallet-modal");
+      if (!modal) return;
+      const bEl = document.getElementById("wallet-modal-balance");
+      if (bEl) bEl.innerText = userCoins;
+      renderWalletPacks();
+      modal.classList.remove("hidden");
+    }
+
+    function closeWalletModal() {
+      const modal = document.getElementById("wallet-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function renderWalletPacks() {
+      const container = document.getElementById("wallet-coin-packs-container");
+      if (!container) return;
+      const packs = (priceTable[currentLang] || priceTable.fr).packs;
+
+      container.innerHTML = packs.map((p, idx) => `
+        <div onclick="selectCoinPack(${idx})" class="cursor-pointer p-3 rounded-2xl border ${selectedCoinPack === idx ? 'border-amber-500 bg-amber-950/20 shadow-lg' : 'border-white/5 bg-[#171726] hover:bg-[#1F1F33]'} flex justify-between items-center transition relative">
+          ${p.popular ? '<span class="absolute -top-2 left-4 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow">POPULAIRE</span>' : ''}
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">🪙</span>
+            <div>
+              <p class="text-xs font-black text-white">${p.coins} Pièces</p>
+              <p class="text-[10px] text-amber-300">${p.bonus}</p>
+            </div>
+          </div>
+          <span class="bg-amber-500 hover:bg-amber-400 text-black font-black text-xs px-3 py-1.5 rounded-xl shadow">
+            ${p.price}
+          </span>
+        </div>
+      `).join("");
+
+      const pack = packs[selectedCoinPack] || packs[0];
+      const checkoutEl = document.getElementById("coin-purchase-checkout");
+      if (checkoutEl) checkoutEl.classList.remove("hidden");
+      const packLbl = document.getElementById("selected-pack-label");
+      if (packLbl) packLbl.innerText = `Pack ${pack.coins} Pièces (${pack.bonus})`;
+      const packPrc = document.getElementById("selected-pack-price");
+      if (packPrc) packPrc.innerText = pack.price;
+    }
+
+    function selectCoinPack(idx) {
+      selectedCoinPack = idx;
+      renderWalletPacks();
+    }
+
+    function selectCoinPayMethod(method) {
+      selectedCoinPayMethod = method;
+      const cBtn = document.getElementById("coin-pay-card-btn");
+      const pBtn = document.getElementById("coin-pay-paypal-btn");
+      if (method === "card") {
+        if (cBtn) cBtn.className = "py-1.5 px-2 bg-rose-600 text-white rounded-xl text-[10px] font-bold";
+        if (pBtn) pBtn.className = "py-1.5 px-2 bg-[#222238] text-slate-300 rounded-xl text-[10px] font-bold";
+      } else {
+        if (cBtn) cBtn.className = "py-1.5 px-2 bg-[#222238] text-slate-300 rounded-xl text-[10px] font-bold";
+        if (pBtn) pBtn.className = "py-1.5 px-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold";
+      }
+    }
+
+    function confirmCoinPurchase() {
+      const packs = (priceTable[currentLang] || priceTable.fr).packs;
+      const pack = packs[selectedCoinPack] || packs[0];
+      userCoins += pack.coins;
+      document.getElementById("profile-coins").innerText = userCoins;
+      const wBal = document.getElementById("wallet-modal-balance");
+      if (wBal) wBal.innerText = userCoins;
+
+      userTransactions.unshift({
+        desc: `Achat Pack ${pack.coins} Pièces (${selectedCoinPayMethod === 'card' ? 'Carte Bancaire' : 'PayPal'})`,
+        date: "À l'instant",
+        amount: `+${pack.coins} 🪙`,
+        positive: true
+      });
+
+      const txList = document.getElementById("wallet-transactions-list");
+      if (txList) {
+        txList.innerHTML = userTransactions.map(t => `
+          <div class="p-2.5 bg-[#171726] rounded-xl border border-white/5 flex justify-between items-center">
+            <div>
+              <p class="font-bold text-white">${t.desc}</p>
+              <p class="text-[10px] text-slate-400">${t.date}</p>
+            </div>
+            <span class="text-emerald-400 font-bold font-mono">${t.amount}</span>
+          </div>
+        `).join("");
+      }
+
+      alert(`🎉 Rechargement Réussi !\n\n+${pack.coins} Pièces ajoutées avec succès à votre solde.\nVotre nouveau solde : ${userCoins} Pièces.`);
+    }
+
+    // ==========================================
+    // FORMULAIRE D'ABONNEMENT VIP AVEC PAIEMENTS (NON AUTOMATIQUE)
+    // ==========================================
+    let selectedVipPlan = "weekly";
+    let selectedPaymentMethod = "card";
+
     function openMembershipModal() {
       const modal = document.getElementById("membership-modal");
       if (modal) {
@@ -1920,19 +2660,105 @@
         const coupon = document.getElementById("membership-coupon-dialog");
         if (coupon) coupon.classList.remove("hidden");
       }
+      selectVipPlan(selectedVipPlan);
     }
+
     function closeMembershipModal() {
       const modal = document.getElementById("membership-modal");
       if (modal) modal.classList.add("hidden");
     }
+
     function dismissCouponAndSelectPlan() {
       const coupon = document.getElementById("membership-coupon-dialog");
       if (coupon) coupon.classList.add("hidden");
+      selectVipPlan("weekly");
     }
-    function confirmVipPurchase() {
+
+    function selectVipPlan(plan) {
+      selectedVipPlan = plan;
+      ["daily", "weekly", "monthly", "yearly"].forEach(p => {
+        const card = document.getElementById(`plan-card-${p}`);
+        if (card) {
+          if (p === plan) {
+            card.className = "cursor-pointer p-3 rounded-2xl border-2 border-rose-500 bg-rose-950/30 flex flex-col transition relative shadow-lg";
+          } else {
+            card.className = "cursor-pointer p-3 rounded-2xl border bg-[#181829] border-white/10 hover:border-rose-500/50 flex flex-col transition relative";
+          }
+        }
+      });
+      updateVipSubmitBtnText();
+    }
+
+    function updateVipSubmitBtnText() {
+      const prices = priceTable[currentLang] || priceTable.fr;
+      const dict = appI18n[currentLang] || appI18n.fr;
+      let pr = prices.weekly;
+      if (selectedVipPlan === "daily") pr = prices.daily;
+      if (selectedVipPlan === "monthly") pr = prices.monthly;
+      if (selectedVipPlan === "yearly") pr = prices.yearly;
+
+      const btnText = document.getElementById("btn-submit-vip-text");
+      if (btnText) btnText.innerText = `${dict.vip_confirm} ${pr}`;
+    }
+
+    function selectPaymentMethod(method) {
+      selectedPaymentMethod = method;
+      const cardBtn = document.getElementById("pay-btn-card");
+      const payPalBtn = document.getElementById("pay-btn-paypal");
+      const cardGroup = document.getElementById("card-fields-group");
+      const payPalGroup = document.getElementById("paypal-fields-group");
+
+      if (method === "card") {
+        if (cardBtn) cardBtn.className = "p-2.5 rounded-xl border-2 border-rose-500 bg-rose-950/20 flex items-center justify-center gap-2 text-xs font-bold text-white transition";
+        if (payPalBtn) payPalBtn.className = "p-2.5 rounded-xl border border-white/10 bg-[#181829] flex items-center justify-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition";
+        if (cardGroup) cardGroup.classList.remove("hidden");
+        if (payPalGroup) payPalGroup.classList.add("hidden");
+      } else {
+        if (cardBtn) cardBtn.className = "p-2.5 rounded-xl border border-white/10 bg-[#181829] flex items-center justify-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition";
+        if (payPalBtn) payPalBtn.className = "p-2.5 rounded-xl border-2 border-blue-500 bg-blue-950/20 flex items-center justify-center gap-2 text-xs font-bold text-white transition";
+        if (cardGroup) cardGroup.classList.add("hidden");
+        if (payPalGroup) payPalGroup.classList.remove("hidden");
+      }
+    }
+
+    function handleVipFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("vip-input-name").value.trim();
+      const email = document.getElementById("vip-input-email").value.trim();
+
+      if (!name || !email) {
+        alert("Veuillez renseigner votre nom complet et votre adresse email.");
+        return;
+      }
+
+      if (selectedPaymentMethod === "card") {
+        const cardNum = document.getElementById("vip-input-cardnum").value.trim();
+        if (cardNum && cardNum.length < 12) {
+          alert("Veuillez saisir un numéro de carte bancaire valide.");
+          return;
+        }
+      }
+
+      // Confirmation explicite et activation
       isVipUser = true;
       closeMembershipModal();
-      alert("👑 Félicitations !\n\nVous êtes désormais Membre VIP Illimité sur Drama Xoxo !\nToutes les séries et tous les épisodes sont débloqués.");
+
+      const prices = priceTable[currentLang] || priceTable.fr;
+      let planName = "Hebdomadaire (7j)";
+      let pr = prices.weekly;
+      if (selectedVipPlan === "daily") { planName = "Journalier (24h)"; pr = prices.daily; }
+      if (selectedVipPlan === "monthly") { planName = "Mensuel (1 mois)"; pr = prices.monthly; }
+      if (selectedVipPlan === "yearly") { planName = "Annuel (1 an)"; pr = prices.yearly; }
+
+      // Enregistrer la transaction
+      userTransactions.unshift({
+        desc: `Abonnement VIP ${planName} (${selectedPaymentMethod === 'card' ? 'Carte' : 'PayPal'})`,
+        date: "À l'instant",
+        amount: pr,
+        positive: false
+      });
+
+      alert(`🎉 Félicitations ${name} !\n\nVotre abonnement VIP ${planName} a été activé avec succès !\nUn reçu détaillé a été généré pour ${email}.\n\nToutes les séries et tous les épisodes sont débloqués en illimité ! 👑`);
     }
 
     function openCreatorApplicationModal() { document.getElementById("creator-app-modal").classList.remove("hidden"); }
@@ -1967,7 +2793,7 @@
     }
 
     function unlockCurrentEpisode() {
-      if (userCoins < 15) { openStoreModal(); return; }
+      if (userCoins < 15) { openWalletModal(); return; }
       userCoins -= 15;
       document.getElementById("profile-coins").innerText = userCoins;
       document.getElementById("locked-overlay").classList.add("hidden");
@@ -1978,6 +2804,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       loadDynamicCatalog();
       updateRoleUI();
+      applyLanguage(currentLang);
       lucide.createIcons();
     });
   </script>
