@@ -260,7 +260,7 @@
             <button onclick="switchHomeSubTab('vip')" id="subtab-vip" class="subtab-btn text-slate-400 hover:text-white border-b-2 border-transparent pb-1.5 whitespace-nowrap transition flex items-center gap-1">
               <span>👑</span> <span id="subtab-vip-text">VIP</span>
             </button>
-            <button onclick="window.location.href='/novels'" id="subtab-novels" class="subtab-btn text-purple-300 hover:text-purple-200 border-b-2 border-transparent pb-1.5 whitespace-nowrap transition flex items-center gap-1">
+            <button onclick="switchTab('novels')" id="subtab-novels" class="subtab-btn text-purple-300 hover:text-purple-200 border-b-2 border-transparent pb-1.5 whitespace-nowrap transition flex items-center gap-1">
               <span>📖</span>
               <span id="subtab-novels-text">Romans</span>
               <span class="text-[8px] bg-gradient-to-r from-rose-500 to-purple-600 text-white px-1.5 py-0.2 rounded-full font-black">NOUVEAU</span>
@@ -567,6 +567,152 @@
               </div>
             </div>
             <span class="text-purple-400 font-bold text-xs">▶ Continuer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN NOVELS: CATALOGUE DES ROMANS -->
+      <div id="screen-novels" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar p-4 pb-24 bg-[#0A0A12]">
+        <!-- Top Bar: Back to series + Title + Author link -->
+        <div class="flex items-center justify-between mb-4 pt-1">
+          <div class="flex items-center gap-2 bg-[#141422] p-1 rounded-full border border-white/10 shadow">
+            <button onclick="switchTab('home')" class="px-3 py-1 rounded-full text-[11px] font-bold text-slate-400 hover:text-white transition">
+              🎬 Séries
+            </button>
+            <div class="px-3 py-1 rounded-full text-[11px] font-black text-white bg-gradient-to-r from-rose-600 to-purple-600 shadow">
+              📖 Romans
+            </div>
+          </div>
+          <button onclick="window.location.href='/author'" class="text-[10px] font-bold text-purple-300 bg-purple-950/40 border border-purple-500/30 px-3 py-1.5 rounded-full transition flex items-center gap-1">
+            <span>✍️</span> <span>Espace Auteur</span>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative mb-4">
+          <input
+            type="text"
+            id="novel-search-input"
+            oninput="filterAppNovels(this.value)"
+            placeholder="Rechercher un roman, auteur, genre..."
+            class="w-full bg-[#161626] text-white text-xs py-2.5 pl-8 pr-3 rounded-xl border border-white/10 outline-none focus:border-purple-500"
+          />
+          <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs">🔍</span>
+        </div>
+
+        <!-- Genre Filter Pills -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 text-xs">
+          <button onclick="setAppNovelGenre('all')" id="novel-genre-all" class="novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 text-white shadow">
+            ✨ Tout
+          </button>
+          <button onclick="setAppNovelGenre('Romance')" id="novel-genre-romance" class="novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-[#161626] text-slate-400 border border-white/5">
+            💖 Romance
+          </button>
+          <button onclick="setAppNovelGenre('Dark Romance')" id="novel-genre-dark" class="novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-[#161626] text-slate-400 border border-white/5">
+            🌹 Dark Romance
+          </button>
+          <button onclick="setAppNovelGenre('Thriller')" id="novel-genre-thriller" class="novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-[#161626] text-slate-400 border border-white/5">
+            🔍 Thriller
+          </button>
+          <button onclick="setAppNovelGenre('Héritage Haïtien')" id="novel-genre-heritage" class="novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-[#161626] text-slate-400 border border-white/5">
+            🇭🇹 Héritage Haïtien
+          </button>
+        </div>
+
+        <!-- Novels Grid Container -->
+        <div id="app-novels-grid" class="grid grid-cols-2 gap-3.5 pt-1">
+          <!-- Populated by renderAppNovels() -->
+        </div>
+      </div>
+
+      <!-- SCREEN NOVEL DETAIL: FICHE DU LIVRE -->
+      <div id="screen-novel-detail" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar pb-24 bg-[#0A0A12]">
+        <div class="sticky top-0 z-30 bg-[#0E0E1A]/90 backdrop-blur-md px-4 py-3 border-b border-white/10 flex items-center justify-between">
+          <button onclick="switchTab('novels')" class="text-xs text-slate-300 hover:text-white font-bold flex items-center gap-1">
+            <span>‹</span> <span>Catalogue Romans</span>
+          </button>
+          <span id="detail-novel-genre-badge" class="text-[9px] bg-purple-900/40 text-purple-300 font-bold px-2 py-0.5 rounded border border-purple-500/30">
+            Romance
+          </span>
+        </div>
+
+        <div class="p-4 space-y-4">
+          <div class="flex gap-4 items-center">
+            <img id="detail-novel-cover" src="" class="w-28 aspect-[9/14] object-cover rounded-2xl border border-white/10 shadow-xl flex-shrink-0" />
+            <div class="flex-1 space-y-1.5">
+              <h2 id="detail-novel-title" class="text-base font-black text-white leading-tight"></h2>
+              <p id="detail-novel-author" class="text-xs text-purple-300 font-bold"></p>
+              <div class="flex items-center gap-2 text-[11px] text-slate-400 pt-1">
+                <span class="text-amber-400 font-bold">★ 4.9</span>
+                <span>•</span>
+                <span id="detail-novel-chaps-count">3 chapitres</span>
+              </div>
+              <button id="detail-read-btn" onclick="openAppNovelReader(0)" class="mt-2 w-full bg-gradient-to-r from-rose-600 to-purple-600 text-white font-black text-xs py-2 rounded-xl shadow transition">
+                📖 Commencer la Lecture
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-[#141424] p-4 rounded-2xl border border-white/5 space-y-1.5">
+            <h3 class="text-[11px] font-black text-rose-400 uppercase tracking-wider">Synopsis</h3>
+            <p id="detail-novel-synopsis" class="text-xs text-slate-300 leading-relaxed"></p>
+          </div>
+
+          <div class="space-y-2">
+            <h3 class="text-xs font-black text-white uppercase tracking-wider">Sommaire des Chapitres</h3>
+            <div id="detail-novel-chapters-list" class="bg-[#141424] rounded-2xl border border-white/5 divide-y divide-white/5 overflow-hidden text-xs">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN NOVEL READER: LISEUSE IMMERSIVE MOBILE -->
+      <div id="screen-novel-reader" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20 bg-[#08080E] text-slate-200">
+        <!-- Sticky Reader Header -->
+        <div class="sticky top-0 z-40 bg-[#0E0E18]/95 backdrop-blur-md px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+          <button onclick="switchTab('novel-detail')" class="text-xs text-slate-300 hover:text-white font-bold flex items-center gap-1">
+            <span>‹</span> <span id="reader-header-novel-title" class="truncate max-w-[140px]">Roman</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleAppReaderTheme()" class="p-1.5 rounded-lg bg-white/5 text-xs text-slate-300 hover:text-white" title="Changer de thème">
+              <span id="reader-theme-icon">🌙</span>
+            </button>
+            <button onclick="changeAppReaderFontSize(-1)" class="px-2 py-1 rounded-lg bg-white/5 text-xs font-bold text-slate-300">A-</button>
+            <button onclick="changeAppReaderFontSize(1)" class="px-2 py-1 rounded-lg bg-white/5 text-xs font-bold text-slate-300">A+</button>
+          </div>
+        </div>
+
+        <!-- Reader Text Area -->
+        <div id="app-reader-body" class="p-5 max-w-lg mx-auto space-y-4 font-serif text-[16px] leading-[1.8] text-justify">
+          <div class="text-center pb-4 border-b border-white/10 space-y-1">
+            <h2 id="reader-chapter-title" class="text-lg font-black text-white font-sans"></h2>
+            <p id="reader-chapter-meta" class="text-[10px] text-slate-400 font-sans"></p>
+          </div>
+          <div id="reader-chapter-content" class="space-y-4">
+            <!-- Populated by loadAppChapter() -->
+          </div>
+
+          <!-- Locked Chapter Paywall Card -->
+          <div id="reader-locked-card" class="hidden p-5 rounded-2xl bg-gradient-to-b from-purple-950/80 to-[#121222] border-2 border-purple-500/50 text-white shadow-2xl text-center space-y-3 mt-6">
+            <div class="w-12 h-12 rounded-full bg-purple-600/30 text-purple-300 border border-purple-400/40 flex items-center justify-center text-xl mx-auto shadow">
+              🔒
+            </div>
+            <h3 class="text-sm font-black text-white">Chapitre Verrouillé</h3>
+            <p class="text-xs text-purple-200">Ce chapitre exclusif nécessite 15 pièces pour être débloqué.</p>
+            <button onclick="unlockAppChapter()" class="w-full bg-gradient-to-r from-rose-600 to-purple-600 text-white font-black text-xs py-3 rounded-xl shadow transition">
+              🔓 Débloquer avec 15 pièces (70% reversés à l'auteur)
+            </button>
+          </div>
+
+          <!-- Next / Prev Chapter Footer -->
+          <div class="pt-6 pb-4 flex items-center justify-between gap-3 font-sans text-xs">
+            <button id="reader-prev-btn" onclick="prevAppChapter()" class="flex-1 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold transition">
+              ‹ Précédent
+            </button>
+            <button id="reader-next-btn" onclick="nextAppChapter()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-purple-600 text-white font-bold transition shadow">
+              Suivant ›
+            </button>
           </div>
         </div>
       </div>
@@ -2208,7 +2354,7 @@
       }
 
       // 3. Masquer tous les écrans
-      ["home", "discover", "mylist", "profile", "creator"].forEach(id => {
+      ["home", "discover", "mylist", "profile", "creator", "novels", "novel-detail", "novel-reader"].forEach(id => {
         const scr = document.getElementById(`screen-${id}`);
         if (scr) scr.classList.add("hidden");
       });
@@ -2219,6 +2365,7 @@
         activeScr.classList.remove("hidden");
         activeScr.scrollTop = 0;
         if (tabId === "mylist") renderMyList();
+        if (tabId === "novels") renderAppNovels();
         if (window.lucide) lucide.createIcons();
       }
 
@@ -4270,6 +4417,318 @@
 
       historyEl.appendChild(msgDiv);
       historyEl.scrollTop = historyEl.scrollHeight;
+    }
+
+
+    // ==========================================
+    // MODULE WEB NOVELS (ROMANS WEB ENRICHI)
+    // ==========================================
+    const appNovelsCatalog = [
+      {
+        id: "la-reine-du-crepuscule",
+        title: "La Reine du Crépuscule",
+        author: "Valérie M.",
+        genre: "Dark Romance",
+        rating: 4.9,
+        reads: "142K",
+        coverUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500",
+        synopsis: "Fiancée de force à l'héritier du cartel rival pour sceller une paix fragile, Elena découvre que son mari cache un secret encore plus ténébreux que ses origines...",
+        chapters: [
+          { id: 1, title: "Chapitre 1 : Le Pacte de Sang", is_paid: false, coins: 0, preview: "La pluie frappait violemment les vitraux du manoir de Port-au-Prince. Elena ajustait le tissu en soie de sa robe, le cœur battant à tout rompre..." },
+          { id: 2, title: "Chapitre 2 : La Nuit des Masques", is_paid: false, coins: 0, preview: "Les invités masqués tourbillonnaient dans la salle de bal. À travers la foule, son regard noir et perçant ne l'avait pas quittée une seule seconde..." },
+          { id: 3, title: "Chapitre 3 : Les Clés du Silence", is_paid: true, coins: 15, preview: "Derrière la porte dérobée de la bibliothèque, une lettre cachetée portait son propre nom avec la date de sa disparition..." }
+        ]
+      },
+      {
+        id: "les-secrets-de-jacmel",
+        title: "Les Secrets de Jacmel",
+        author: "Jean-Baptiste R.",
+        genre: "Héritage Haïtien",
+        rating: 4.8,
+        reads: "98K",
+        coverUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500",
+        synopsis: "De retour dans la demeure coloniale de ses aïeux sur la côte de Jacmel, Naïka trouve un carnet manuscrit révélant les amours interdites de 1920.",
+        chapters: [
+          { id: 1, title: "Chapitre 1 : L'Arrivée au Manoir", is_paid: false, coins: 0, preview: "L'odeur de la brise marine et du café chaud flottait sur la véranda. Le vieux bois grinçait sous les pas hésitants de Naïka..." },
+          { id: 2, title: "Chapitre 2 : L'Encre Effacée", is_paid: true, coins: 15, preview: "Sous le tiroir à double fond du bureau d'acajou, une page jaunie par les années attendait d'être déchiffrée..." }
+        ]
+      },
+      {
+        id: "contrat-avec-le-milliardaire",
+        title: "Contrat avec le Milliardaire",
+        author: "Sarah D.",
+        genre: "Romance",
+        rating: 4.7,
+        reads: "210K",
+        coverUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500",
+        synopsis: "Une simple assistante se voit proposer un contrat de mariage d'un an avec son impitoyable patron. Mais les sentiments ne faisaient pas partie de la clause.",
+        chapters: [
+          { id: 1, title: "Chapitre 1 : La Clause 14", is_paid: false, coins: 0, preview: "— Signez ici, mademoiselle Duval. Douze mois, un million, aucune question personnelle..." },
+          { id: 2, title: "Chapitre 2 : Première Apparition", is_paid: false, coins: 0, preview: "Les flashs des photographes crépitaient sur le tapis rouge du gala annuel..." },
+          { id: 3, title: "Chapitre 3 : Révélations Privées", is_paid: true, coins: 15, preview: "Dans le penthouse silencieux surplombant la baie, la distance professionnelle volait en éclats..." }
+        ]
+      },
+      {
+        id: "lombre-du-passe",
+        title: "L'Ombre du Passé",
+        author: "Marc-Antoine P.",
+        genre: "Thriller",
+        rating: 4.9,
+        reads: "76K",
+        coverUrl: "https://images.unsplash.com/photo-1509281373149-e957c6296406?w=500",
+        synopsis: "Un détective privé traque un cambrioleur d'art réputé insaisissable qui ne dérobe que des reliques appartenant à une même famille disparue.",
+        chapters: [
+          { id: 1, title: "Chapitre 1 : La Galerie Vide", is_paid: false, coins: 0, preview: "L'alarme n'avait pas sonné. Sur le mur, seul le cadre doré subsistait, avec un mot manuscrit..." },
+          { id: 2, title: "Chapitre 2 : L'Indice dans l'Ombre", is_paid: true, coins: 15, preview: "L'empreinte digitale laissée sur le marbre ne correspondait à aucun criminel vivant..." }
+        ]
+      }
+    ];
+
+    let currentAppNovelIndex = 0;
+    let currentAppChapterIndex = 0;
+    let currentNovelFilterGenre = 'all';
+    let appReaderFontSize = 16;
+    let appReaderTheme = 'dark';
+    let purchasedAppChapters = JSON.parse(localStorage.getItem('dramaxoxo_purchased_chapters') || '[]');
+
+    function renderAppNovels() {
+      const grid = document.getElementById('app-novels-grid');
+      if (!grid) return;
+
+      const searchInput = document.getElementById('app-novel-search');
+      const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+      const filtered = appNovelsCatalog.filter(n => {
+        const matchesGenre = currentNovelFilterGenre === 'all' || n.genre === currentNovelFilterGenre;
+        const matchesQuery = !query || n.title.toLowerCase().includes(query) || n.author.toLowerCase().includes(query) || n.genre.toLowerCase().includes(query);
+        return matchesGenre && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-2 py-12 text-center text-slate-500">
+            <span class="text-3xl block mb-2">📚</span>
+            <p class="text-xs font-bold">Aucun roman trouvé pour cette recherche.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((n) => {
+        const origIdx = appNovelsCatalog.findIndex(x => x.id === n.id);
+        return `
+          <div onclick="openAppNovelDetail(${origIdx})" class="bg-[#141424] rounded-2xl overflow-hidden border border-white/5 hover:border-purple-500/30 cursor-pointer transition group shadow-lg flex flex-col">
+            <div class="relative aspect-[9/13] overflow-hidden bg-[#1E1E2E]">
+              <img src="${n.coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+              <span class="absolute top-2 left-2 bg-purple-900/80 backdrop-blur-md text-purple-200 border border-purple-500/40 text-[9px] font-bold px-2 py-0.5 rounded-md shadow">
+                ${n.genre}
+              </span>
+              <span class="absolute bottom-2 right-2 bg-black/70 text-slate-200 text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm">
+                ★ ${n.rating}
+              </span>
+            </div>
+            <div class="p-2.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h4 class="font-bold text-white text-xs leading-snug group-hover:text-purple-300 transition line-clamp-1">${n.title}</h4>
+                <p class="text-[10px] text-slate-400 truncate">${n.author}</p>
+              </div>
+              <div class="pt-2 mt-1 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-400">
+                <span>${n.chapters.length} chap.</span>
+                <span class="text-rose-400 font-bold">▶ ${n.reads}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterAppNovels() {
+      renderAppNovels();
+    }
+
+    function setAppNovelGenre(genre) {
+      currentNovelFilterGenre = genre;
+      const pills = document.querySelectorAll('.novel-genre-pill');
+      pills.forEach(p => {
+        p.className = "novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-[#161626] text-slate-400 border border-white/5 transition";
+      });
+      const activeBtn = event ? event.currentTarget : null;
+      if (activeBtn) {
+        activeBtn.className = "novel-genre-pill px-3 py-1.5 rounded-xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 text-white shadow transition";
+      }
+      renderAppNovels();
+    }
+
+    function openAppNovelDetail(index) {
+      currentAppNovelIndex = index;
+      const novel = appNovelsCatalog[index];
+      if (!novel) return;
+
+      const cover = document.getElementById('detail-novel-cover');
+      const title = document.getElementById('detail-novel-title');
+      const author = document.getElementById('detail-novel-author');
+      const genreBadge = document.getElementById('detail-novel-genre-badge');
+      const chapsCount = document.getElementById('detail-novel-chaps-count');
+      const synopsis = document.getElementById('detail-novel-synopsis');
+      const chapsList = document.getElementById('detail-novel-chapters-list');
+
+      if (cover) cover.src = novel.coverUrl;
+      if (title) title.innerText = novel.title;
+      if (author) author.innerText = `Par ${novel.author}`;
+      if (genreBadge) genreBadge.innerText = novel.genre;
+      if (chapsCount) chapsCount.innerText = `${novel.chapters.length} chapitres`;
+      if (synopsis) synopsis.innerText = novel.synopsis;
+
+      if (chapsList) {
+        chapsList.innerHTML = novel.chapters.map((ch, cIdx) => {
+          const isUnlocked = !ch.is_paid || purchasedAppChapters.includes(`${novel.id}_${ch.id}`);
+          return `
+            <div onclick="openAppNovelReader(${cIdx})" class="p-3.5 flex items-center justify-between hover:bg-white/5 cursor-pointer transition">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-white/5 text-slate-400 text-xs font-bold flex items-center justify-center">${ch.id}</span>
+                <span class="font-bold text-white text-xs ${!isUnlocked ? 'text-slate-300' : ''}">${ch.title}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                ${isUnlocked 
+                  ? '<span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">✓ Gratuit</span>'
+                  : `<span class="text-[10px] text-amber-400 font-bold bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/20">🔒 ${ch.coins} pièces</span>`
+                }
+                <span class="text-slate-500 text-xs">›</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      switchTab('novel-detail');
+    }
+
+    function openAppNovelReader(chapterIdx) {
+      currentAppChapterIndex = chapterIdx;
+      loadAppChapter();
+      switchTab('novel-reader');
+    }
+
+    function loadAppChapter() {
+      const novel = appNovelsCatalog[currentAppNovelIndex];
+      if (!novel) return;
+      const chapter = novel.chapters[currentAppChapterIndex];
+      if (!chapter) return;
+
+      const headerTitle = document.getElementById('reader-header-novel-title');
+      const chapTitle = document.getElementById('reader-chapter-title');
+      const chapMeta = document.getElementById('reader-chapter-meta');
+      const content = document.getElementById('reader-chapter-content');
+      const lockedCard = document.getElementById('reader-locked-card');
+      const prevBtn = document.getElementById('reader-prev-btn');
+      const nextBtn = document.getElementById('reader-next-btn');
+
+      if (headerTitle) headerTitle.innerText = novel.title;
+      if (chapTitle) chapTitle.innerText = chapter.title;
+      if (chapMeta) chapMeta.innerText = `${novel.title} • Par ${novel.author}`;
+
+      const isUnlocked = !chapter.is_paid || purchasedAppChapters.includes(`${novel.id}_${chapter.id}`);
+
+      if (content) {
+        let paragraphs = [
+          chapter.preview,
+          "La pénombre enveloppait la pièce tandis que les souvenirs de cette nuit refaisaient surface. Chaque parole résonnait avec une intensité troublante, brisant le silence pesant qui régnait entre eux.",
+          "— Tu penses vraiment pouvoir t'échapper après ce que nous avons partagé ? murmura-t-il, un demi-sourire énigmatique aux lèvres.",
+          "Elle releva la tête, refusant de laisser paraître le moindre doute. Ses yeux brillaient d'une détermination nouvelle."
+        ];
+
+        if (!isUnlocked) {
+          content.innerHTML = `
+            <p>${chapter.preview}</p>
+            <p class="text-slate-500 italic text-center py-4">[ ... Extrait réservé aux membres ... ]</p>
+          `;
+          if (lockedCard) lockedCard.classList.remove('hidden');
+        } else {
+          content.innerHTML = paragraphs.map(p => `<p class="mb-4 indent-4">${p}</p>`).join('');
+          if (lockedCard) lockedCard.classList.add('hidden');
+        }
+      }
+
+      if (prevBtn) {
+        prevBtn.disabled = currentAppChapterIndex <= 0;
+        prevBtn.classList.toggle('opacity-30', currentAppChapterIndex <= 0);
+      }
+      if (nextBtn) {
+        nextBtn.disabled = currentAppChapterIndex >= novel.chapters.length - 1;
+        nextBtn.classList.toggle('opacity-30', currentAppChapterIndex >= novel.chapters.length - 1);
+      }
+    }
+
+    function prevAppChapter() {
+      if (currentAppChapterIndex > 0) {
+        currentAppChapterIndex--;
+        loadAppChapter();
+        const body = document.getElementById('screen-novel-reader');
+        if (body) body.scrollTop = 0;
+      }
+    }
+
+    function nextAppChapter() {
+      const novel = appNovelsCatalog[currentAppNovelIndex];
+      if (novel && currentAppChapterIndex < novel.chapters.length - 1) {
+        currentAppChapterIndex++;
+        loadAppChapter();
+        const body = document.getElementById('screen-novel-reader');
+        if (body) body.scrollTop = 0;
+      }
+    }
+
+    function toggleAppReaderTheme() {
+      const readerScr = document.getElementById('screen-novel-reader');
+      const icon = document.getElementById('reader-theme-icon');
+      if (!readerScr) return;
+
+      if (appReaderTheme === 'dark') {
+        appReaderTheme = 'sepia';
+        readerScr.className = "flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20 bg-[#F4ECD8] text-[#433422]";
+        if (icon) icon.innerText = "📜";
+      } else if (appReaderTheme === 'sepia') {
+        appReaderTheme = 'light';
+        readerScr.className = "flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20 bg-[#FFFFFF] text-[#1A1A1A]";
+        if (icon) icon.innerText = "☀️";
+      } else {
+        appReaderTheme = 'dark';
+        readerScr.className = "flex-1 flex flex-col overflow-y-auto no-scrollbar pb-20 bg-[#08080E] text-slate-200";
+        if (icon) icon.innerText = "🌙";
+      }
+    }
+
+    function changeAppReaderFontSize(delta) {
+      appReaderFontSize = Math.max(13, Math.min(24, appReaderFontSize + delta));
+      const body = document.getElementById('app-reader-body');
+      if (body) body.style.fontSize = `${appReaderFontSize}px`;
+    }
+
+    function unlockAppChapter() {
+      const novel = appNovelsCatalog[currentAppNovelIndex];
+      if (!novel) return;
+      const chapter = novel.chapters[currentAppChapterIndex];
+      if (!chapter) return;
+
+      if (userCoins < (chapter.coins || 15)) {
+        alert("🪙 Solde insuffisant ! Rechargez vos pièces dans votre Profil ou l'onglet VIP.");
+        return;
+      }
+
+      const cost = chapter.coins || 15;
+      userCoins -= cost;
+      localStorage.setItem("dramaxoxo_coins", userCoins.toString());
+      const cEl = document.getElementById("profile-coins");
+      if (cEl) cEl.innerText = userCoins;
+
+      const key = `${novel.id}_${chapter.id}`;
+      if (!purchasedAppChapters.includes(key)) {
+        purchasedAppChapters.push(key);
+        localStorage.setItem('dramaxoxo_purchased_chapters', JSON.stringify(purchasedAppChapters));
+      }
+
+      alert(`🎉 Chapitre "${chapter.title}" débloqué avec succès ! (70% reversés à l'auteur)`);
+      loadAppChapter();
     }
 
     window.addEventListener("DOMContentLoaded", () => {
