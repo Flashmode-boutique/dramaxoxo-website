@@ -51,26 +51,27 @@
       <form id="auth-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
         <div>
           <label class="block text-left text-xs font-semibold text-slate-300 mb-1.5">
-            Mot de Passe Secret Administrateur
+            E-mail administrateur
           </label>
           <input
-            id="password-input"
-            type="password"
-            placeholder="Entrez votre mot de passe..."
+            id="email-input"
+            type="email"
+            placeholder="admin@dramaxoxo.com"
             class="w-full bg-[#1F1F2E] border border-white/10 text-white px-4 py-3 rounded-xl text-sm outline-none focus:border-rose-500 transition"
             required
             autofocus
           />
           <p id="error-msg" class="hidden text-xs text-rose-400 font-semibold text-left mt-2">
-            ✕ Mot de passe incorrect.
+            ✕ Connexion refusée.
           </p>
         </div>
 
         <button
+          id="auth-submit-button"
           type="submit"
           class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-rose-600/30 transition tracking-wide"
         >
-          Déverrouiller l'Administration
+          Envoyer le code sécurisé
         </button>
       </form>
 
@@ -671,38 +672,8 @@
       }
     ];
 
-    const GITHUB_REPO = "Flashmode-boutique/dramaxoxo-website";
-    const _tA = "ghp_";
-    const _tB = "9Ll59WoS6NpM4SPPK71HZojfSph7R21PT1of";
-    const GITHUB_TOKEN = _tA + _tB;
-
     async function syncGlobalCatalogToCloud() {
-      try {
-        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/public/catalog.json`, {
-          headers: { Authorization: `token ${GITHUB_TOKEN}`, Accept: "application/vnd.github.v3+json" }
-        });
-        if (!getRes.ok) return;
-        const fileData = await getRes.json();
-        const sha = fileData.sha;
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(seriesCatalog, null, 2))));
-
-        await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/public/catalog.json`, {
-          method: "PUT",
-          headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: "Admin: Update global series catalog [Cloud Sync]",
-            content: content,
-            sha: sha
-          })
-        });
-        console.log("✓ Cloud sync complete: Catalog updated globally for all users.");
-      } catch (err) {
-        console.warn("Cloud sync warning:", err);
-      }
+      console.warn("Cloud catalog writes are disabled until the authenticated server-side catalog API is enabled.");
     }
 
     async function loadCatalog() {
@@ -748,20 +719,59 @@
       if (cBadge) cBadge.innerText = creatorApps.filter(a => a.status === "PENDING").length;
     }
 
-    function handleAdminLogin(e) {
+    let adminOtpRequested = false;
+    async function handleAdminLogin(e) {
       e.preventDefault();
-      const pwd = document.getElementById("password-input").value.trim();
-      if (pwd === "Virtualsis@$1" || pwd === "admin2026") {
+      const emailInput = document.getElementById("email-input");
+      const errorMsg = document.getElementById("error-msg");
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const email = emailInput.dataset.email || emailInput.value.trim();
+      errorMsg.classList.add("hidden");
+      submitButton.disabled = true;
+      try {
+        const endpoint = adminOtpRequested ? "/api/verify-otp" : "/api/send-otp";
+        const payload = adminOtpRequested ? { email, code: emailInput.value.trim() } : { email };
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.error || "Connexion refusée.");
+        if (!adminOtpRequested) {
+          adminOtpRequested = true;
+          emailInput.dataset.email = email;
+          emailInput.value = "";
+          emailInput.type = "text";
+          emailInput.inputMode = "numeric";
+          emailInput.maxLength = 6;
+          emailInput.placeholder = "000000";
+          submitButton.textContent = "Vérifier le code";
+          return;
+        }
         document.getElementById("admin-auth-gate").classList.add("hidden");
         document.getElementById("admin-main-ui").classList.remove("hidden");
         loadCatalog();
-      } else {
-        document.getElementById("error-msg").classList.remove("hidden");
+      } catch (error) {
+        errorMsg.textContent = `✕ ${error.message || "Connexion refusée."}`;
+        errorMsg.classList.remove("hidden");
+      } finally {
+        submitButton.disabled = false;
       }
     }
 
     function lockSession() {
-      document.getElementById("password-input").value = "";
+      const emailInput = document.getElementById("email-input");
+      const submitButton = document.getElementById("auth-submit-button");
+      emailInput.value = "";
+      emailInput.type = "email";
+      emailInput.removeAttribute("inputmode");
+      emailInput.removeAttribute("maxlength");
+      emailInput.placeholder = "admin@dramaxoxo.com";
+      delete emailInput.dataset.email;
+      submitButton.textContent = "Envoyer le code sécurisé";
+      submitButton.disabled = false;
+      adminOtpRequested = false;
       document.getElementById("error-msg").classList.add("hidden");
       document.getElementById("admin-main-ui").classList.add("hidden");
       document.getElementById("admin-auth-gate").classList.remove("hidden");

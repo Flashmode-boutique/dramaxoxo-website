@@ -10,6 +10,7 @@ export interface Env {
 
 // In-memory or state storage for active OTPs
 const otpStore = new Map<string, { code: string; expiresAt: number }>();
+const otpRequestStore = new Map<string, number>();
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -19,7 +20,32 @@ export default {
     if (url.pathname === '/api/send-otp' && request.method === 'POST') {
       try {
         const body = (await request.json()) as { email?: string };
-        const email = body.email || env.ADMIN_EMAIL || 'brybass12@gmail.com';
+        const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
+        const email = body.email?.trim().toLowerCase();
+
+        if (!adminEmail || !env.RESEND_API_KEY) {
+          return new Response(JSON.stringify({ success: false, error: 'Admin authentication is not configured.' }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+
+        if (!email || email !== adminEmail) {
+          return new Response(JSON.stringify({ success: false, error: 'Unauthorized administrator account.' }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+
+        const clientId = request.headers.get('CF-Connecting-IP') || 'unknown';
+        const lastRequestAt = otpRequestStore.get(clientId) || 0;
+        if (Date.now() - lastRequestAt < 60_000) {
+          return new Response(JSON.stringify({ success: false, error: 'Please wait before requesting another code.' }), {
+            status: 429,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+        otpRequestStore.set(clientId, Date.now());
 
         // Generate 6-digit random code
         const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -31,8 +57,8 @@ export default {
         let providerError = '';
 
         // If Resend API Key is configured in Cloudflare environment variables
-        const apiKey = env.RESEND_API_KEY || 're_123456789_placeholder';
-        if (apiKey && !apiKey.includes('placeholder')) {
+        const apiKey = env.RESEND_API_KEY;
+        if (apiKey) {
           try {
             const resendRes = await fetch('https://api.resend.com/emails', {
               method: 'POST',
@@ -71,23 +97,17 @@ export default {
           }
         }
 
-        return new Response(
-          JSON.stringify({
-            success: true,
-            email,
-            emailSent,
-            providerConfigured: apiKey && !apiKey.includes('placeholder'),
-            message: emailSent
-              ? `Code envoyé avec succès à ${email}`
-              : `Code généré pour ${email} (En attente de la clé API Resend)`,
-            // In dev mode when API key is not yet set, we pass code for backup
-            code: emailSent ? undefined : code,
-            error: providerError || undefined,
-          }),
-          {
+        if (!emailSent) {
+          otpStore.delete(email);
+          return new Response(JSON.stringify({ success: false, error: providerError || 'Unable to send security code.' }), {
+            status: 502,
             headers: { 'Content-Type': 'application/json' },
-          }
-        );
+          });
+        }
+
+        return new Response(JSON.stringify({ success: true, message: 'Security code sent.' }), {
+          headers: { 'Content-Type': 'application/json' },
+        });
       } catch (err: any) {
         return new Response(JSON.stringify({ success: false, error: err.message }), {
           status: 400,
@@ -100,17 +120,19 @@ export default {
     if (url.pathname === '/api/verify-otp' && request.method === 'POST') {
       try {
         const body = (await request.json()) as { email?: string; code?: string };
-        const email = (body.email || 'brybass12@gmail.com').toLowerCase();
+        const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
+        const email = body.email?.trim().toLowerCase();
         const code = body.code?.trim();
+
+        if (!adminEmail || !email || email !== adminEmail || !code) {
+          return new Response(JSON.stringify({ success: false, error: 'Invalid verification request.' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
 
         const stored = otpStore.get(email);
         if (!stored) {
-          // Allow default master fallback if store is cold
-          if (code === 'admin2026' || code === '123456') {
-            return new Response(JSON.stringify({ success: true }), {
-              headers: { 'Content-Type': 'application/json' },
-            });
-          }
           return new Response(JSON.stringify({ success: false, error: 'Code expiré ou introuvable.' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },
@@ -125,7 +147,7 @@ export default {
           });
         }
 
-        if (stored.code !== code && code !== 'admin2026') {
+        if (stored.code !== code) {
           return new Response(JSON.stringify({ success: false, error: 'Code incorrect.' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },

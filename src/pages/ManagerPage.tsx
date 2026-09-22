@@ -68,8 +68,11 @@ interface PayoutItem {
 
 export const ManagerPage: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passwordInput, setPasswordInput] = useState('');
-  const [authError, setAuthError] = useState(false);
+  const [adminEmail, setAdminEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [otpRequested, setOtpRequested] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [authBusy, setAuthBusy] = useState(false);
 
   const [activeTab, setActiveTab] = useState<
     'overview' | 'catalog_editor' | 'publish_series' | 'applications' | 'reports' | 'payouts' | 'home_layout' | 'pricing'
@@ -201,14 +204,43 @@ export const ManagerPage: React.FC = () => {
   const [royaltyRate, setRoyaltyRate] = useState('70');
   const [minPayout, setMinPayout] = useState('50');
 
-  // Login handler
-  const handleLogin = (e: React.FormEvent) => {
+  const requestAdminCode = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput.trim() === 'Virtualsis@$1' || passwordInput.trim() === 'admin2026') {
+    setAuthBusy(true);
+    setAuthError('');
+    try {
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: adminEmail.trim() }),
+      });
+      const result = await response.json() as { success?: boolean; error?: string };
+      if (!response.ok || !result.success) throw new Error(result.error || 'Unable to send the security code.');
+      setOtpRequested(true);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Unable to send the security code.');
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  const verifyAdminCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthBusy(true);
+    setAuthError('');
+    try {
+      const response = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: adminEmail.trim(), code: otpCode.trim() }),
+      });
+      const result = await response.json() as { success?: boolean; error?: string };
+      if (!response.ok || !result.success) throw new Error(result.error || 'Invalid security code.');
       setIsAuthenticated(true);
-      setAuthError(false);
-    } else {
-      setAuthError(true);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Invalid security code.');
+    } finally {
+      setAuthBusy(false);
     }
   };
 
@@ -292,29 +324,40 @@ export const ManagerPage: React.FC = () => {
             <p className="text-xs text-brand-textMuted">Console de gestion privée pour Marie Stanley</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={otpRequested ? verifyAdminCode : requestAdminCode} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-brand-textSecondary mb-2">
-                Mot de Passe Secret Administrateur
+                {otpRequested ? 'Code de sécurité à 6 chiffres' : 'E-mail administrateur'}
               </label>
               <input
-                type="password"
-                value={passwordInput}
-                onChange={e => { setPasswordInput(e.target.value); setAuthError(false); }}
-                placeholder="Entrez votre mot de passe..."
+                type={otpRequested ? 'text' : 'email'}
+                inputMode={otpRequested ? 'numeric' : 'email'}
+                value={otpRequested ? otpCode : adminEmail}
+                onChange={e => {
+                  if (otpRequested) setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6));
+                  else setAdminEmail(e.target.value);
+                  setAuthError('');
+                }}
+                placeholder={otpRequested ? '000000' : 'admin@dramaxoxo.com'}
                 className="w-full px-4 py-3 rounded-xl bg-brand-card border border-brand-border text-white text-sm focus:border-brand-red focus:outline-none"
                 autoFocus
+                required
               />
               {authError && (
                 <p className="text-xs text-rose-400 mt-2 font-medium">
-                  ✕ Mot de passe incorrect.
+                  ✕ {authError}
                 </p>
               )}
             </div>
 
-            <Button variant="glow" size="lg" className="w-full font-bold shadow-red-glow" type="submit">
-              Ouvrir la Console d'Administration
+            <Button variant="glow" size="lg" className="w-full font-bold shadow-red-glow" type="submit" disabled={authBusy}>
+              {authBusy ? 'Vérification…' : otpRequested ? "Ouvrir la Console d'Administration" : 'Envoyer le code sécurisé'}
             </Button>
+            {otpRequested && (
+              <button type="button" className="w-full text-xs text-brand-textMuted hover:text-white" onClick={() => { setOtpRequested(false); setOtpCode(''); setAuthError(''); }}>
+                Utiliser un autre e-mail
+              </button>
+            )}
           </form>
 
           <p className="text-[11px] text-center text-brand-textMuted">
