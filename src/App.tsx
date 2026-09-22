@@ -11,6 +11,10 @@ import { CopyrightPage } from './pages/CopyrightPage';
 import { SupportPage } from './pages/SupportPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
 import { ManagerPage } from './pages/ManagerPage';
+import { NovelsPage } from './pages/NovelsPage';
+import { NovelDetailPage } from './pages/NovelDetailPage';
+import { NovelReaderPage } from './pages/NovelReaderPage';
+import { AuthorStudioPage } from './pages/AuthorStudioPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 export const App: React.FC = () => {
@@ -20,6 +24,10 @@ export const App: React.FC = () => {
         <PageLayout>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/novels" element={<NovelsPage />} />
+            <Route path="/novels/:slug" element={<NovelDetailPage />} />
+            <Route path="/novels/:slug/read/:chapterId" element={<NovelReaderPage />} />
+            <Route path="/author" element={<AuthorStudioPage />} />
             <Route path="/manager" element={<ManagerPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />

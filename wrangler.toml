@@ -7,3 +7,10 @@ compatibility_flags = ["nodejs_compat"]
 directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dramaxoxo-db"
+database_id = "dramaxoxo-d1-production"
+migrations_dir = "./migrations"
+

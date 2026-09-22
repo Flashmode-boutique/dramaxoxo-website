@@ -75,8 +75,16 @@ export const ManagerPage: React.FC = () => {
   const [authBusy, setAuthBusy] = useState(false);
 
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'catalog_editor' | 'publish_series' | 'applications' | 'reports' | 'payouts' | 'home_layout' | 'pricing'
+    'overview' | 'catalog_editor' | 'publish_series' | 'applications' | 'reports' | 'payouts' | 'novels_admin' | 'home_layout' | 'pricing'
   >('overview');
+
+  // State: Novels & Authors Moderation
+  const [novelApps, setNovelApps] = useState<any[]>([]);
+  const [pendingNovelChapters, setPendingNovelChapters] = useState<any[]>([]);
+  const [allPlatformNovels, setAllPlatformNovels] = useState<any[]>([]);
+  const [royaltiesAuditData, setRoyaltiesAuditData] = useState<any>(null);
+  const [loadingNovelsAdmin, setLoadingNovelsAdmin] = useState<boolean>(false);
+
 
   // State: Catalog Series (Full Demo & Live Series Editor)
   const [catalogSeries, setCatalogSeries] = useState<ModerationSeriesItem[]>([
@@ -291,6 +299,69 @@ export const ManagerPage: React.FC = () => {
     }
   };
 
+  // Novels Admin API Handlers
+  const fetchNovelsAdmin = async () => {
+    setLoadingNovelsAdmin(true);
+    try {
+      const email = adminEmail || 'mariestanley@virtualsis.com';
+      const [resApps, resMod, resLedger] = await Promise.all([
+        fetch('/api/admin/novels/applications', { headers: { 'X-User-Email': email } }),
+        fetch('/api/admin/novels/moderation', { headers: { 'X-User-Email': email } }),
+        fetch('/api/admin/royalties/ledger', { headers: { 'X-User-Email': email } })
+      ]);
+      const dataApps = await resApps.json();
+      const dataMod = await resMod.json();
+      const dataLedger = await resLedger.json();
+      if (dataApps.success) setNovelApps(dataApps.applications || []);
+      if (dataMod.success) {
+        setPendingNovelChapters(dataMod.pendingChapters || []);
+        setAllPlatformNovels(dataMod.allNovels || []);
+      }
+      if (dataLedger.success) setRoyaltiesAuditData(dataLedger);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingNovelsAdmin(false);
+    }
+  };
+
+  const handleReviewNovelApp = async (appId: string, decision: 'APPROVED' | 'REJECTED') => {
+    try {
+      const email = adminEmail || 'mariestanley@virtualsis.com';
+      const res = await fetch(`/api/admin/novels/applications/${appId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-User-Email': email },
+        body: JSON.stringify({ decision })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message || 'Décision enregistrée.');
+        fetchNovelsAdmin();
+      }
+    } catch (e: any) {
+      alert('Erreur: ' + e.message);
+    }
+  };
+
+  const handlePublishNovelChapter = async (chapterId: string, publish: boolean) => {
+    try {
+      const email = adminEmail || 'mariestanley@virtualsis.com';
+      const res = await fetch(`/api/admin/novels/chapters/${chapterId}/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-User-Email': email },
+        body: JSON.stringify({ publish })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message || 'Mise à jour effectuée.');
+        fetchNovelsAdmin();
+      }
+    } catch (e: any) {
+      alert('Erreur: ' + e.message);
+    }
+  };
+
+
   // Approve / Reject Creator
   const handleApproveCreator = (id: string) => {
     setApplications(prev => prev.map(a => a.id === id ? { ...a, status: 'APPROVED' } : a));
@@ -416,6 +487,7 @@ export const ManagerPage: React.FC = () => {
           { id: 'catalog_editor', label: `🎬 Modifier Séries Démo (${catalogSeries.length})` },
           { id: 'publish_series', label: '➕ Publier une Série' },
           { id: 'applications', label: `📝 Candidatures Créateurs (${applications.filter(a => a.status === 'PENDING_REVIEW').length})` },
+          { id: 'novels_admin', label: '📖 Modération Romans & Auteurs' },
           { id: 'reports', label: `🚨 Signalements & DMCA (${reports.filter(r => r.status === 'UNDER_REVIEW').length})` },
           { id: 'payouts', label: `💰 Royalties & Payouts (${payouts.filter(p => p.status === 'PENDING_REVIEW').length})` },
           { id: 'home_layout', label: '🏠 Gestion de l\'Accueil' },
@@ -423,7 +495,10 @@ export const ManagerPage: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => {
+              setActiveTab(tab.id as any);
+              if (tab.id === 'novels_admin') fetchNovelsAdmin();
+            }}
             className={`px-4 py-2.5 rounded-xl whitespace-nowrap transition-all ${
               activeTab === tab.id
                 ? 'bg-brand-red text-white font-bold shadow-red-glow'
@@ -814,6 +889,180 @@ export const ManagerPage: React.FC = () => {
             ))}
           </div>
         </Card>
+      )}
+
+      {/* NOVELS & AUTHORS MODERATION & ROYALTIES AUDIT */}
+      {activeTab === 'novels_admin' && (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center bg-brand-surface p-6 rounded-3xl border border-brand-border">
+            <div>
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <span>📖</span> <span>Modération des Romans Web, Auteurs & Grand Livre des Royalties</span>
+              </h2>
+              <p className="text-xs text-brand-textMuted">Contrôle éditorial, approbation des plumes et registre vérifiable des ventes de chapitres.</p>
+            </div>
+            <Button variant="secondary" size="sm" onClick={fetchNovelsAdmin} disabled={loadingNovelsAdmin}>
+              {loadingNovelsAdmin ? 'Actualisation...' : '🔄 Actualiser'}
+            </Button>
+          </div>
+
+          {/* Section 1: Candidatures d'Auteurs */}
+          <Card className="p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-brand-border pb-3">
+              <h3 className="font-bold text-white text-sm">
+                📝 Candidatures Auteurs en Attente ({novelApps.filter(a => a.status === 'PENDING').length})
+              </h3>
+              <span className="text-[10px] bg-purple-500/20 text-purple-300 font-bold px-2.5 py-0.5 rounded-full">
+                70% Royalties Standard
+              </span>
+            </div>
+
+            {novelApps.length === 0 ? (
+              <p className="text-xs text-brand-textMuted py-4 text-center">Aucune candidature d'auteur en attente.</p>
+            ) : (
+              <div className="space-y-4">
+                {novelApps.map((app: any) => (
+                  <div key={app.id} className="p-5 rounded-2xl bg-brand-card border border-brand-border space-y-3 text-xs">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-bold text-white text-sm">{app.penName}</h4>
+                        <p className="text-[11px] text-brand-textMuted">{app.contactEmail} • Reçu le {new Date(app.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        app.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-300' : (app.status === 'REJECTED' ? 'bg-rose-500/20 text-rose-300' : 'bg-amber-500/20 text-amber-300')
+                      }`}>
+                        {app.status}
+                      </span>
+                    </div>
+
+                    {app.bio && <p className="text-slate-300 bg-black/20 p-2.5 rounded-xl"><strong>Bio :</strong> {app.bio}</p>}
+
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5 space-y-1">
+                      <p className="font-bold text-purple-300">Extrait : « {app.sampleTitle} »</p>
+                      <p className="text-slate-300 font-serif leading-relaxed line-clamp-4">{app.sampleContent}</p>
+                    </div>
+
+                    {app.status === 'PENDING' && (
+                      <div className="flex gap-2 pt-2">
+                        <Button variant="glow" size="sm" onClick={() => handleReviewNovelApp(app.id, 'APPROVED')} className="font-bold">
+                          ✓ Approuver l'Auteur
+                        </Button>
+                        <Button variant="danger" size="sm" onClick={() => handleReviewNovelApp(app.id, 'REJECTED')}>
+                          ✕ Refuser
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          {/* Section 2: Modération des Chapitres */}
+          <Card className="p-6 space-y-4">
+            <h3 className="font-bold text-white text-sm border-b border-brand-border pb-3">
+              📑 Chapitres Soumis à Publication ({pendingNovelChapters.length})
+            </h3>
+
+            {pendingNovelChapters.length === 0 ? (
+              <p className="text-xs text-brand-textMuted py-4 text-center">Tous les chapitres soumis ont été modérés.</p>
+            ) : (
+              <div className="space-y-4">
+                {pendingNovelChapters.map((chap: any) => (
+                  <div key={chap.id} className="p-5 rounded-2xl bg-brand-card border border-brand-border space-y-3 text-xs">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-[10px] bg-purple-900/40 text-purple-300 font-bold px-2 py-0.5 rounded">
+                          {chap.novelTitle}
+                        </span>
+                        <h4 className="font-bold text-white text-sm mt-1">{chap.title}</h4>
+                        <p className="text-[11px] text-brand-textMuted">Par {chap.authorName} • ~{chap.wordCount} mots • {chap.isPaid ? '🔒 15 pièces' : '🟢 Gratuit'}</p>
+                      </div>
+                      <span className="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded">
+                        EN ATTENTE
+                      </span>
+                    </div>
+
+                    <div className="bg-black/40 p-4 rounded-xl border border-white/5 font-serif text-slate-300 max-h-48 overflow-y-auto leading-relaxed">
+                      {chap.content}
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <Button variant="glow" size="sm" onClick={() => handlePublishNovelChapter(chap.id, true)} className="font-bold">
+                        🚀 Publier Immédiatement au Catalogue
+                      </Button>
+                      <Button variant="secondary" size="sm" onClick={() => handlePublishNovelChapter(chap.id, false)}>
+                        Mettre en Brouillon
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          {/* Section 3: Grand Livre des Royalties (Ledger Réel) */}
+          <Card className="p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-brand-border pb-3">
+              <h3 className="font-bold text-white text-sm flex items-center gap-1.5">
+                <span>💰</span> <span>Grand Livre des Ventes & Royalties (Ledger Certifié)</span>
+              </h3>
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/30">
+                AUDIT INTÈGRE
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 bg-brand-card rounded-xl border border-brand-border">
+                <span className="text-slate-400">Total Brut Transactions</span>
+                <p className="text-xl font-black text-white mt-1">{royaltiesAuditData?.summary?.totalGrossFormatted || '$0.00'}</p>
+              </div>
+              <div className="p-4 bg-brand-card rounded-xl border border-emerald-500/30">
+                <span className="text-emerald-400">Total Part Auteurs (70%)</span>
+                <p className="text-xl font-black text-emerald-400 mt-1">{royaltiesAuditData?.summary?.totalAuthorFormatted || '$0.00'}</p>
+              </div>
+              <div className="p-4 bg-brand-card rounded-xl border border-brand-border">
+                <span className="text-slate-400">Total Part Plateforme (30%)</span>
+                <p className="text-xl font-black text-purple-400 mt-1">{royaltiesAuditData?.summary?.totalPlatformFormatted || '$0.00'}</p>
+              </div>
+            </div>
+
+            {!royaltiesAuditData?.ledger || royaltiesAuditData.ledger.length === 0 ? (
+              <p className="text-xs text-brand-textMuted py-4 text-center">Aucune transaction de roman enregistrée pour le moment.</p>
+            ) : (
+              <div className="overflow-x-auto text-xs">
+                <table className="w-full text-left text-slate-300">
+                  <thead className="border-b border-white/10 text-slate-400 text-[10px] uppercase">
+                    <tr>
+                      <th className="py-2">ID Transaction</th>
+                      <th className="py-2">Auteur ID</th>
+                      <th className="py-2">Brut</th>
+                      <th className="py-2">Auteur (70%)</th>
+                      <th className="py-2">Plateforme (30%)</th>
+                      <th className="py-2">Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {royaltiesAuditData.ledger.map((r: any) => (
+                      <tr key={r.id}>
+                        <td className="py-2 font-mono text-purple-300">{r.id}</td>
+                        <td className="py-2">{r.authorId}</td>
+                        <td className="py-2">${(r.grossAmountCents / 100).toFixed(2)}</td>
+                        <td className="py-2 text-emerald-400 font-bold">${(r.authorCutCents / 100).toFixed(2)}</td>
+                        <td className="py-2">${(r.platformCutCents / 100).toFixed(2)}</td>
+                        <td className="py-2">
+                          <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-[9px] font-bold">
+                            {r.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Card>
+        </div>
       )}
 
       {/* 7. HOME LAYOUT */}
