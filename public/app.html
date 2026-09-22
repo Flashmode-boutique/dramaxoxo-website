@@ -4571,6 +4571,7 @@
       const chapsCount = document.getElementById('detail-novel-chaps-count');
       const synopsis = document.getElementById('detail-novel-synopsis');
       const chapsList = document.getElementById('detail-novel-chapters-list');
+      const readBtn = document.getElementById('detail-read-btn');
 
       if (cover) cover.src = novel.coverUrl;
       if (title) title.innerText = novel.title;
@@ -4578,6 +4579,19 @@
       if (genreBadge) genreBadge.innerText = novel.genre;
       if (chapsCount) chapsCount.innerText = `${novel.chapters.length} chapitres`;
       if (synopsis) synopsis.innerText = novel.synopsis;
+
+      const savedProgress = localStorage.getItem(`dramaxoxo_novel_progress_${novel.id}`);
+      const resumeChapIndex = savedProgress ? parseInt(savedProgress, 10) : 0;
+
+      if (readBtn) {
+        if (savedProgress && resumeChapIndex > 0) {
+          readBtn.innerHTML = `📖 Reprendre (Chap. ${resumeChapIndex + 1})`;
+          readBtn.setAttribute('onclick', `openAppNovelReader(${resumeChapIndex})`);
+        } else {
+          readBtn.innerHTML = `📖 Commencer la Lecture`;
+          readBtn.setAttribute('onclick', `openAppNovelReader(0)`);
+        }
+      }
 
       if (chapsList) {
         chapsList.innerHTML = novel.chapters.map((ch, cIdx) => {
@@ -4626,6 +4640,11 @@
       if (headerTitle) headerTitle.innerText = novel.title;
       if (chapTitle) chapTitle.innerText = chapter.title;
       if (chapMeta) chapMeta.innerText = `${novel.title} • Par ${novel.author}`;
+
+      // Enregistrer automatiquement la reprise de lecture
+      try {
+        localStorage.setItem(`dramaxoxo_novel_progress_${novel.id}`, currentAppChapterIndex.toString());
+      } catch (e) {}
 
       const isUnlocked = !chapter.is_paid || purchasedAppChapters.includes(`${novel.id}_${chapter.id}`);
 
