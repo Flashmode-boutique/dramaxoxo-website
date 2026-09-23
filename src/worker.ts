@@ -91,6 +91,22 @@ export interface RoyaltyEntry {
 // In-memory persistent state (fallback if D1 not bound)
 let memoryNovels: Novel[] = [
   {
+    id: "novel_pouvwa_lev_li",
+    authorId: "author_manmi_soso",
+    authorName: "Manmi Soso",
+    title: "Pouvwa \"Lèv\" Li",
+    slug: "pouvwa-lev-li",
+    synopsis: "Aprann viv ak yon diferans ki fè w' santi w'pa menm ak lòt fanm, ki tounen yon sous wont pou ou, ka tounen yon sous plezi pou yon lòt. Li ka rekole moso zenglen fwaye ki te kraze, bati yon lien ke w' pa t' janm imajine, e menm ka few leve gwo lo ou pa t' espere.",
+    coverUrl: "/images/pouvwa-lev-li.webp",
+    genre: "Romance",
+    tags: ["Romance", "Héritage Haïtien", "Pouvwa Lèv Li", "Drame Passionnel", "Manmi Soso"],
+    status: "PUBLISHED",
+    viewsCount: 28540,
+    rating: 5.0,
+    createdAt: Date.now() - 86400000 * 3,
+    updatedAt: Date.now() - 86400000 * 1,
+  },
+  {
     id: "novel_1",
     authorId: "author_stanley",
     authorName: "Stanley M. Imbry",
@@ -141,6 +157,72 @@ let memoryNovels: Novel[] = [
 ];
 
 let memoryChapters: NovelChapter[] = [
+  {
+    id: "chap_pouvwa_1",
+    novelId: "novel_pouvwa_lev_li",
+    chapterIndex: 1,
+    title: "Chapit 1 : Yon Diferans Ki Chanje Tout",
+    content: `Depi m' piti, mwen te toujou santi m' diferan. Yon diferans ki pa t' vizib pou tout moun nan lari, men ki te peze lou sou kè m' chak fwa m' gade kò m' nan glas la. Yon sekrè mwen te kache ak tout fòs mwen, paske mwen te pè jijman, mwen te pè pou moun pa t' wè m' kòm yon fanm ki gen yon defo.
+
+Pandan plizyè ane, sa te tounen yon sous wont pou mwen. Mwen te refize kite okenn gason pwoche twò pre, mwen te bati yon baryè an fè toutotou kè m'. Mwen te konvenki ke pèsonn pa t' ka vrèman renmen m' jan m' ye a san yo pa gade m' ak pitye oubyen ak degoutans.
+
+Men lavi gen yon fason dwòl pou l' chanje desten nou lè nou pi piti atann sa.
+
+Jou sa a, lapli te kòmanse tonbe sou Petyonvil. Bri dlo ki t'ap frape sou do kay la te sanble ak yon kout tanbou ki t'ap anonse yon gwo evènman. Lè pòt salon an te louvri epi li menm li te antre, yon gwo silans te tonbe nan tout chanm nan.
+
+Je l' te nwa, gade l' te pèse nan fon nanm mwen tankou yon flèch. Li pa t' gade m' tankou lòt yo te konn fè. Nan je l', mwen pa t' wè okenn wont, okenn dout... mwen te wè yon pasyon tou limen ki te kòmanse fè tout kò m' tranble.`,
+    wordCount: 1350,
+    isPaid: false,
+    coinPrice: 0,
+    status: "PUBLISHED",
+    publishedAt: Date.now() - 86400000 * 3,
+    createdAt: Date.now() - 86400000 * 3,
+    updatedAt: Date.now() - 86400000 * 3,
+  },
+  {
+    id: "chap_pouvwa_2",
+    novelId: "novel_pouvwa_lev_li",
+    chapterIndex: 2,
+    title: "Chapit 2 : Rega Ki Fè Tranble",
+    content: `Li te fè yon pa pi devan, soulye kwi l' yo fè yon ti bri sou bèl mab klere a. Mwen te vle fè bak, men pye m' te refize bouje. Li te kanpe jis devan m', sant pafen l' melanje ak sant lapli a te anvayi tout espas la.
+
+— Ou pa bezwen pè m', li te di ak yon vwa dou, men ki gen yon fòs ladan l' ki ta ka deplase mòn.
+
+— Mwen pa pè ou, mwen te reponn byen vit, menm si vwa m' te yon ti jan tranble.
+
+Li te souri yon ti souri malen, yon souri ki montre li te wè nan jwèt mwen an. Men olye li te pase m' nan rizib, li te lonje men l' dousman, li mete de dwèt anba manton m', li leve figi m' pou m' te ka gade l' dwat nan je.
+
+— Sa ou wè kòm yon feblès, mwen menm mwen wè l' kòm yon bèl trezò. Diferans ou an se pa yon malediksyon... se yon pouvwa ou poko menm konprann.
+
+Pawòl sa yo te frape m' tankou yon kout zèklè. Pou premye fwa nan lavi m', yon moun pa t' ap eseye kache sa m' ye, li t'ap gade l' nan figi epi li t'ap ba li valè. Zenglen fwaye ki te kraze nan kè m' te kòmanse rekole youn pa youn.`,
+    wordCount: 1420,
+    isPaid: false,
+    coinPrice: 0,
+    status: "PUBLISHED",
+    publishedAt: Date.now() - 86400000 * 2,
+    createdAt: Date.now() - 86400000 * 2,
+    updatedAt: Date.now() - 86400000 * 2,
+  },
+  {
+    id: "chap_pouvwa_3",
+    novelId: "novel_pouvwa_lev_li",
+    chapterIndex: 3,
+    title: "Chapit 3 : Sekrè Manwa a",
+    content: `Lannwit lan te avanse, epi sekrè manwa a t'ap kòmanse revele tèt yo. Nan gwo kay sa a ki te plen istwa ak mistè, chak kwen te sanble gen yon bagay pou l' di.
+
+Li te pran men m', li mennen m' nan direksyon gwo balkon an ki t'ap bay sou tout vil la. Limyè Pòtoprens t'ap briye nan distans tankou ti zetwal ki te tonbe sou tè a.
+
+— Nou tou de gen blesi nou kache, li te chichote pandan van frèt la t'ap soufle sou cheve m'. Men ansanm, nou ka bati yon bagay ke pèsonn pa t' janm imajine. Yon lyen ki pi fò pase tout sa yo te di sou nou.
+
+Mwen te gade bouch li, mwen te gade fason li t'ap pale ak tout kè l'. Mwen te konnen depi nan moman sa a, lavi m' pa t'ap janm menm jan ankò. Sa ki te konn fè m' wont lan te tounen sous yon plezi ak yon libète mwen pa t' janm espere jwenn nan vi sa a...`,
+    wordCount: 1510,
+    isPaid: true,
+    coinPrice: 15,
+    status: "PUBLISHED",
+    publishedAt: Date.now() - 86400000 * 1,
+    createdAt: Date.now() - 86400000 * 1,
+    updatedAt: Date.now() - 86400000 * 1,
+  },
   {
     id: "chap_1_1",
     novelId: "novel_1",
