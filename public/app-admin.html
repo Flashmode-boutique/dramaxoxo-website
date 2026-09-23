@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DRAMA XOXO — Studio d'Administration & Back-Office</title>
+  <title>DRAMA XOXO — Studio d'Administration, Finance & Créateurs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -82,7 +82,7 @@
             ADMINISTRATRICE
           </span>
         </div>
-        <p class="text-[11px] text-slate-400">Gestionnaire de Contenu Réel • Marie Stanley</p>
+        <p class="text-[11px] text-slate-400">Direction Générale & Finance • Marie Stanley</p>
       </div>
     </div>
 
@@ -93,7 +93,7 @@
         class="text-xs font-bold px-3.5 py-2 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600 hover:text-white transition flex items-center gap-1.5 shadow"
       >
         <span>📱</span>
-        <span class="hidden sm:inline">Voir l'App en Direct</span>
+        <span class="hidden sm:inline">Tester l'App Spectateur</span>
       </a>
 
       <button
@@ -108,20 +108,26 @@
 
   <!-- ==================== NAVIGATION TABS ==================== -->
   <nav class="bg-[#12121E] border-b border-[#202030] px-4 sm:px-8 py-2.5 flex gap-2 overflow-x-auto no-scrollbar text-xs font-bold">
-    <button onclick="switchTab('overview')" id="tab-overview" class="px-4 py-2 rounded-xl bg-rose-600 text-white shadow-lg whitespace-nowrap transition">
+    <button onclick="switchTab('overview')" id="tab-overview" class="px-3.5 py-2 rounded-xl bg-rose-600 text-white shadow-lg whitespace-nowrap transition">
       📊 Vue d'ensemble
     </button>
-    <button onclick="switchTab('dramas')" id="tab-dramas" class="px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
+    <button onclick="switchTab('dramas')" id="tab-dramas" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
       🎬 Séries Réelles (<span id="dramas-count-badge">0</span>)
     </button>
-    <button onclick="switchTab('novels')" id="tab-novels" class="px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
+    <button onclick="switchTab('novels')" id="tab-novels" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
       📖 Romans Réels (<span id="novels-count-badge">0</span>)
     </button>
-    <button onclick="switchTab('hero')" id="tab-hero" class="px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
-      🔥 Hero & Bannières Défilantes
+    <button onclick="switchTab('creators')" id="tab-creators" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
+      📝 Candidatures Créateurs (<span id="creators-count-badge">0</span>)
     </button>
-    <button onclick="switchTab('sync')" id="tab-sync" class="px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
-      💾 Synchronisation & Données
+    <button onclick="switchTab('finance')" id="tab-finance" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
+      💰 Finance & Déblocages
+    </button>
+    <button onclick="switchTab('hero')" id="tab-hero" class="px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
+      🔥 Hero & Bannières
+    </button>
+    <button onclick="switchTab('sync')" id="tab-sync" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
+      💾 Sync & Données
     </button>
   </nav>
 
@@ -131,63 +137,68 @@
     <!-- ==================== TAB 1: OVERVIEW ==================== -->
     <section id="view-overview" class="space-y-6">
       
-      <!-- Live Stats -->
+      <!-- Live Stats Financial & Operational -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Séries Actives</p>
-          <h3 class="text-2xl font-black text-rose-500" id="stat-dramas-count">0</h3>
-          <p class="text-[10px] text-emerald-400">Prêtes pour le streaming</p>
+          <p class="text-[11px] text-slate-400 font-semibold">Revenu Brut Global</p>
+          <h3 class="text-2xl font-black text-emerald-400" id="stat-revenue-total">24 850,00 $</h3>
+          <p class="text-[10px] text-emerald-400">↑ +32% ce mois</p>
         </div>
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Romans Disponibles</p>
-          <h3 class="text-2xl font-black text-purple-400" id="stat-novels-count">0</h3>
-          <p class="text-[10px] text-purple-300">Lecteur de texte actif</p>
+          <p class="text-[11px] text-slate-400 font-semibold">Royalties Créateurs (70%)</p>
+          <h3 class="text-2xl font-black text-purple-400" id="stat-royalties-total">17 395,00 $</h3>
+          <p class="text-[10px] text-purple-300">À reverser aux auteurs & studios</p>
         </div>
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Bannières Défilantes</p>
-          <h3 class="text-2xl font-black text-amber-400">Actif</h3>
-          <p class="text-[10px] text-amber-300">Marquee infini 60 FPS</p>
+          <p class="text-[11px] text-slate-400 font-semibold">Marge DRAMA XOXO (30%)</p>
+          <h3 class="text-2xl font-black text-rose-500" id="stat-margin-total">7 455,00 $</h3>
+          <p class="text-[10px] text-rose-300">Revenus nets plateforme</p>
         </div>
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Mode Synchronisation</p>
-          <h3 class="text-2xl font-black text-emerald-400">Direct</h3>
-          <p class="text-[10px] text-emerald-300">Persistance locale et cloud</p>
+          <p class="text-[11px] text-slate-400 font-semibold">Candidatures en Attente</p>
+          <h3 class="text-2xl font-black text-amber-400" id="stat-pending-creators">0</h3>
+          <p class="text-[10px] text-amber-300">À modérer aujourd'hui</p>
         </div>
       </div>
 
       <!-- Quick Shortcuts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-[#12121E] p-6 rounded-2xl border border-white/5 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>🎬</span> Gestion des Séries
+            <span>🎬</span> Catalogue Séries & Romans
           </h3>
-          <p class="text-xs text-slate-400">Remplacez les séries de démonstration par vos vraies productions, modifiez les jaquettes et gérez les badges VIP.</p>
+          <p class="text-xs text-slate-400"><span id="stat-dramas-count">0</span> Séries actives • <span id="stat-novels-count">0</span> Romans en ligne.</p>
           <div class="flex gap-2">
-            <button onclick="switchTab('dramas')" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition">
-              Gérer les Séries ›
+            <button onclick="switchTab('dramas')" class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition">
+              Séries ›
             </button>
-            <button onclick="switchTab('hero')" class="flex-1 py-2.5 rounded-xl bg-[#1C1C2A] hover:bg-[#252538] text-slate-200 font-bold text-xs transition">
-              Bannières Défilantes ›
+            <button onclick="switchTab('novels')" class="flex-1 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition">
+              Romans ›
             </button>
           </div>
         </div>
 
-        <div class="bg-[#12121E] p-6 rounded-2xl border border-white/5 space-y-4">
+        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>📖</span> Gestion des Romans
+            <span>📝</span> Modération Candidatures
           </h3>
-          <p class="text-xs text-slate-400">Ajoutez vos romans exclusifs, publiez de nouveaux chapitres complets et modifiez les résumés pour vos lecteurs.</p>
-          <div class="flex gap-2">
-            <button onclick="switchTab('novels')" class="flex-1 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition">
-              Gérer les Romans ›
-            </button>
-            <button onclick="switchTab('sync')" class="flex-1 py-2.5 rounded-xl bg-[#1C1C2A] hover:bg-[#252538] text-slate-200 font-bold text-xs transition">
-              Exporter le Catalogue ›
-            </button>
-          </div>
+          <p class="text-xs text-slate-400">Validez ou rejetez les demandes des créateurs de mini-séries et d'auteurs de romans.</p>
+          <button onclick="switchTab('creators')" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">
+            Examiner les Candidatures ›
+          </button>
+        </div>
+
+        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center gap-2">
+            <span>💰</span> Finances & Déblocages
+          </h3>
+          <p class="text-xs text-slate-400">Gérez les virements Stripe / Banque et le moteur de déblocage automatique des chapitres/épisodes.</p>
+          <button onclick="switchTab('finance')" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+            Gérer les Finances ›
+          </button>
         </div>
       </div>
 
@@ -210,8 +221,6 @@
 
     <!-- ==================== TAB 2: DRAMAS CRUD ==================== -->
     <section id="view-dramas" class="hidden space-y-6">
-      
-      <!-- Add New Drama Form -->
       <div class="bg-[#12121E] p-6 rounded-2xl border border-rose-500/20 space-y-4">
         <h3 class="font-extrabold text-sm text-rose-400 flex items-center gap-2">
           <span>➕</span> Ajouter une Nouvelle Série Réelle
@@ -255,19 +264,14 @@
         </button>
       </div>
 
-      <!-- Current Dramas List -->
       <div class="space-y-3">
         <h3 class="font-bold text-white text-sm">🎬 Séries Actuellement en Ligne (<span id="dramas-list-count">0</span>)</h3>
-        <div id="dramas-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Populated by JS -->
-        </div>
+        <div id="dramas-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
     </section>
 
     <!-- ==================== TAB 3: NOVELS CRUD ==================== -->
     <section id="view-novels" class="hidden space-y-6">
-      
-      <!-- Add New Novel Form -->
       <div class="bg-[#12121E] p-6 rounded-2xl border border-purple-500/20 space-y-4">
         <h3 class="font-extrabold text-sm text-purple-400 flex items-center gap-2">
           <span>➕</span> Ajouter un Nouveau Roman Réel
@@ -318,16 +322,114 @@
         </button>
       </div>
 
-      <!-- Current Novels List -->
       <div class="space-y-3">
         <h3 class="font-bold text-white text-sm">📚 Romans Actuellement en Ligne (<span id="novels-list-count">0</span>)</h3>
-        <div id="novels-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Populated by JS -->
+        <div id="novels-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: CREATORS APPLICATIONS MODERATION ==================== -->
+    <section id="view-creators" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-white">📝 Candidatures Créateurs & Postulants</h2>
+          <p class="text-xs text-slate-400">Examinez les dossiers des postulants (Mini-Séries et Romans), approuvez ou rejetez en un clic.</p>
+        </div>
+        <div class="flex gap-2">
+          <select id="filter-creator-status" onchange="renderCreatorsApplications()" class="bg-[#1A1A28] border border-white/10 text-white text-xs px-3 py-1.5 rounded-xl font-bold outline-none">
+            <option value="ALL">Tous les statuts</option>
+            <option value="PENDING">⏳ En attente</option>
+            <option value="APPROVED">✅ Approuvées</option>
+            <option value="REJECTED">❌ Rejetées</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="creators-applications-list" class="space-y-4">
+        <!-- Injected dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: FINANCE & AUTO-UNLOCK ENGINE ==================== -->
+    <section id="view-finance" class="hidden space-y-6">
+      
+      <!-- Financial Overview Banner -->
+      <div class="bg-gradient-to-r from-emerald-950/40 via-[#12121E] to-[#161626] p-6 rounded-2xl border border-emerald-500/30 space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-black px-2.5 py-1 rounded-full border border-emerald-500/30">
+              LEDGER FINANCIER EN TEMPS RÉEL
+            </span>
+            <h3 class="text-xl font-black text-white mt-1.5">Gestion des Royalties & Paiements Sécurisés</h3>
+            <p class="text-xs text-slate-400">Répartition contractuelle : 70% pour les auteurs/studios • 30% marge DRAMA XOXO.</p>
+          </div>
+          <button onclick="triggerAutoUnlockSimulation()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-2">
+            <span>⚡</span> Simuler Achat & Déblocage Auto
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5">
+            <p class="text-[11px] text-slate-400">Total Ventes Pièces & VIP</p>
+            <p class="text-lg font-black text-emerald-400" id="finance-total-sales">24 850,00 $</p>
+          </div>
+          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5">
+            <p class="text-[11px] text-slate-400">Royalties Payées aux Auteurs</p>
+            <p class="text-lg font-black text-purple-400" id="finance-paid-royalties">14 200,00 $</p>
+          </div>
+          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5">
+            <p class="text-[11px] text-slate-400">Solde Royalties en Attente</p>
+            <p class="text-lg font-black text-amber-400" id="finance-pending-royalties">3 195,00 $</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-Unlock Engine Rules -->
+      <div class="bg-[#12121E] p-6 rounded-2xl border border-white/5 space-y-4">
+        <h4 class="font-bold text-sm text-white flex items-center gap-2">
+          <span>🔓</span> Moteur de Déblocage Automatique des Épisodes & Chapitres
+        </h4>
+        <p class="text-xs text-slate-400">
+          Dès qu'un visiteur souscrit au Pass VIP ou achète un pack de pièces, le système déverrouille instantanément les contenus protégés et crédite les royalties (70%) au créateur correspondant.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div class="p-3.5 bg-[#1A1A28] rounded-xl border border-white/5 space-y-1">
+            <p class="font-bold text-amber-400">👑 Règle Adhésion VIP</p>
+            <p class="text-[11px] text-slate-300">Accès illimité immédiat à tous les épisodes vidéo et tous les chapitres de romans.</p>
+          </div>
+          <div class="p-3.5 bg-[#1A1A28] rounded-xl border border-white/5 space-y-1">
+            <p class="font-bold text-rose-400">🪙 Règle Achat de Pièces</p>
+            <p class="text-[11px] text-slate-300">10 pièces / épisode débloqué • 5 pièces / chapitre roman débloqué de façon permanente.</p>
+          </div>
+          <div class="p-3.5 bg-[#1A1A28] rounded-xl border border-white/5 space-y-1">
+            <p class="font-bold text-purple-400">💸 Règle Versement 70%</p>
+            <p class="text-[11px] text-slate-300">Crédité au portefeuille de l'auteur dès chaque déblocage payant.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Author Payouts -->
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <h4 class="font-bold text-sm text-white">💸 Demandes de Virements & Paiements Auteurs</h4>
+          <span class="text-xs text-slate-400">Virements Stripe / Bank / PayPal</span>
+        </div>
+        <div id="payouts-list" class="space-y-3">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Live Transaction Stream -->
+      <div class="space-y-3">
+        <h4 class="font-bold text-sm text-white">⚡ Journal des Transactions & Déblocages en Direct</h4>
+        <div id="transactions-stream" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+          <!-- Injected by JS -->
         </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 4: HERO & MARQUEE ==================== -->
+    <!-- ==================== TAB 6: HERO & MARQUEE ==================== -->
     <section id="view-hero" class="hidden space-y-6">
       <div class="bg-[#12121E] p-6 rounded-2xl border border-rose-500/20 space-y-4 max-w-2xl">
         <h3 class="font-extrabold text-sm text-rose-400 flex items-center gap-2">
@@ -367,7 +469,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 5: SYNC & DATABASE ==================== -->
+    <!-- ==================== TAB 7: SYNC & DATABASE ==================== -->
     <section id="view-sync" class="hidden space-y-6 max-w-2xl">
       <div class="bg-[#12121E] p-6 rounded-2xl border border-emerald-500/20 space-y-4">
         <h3 class="font-extrabold text-sm text-emerald-400 flex items-center gap-2">
@@ -443,6 +545,57 @@
       }
     ];
 
+    const INITIAL_CREATORS_APPLICATIONS = [
+      {
+        id: "app-101",
+        name: "Marc-Antoine Désir",
+        email: "marcantoine.prod@gmail.com",
+        format: "series", // 'series' | 'novel'
+        title: "Les Secrets du Cap-Haïtien",
+        genre: "Suspense & Romance Tropicale",
+        synopsis: "Une saga familiale au cœur des plantations historiques où disparitions et amours interdites se croisent.",
+        file: "teaser_pilote_vertical_916.mp4 (45 MB)",
+        status: "PENDING", // 'PENDING' | 'APPROVED' | 'REJECTED'
+        date: "Aujourd'hui à 14:15"
+      },
+      {
+        id: "app-102",
+        name: "Solange Baptiste",
+        email: "solange.b@ecrivains-caraibes.org",
+        format: "novel",
+        title: "La Flamme d'un Amour Interdit",
+        genre: "Romance Passionnée",
+        synopsis: "Une jeune pianiste prodige tombe sous le charme du critique musical le plus impitoyable de Paris.",
+        file: "manuscrit_complet_chapitres1-10.pdf (3.8 MB)",
+        status: "PENDING",
+        date: "Hier à 18:30"
+      },
+      {
+        id: "app-103",
+        name: "David K. Vlady",
+        email: "david.vlady@cinema-short.com",
+        format: "series",
+        title: "Le Dernier Pacte du Parrain",
+        genre: "Action & Mafia",
+        synopsis: "Un jeune détective infiltré doit choisir entre sa loyauté envers la police et son devoir fraternel.",
+        file: "episode_1_master_4k.mp4 (110 MB)",
+        status: "APPROVED",
+        date: "21 Sep 2026"
+      }
+    ];
+
+    const INITIAL_PAYOUTS = [
+      { id: "pay-1", creator: "Jean-Paul Delacroix", amount: "4 250,00 $", method: "Stripe Connect", date: "23 Sep 2026", status: "PENDING" },
+      { id: "pay-2", creator: "Aurore Valmont", amount: "3 890,00 $", method: "Virement Bancaire (IBAN)", date: "22 Sep 2026", status: "PENDING" },
+      { id: "pay-3", creator: "David K. Vlady", amount: "6 060,00 $", method: "PayPal Business", date: "20 Sep 2026", status: "PAID" }
+    ];
+
+    const INITIAL_TRANSACTIONS = [
+      { id: "tx-1", type: "VIP_PASS", user: "Utilisateur #84920", amount: "+29,99 $", item: "Adhésion VIP Mensuelle", unlocked: "Tous les épisodes & romans débloqués", date: "Il y a 2 min" },
+      { id: "tx-2", type: "COINS", user: "Utilisateur #19402", amount: "+9,99 $", item: "Pack 1 000 Pièces", unlocked: "Déblocage Épisodes 6-15 Série 'Amour & Vengeance'", date: "Il y a 8 min" },
+      { id: "tx-3", type: "COINS", user: "Utilisateur #55231", amount: "+4,99 $", item: "Pack 500 Pièces", unlocked: "Déblocage Chapitres 3-7 Roman 'L'Ombre du Destin'", date: "Il y a 18 min" }
+    ];
+
     const DEFAULT_HERO = {
       tag: "🔥 NOUVEAU TENDANCE",
       title: "Le Secret Inavouable de l'Héritier",
@@ -454,6 +607,9 @@
     let DRAMAS = loadDramas();
     let NOVELS = loadNovels();
     let HERO = loadHero();
+    let CREATORS = loadCreators();
+    let PAYOUTS = loadPayouts();
+    let TRANSACTIONS = loadTransactions();
 
     function loadDramas() {
       try {
@@ -488,6 +644,39 @@
       try { localStorage.setItem('dramaxoxo_hero', JSON.stringify(HERO)); } catch (e) {}
     }
 
+    function loadCreators() {
+      try {
+        const s = localStorage.getItem('dramaxoxo_creator_applications');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return [...INITIAL_CREATORS_APPLICATIONS];
+    }
+    function saveCreators() {
+      try { localStorage.setItem('dramaxoxo_creator_applications', JSON.stringify(CREATORS)); } catch (e) {}
+    }
+
+    function loadPayouts() {
+      try {
+        const s = localStorage.getItem('dramaxoxo_payouts');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return [...INITIAL_PAYOUTS];
+    }
+    function savePayouts() {
+      try { localStorage.setItem('dramaxoxo_payouts', JSON.stringify(PAYOUTS)); } catch (e) {}
+    }
+
+    function loadTransactions() {
+      try {
+        const s = localStorage.getItem('dramaxoxo_transactions');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return [...INITIAL_TRANSACTIONS];
+    }
+    function saveTransactions() {
+      try { localStorage.setItem('dramaxoxo_transactions', JSON.stringify(TRANSACTIONS)); } catch (e) {}
+    }
+
     function showToast(msg, icon = "✨") {
       const el = document.getElementById('toast');
       document.getElementById('toast-msg').innerText = msg;
@@ -502,17 +691,17 @@
 
     // ================= TAB NAVIGATION =================
     function switchTab(tabId) {
-      const tabs = ["overview", "dramas", "novels", "hero", "sync"];
+      const tabs = ["overview", "dramas", "novels", "creators", "finance", "hero", "sync"];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-${t}`);
         if (view) {
           if (t === tabId) {
             view.classList.remove('hidden');
-            if (btn) btn.className = "px-4 py-2 rounded-xl bg-rose-600 text-white shadow-lg whitespace-nowrap transition font-bold";
+            if (btn) btn.className = "px-3.5 py-2 rounded-xl bg-rose-600 text-white shadow-lg whitespace-nowrap transition font-bold";
           } else {
             view.classList.add('hidden');
-            if (btn) btn.className = "px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition font-bold";
+            if (btn) btn.className = "px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition font-bold";
           }
         }
       });
@@ -522,10 +711,13 @@
     // ================= RENDER FUNCTIONS =================
     function renderAll() {
       // Badges
+      const pendingCount = CREATORS.filter(c => c.status === 'PENDING').length;
       document.getElementById('dramas-count-badge').innerText = DRAMAS.length;
       document.getElementById('novels-count-badge').innerText = NOVELS.length;
+      document.getElementById('creators-count-badge').innerText = pendingCount;
       document.getElementById('stat-dramas-count').innerText = DRAMAS.length;
       document.getElementById('stat-novels-count').innerText = NOVELS.length;
+      document.getElementById('stat-pending-creators').innerText = pendingCount;
       document.getElementById('dramas-list-count').innerText = DRAMAS.length;
       document.getElementById('novels-list-count').innerText = NOVELS.length;
 
@@ -594,6 +786,12 @@
         `).join('');
       }
 
+      // Creators Applications
+      renderCreatorsApplications();
+
+      // Payouts & Finance
+      renderPayoutsAndTransactions();
+
       // Hero Form Populate
       document.getElementById('form-hero-tag').value = HERO.tag || '';
       document.getElementById('form-hero-title').value = HERO.title || '';
@@ -604,11 +802,185 @@
       // JSON Area
       const jsonArea = document.getElementById('database-json-area');
       if (jsonArea) {
-        jsonArea.value = JSON.stringify({ dramas: DRAMAS, novels: NOVELS, hero: HERO }, null, 2);
+        jsonArea.value = JSON.stringify({ dramas: DRAMAS, novels: NOVELS, hero: HERO, creators: CREATORS, payouts: PAYOUTS, transactions: TRANSACTIONS }, null, 2);
       }
     }
 
-    // ================= CRUD ACTIONS =================
+    // ================= CREATORS MODERATION =================
+    function renderCreatorsApplications() {
+      const container = document.getElementById('creators-applications-list');
+      if (!container) return;
+
+      const filter = document.getElementById('filter-creator-status')?.value || 'ALL';
+      const filtered = CREATORS.filter(c => filter === 'ALL' || c.status === filter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-[#12121E] p-8 rounded-2xl border border-white/5 text-center text-slate-400 text-xs">
+            Aucune candidature trouvée pour ce filtre.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(c => `
+        <div class="bg-[#161624] p-5 rounded-2xl border ${c.status === 'PENDING' ? 'border-amber-500/30' : (c.status === 'APPROVED' ? 'border-emerald-500/30' : 'border-rose-500/30')} space-y-3">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">${c.format === 'series' ? '🎬' : '📖'}</span>
+              <div>
+                <h4 class="font-extrabold text-sm text-white">${c.name}</h4>
+                <p class="text-[11px] text-slate-400">${c.email} • Postulé le ${c.date}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full ${c.status === 'PENDING' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (c.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30')}">
+                ${c.status === 'PENDING' ? '⏳ En Attente d\'Examen' : (c.status === 'APPROVED' ? '✅ Approuvée & Active' : '❌ Rejetée')}
+              </span>
+            </div>
+          </div>
+
+          <!-- Project Details -->
+          <div class="p-3.5 bg-[#12121E] rounded-xl border border-white/5 space-y-1.5 text-xs">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-white">Titre du Projet : <span class="text-rose-400">${c.title}</span></span>
+              <span class="text-[10px] text-purple-300 font-semibold uppercase bg-purple-950/40 px-2 py-0.5 rounded">${c.format === 'series' ? 'Mini-Série Vidéo' : 'Roman Texte'}</span>
+            </div>
+            <p class="text-[11px] text-slate-300"><strong class="text-slate-400">Genre :</strong> ${c.genre}</p>
+            <p class="text-[11px] text-slate-300"><strong class="text-slate-400">Synopsis :</strong> ${c.synopsis}</p>
+            <p class="text-[11px] text-emerald-400 flex items-center gap-1">
+              <span>📎 Fichier soumis :</span>
+              <span class="font-mono bg-emerald-950/40 px-2 py-0.5 rounded text-[10px]">${c.file}</span>
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2 pt-1">
+            ${c.status !== 'APPROVED' ? `
+              <button onclick="setCreatorStatus('${c.id}', 'APPROVED')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20">
+                <span>✅</span> Approuver & Donner Accès Créateur
+              </button>
+            ` : ''}
+
+            ${c.status !== 'REJECTED' ? `
+              <button onclick="setCreatorStatus('${c.id}', 'REJECTED')" class="flex-1 bg-rose-900/40 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-extrabold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                <span>❌</span> Rejeter la Candidature
+              </button>
+            ` : ''}
+
+            ${c.status !== 'PENDING' ? `
+              <button onclick="setCreatorStatus('${c.id}', 'PENDING')" class="bg-[#202030] hover:bg-[#2c2c40] text-slate-300 font-bold text-xs px-3 py-2 rounded-xl transition">
+                Remettre en attente
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setCreatorStatus(appId, newStatus) {
+      const app = CREATORS.find(c => c.id === appId);
+      if (!app) return;
+      app.status = newStatus;
+      saveCreators();
+      renderAll();
+      showToast(`Candidature de ${app.name} : ${newStatus === 'APPROVED' ? 'Approuvée ✅' : (newStatus === 'REJECTED' ? 'Rejetée ❌' : 'En attente ⏳')}`);
+    }
+
+    // ================= PAYOUTS & TRANSACTIONS =================
+    function renderPayoutsAndTransactions() {
+      // Payouts
+      const payoutsContainer = document.getElementById('payouts-list');
+      if (payoutsContainer) {
+        payoutsContainer.innerHTML = PAYOUTS.map(p => `
+          <div class="bg-[#161624] p-4 rounded-xl border border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center font-bold text-sm">
+                👤
+              </div>
+              <div>
+                <h5 class="font-bold text-xs text-white">${p.creator}</h5>
+                <p class="text-[10px] text-slate-400">${p.method} • Date demande : ${p.date}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-black text-purple-400">${p.amount}</span>
+              ${p.status === 'PENDING' ? `
+                <button onclick="processPayout('${p.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow transition">
+                  Valider le Virement 💸
+                </button>
+              ` : `
+                <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/30">
+                  ✓ Transféré
+                </span>
+              `}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Transactions Stream
+      const streamContainer = document.getElementById('transactions-stream');
+      if (streamContainer) {
+        streamContainer.innerHTML = TRANSACTIONS.map(tx => `
+          <div class="bg-[#141420] p-3 rounded-xl border border-white/5 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">${tx.type === 'VIP_PASS' ? '👑' : '🪙'}</span>
+              <div>
+                <p class="font-bold text-white">${tx.item} <span class="text-slate-400 font-normal">(${tx.user})</span></p>
+                <p class="text-[10px] text-emerald-400">🔓 Auto-déblocage : ${tx.unlocked}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-extrabold text-emerald-400">${tx.amount}</p>
+              <p class="text-[9px] text-slate-500">${tx.date}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function processPayout(payoutId) {
+      const p = PAYOUTS.find(x => x.id === payoutId);
+      if (!p) return;
+      if (!confirm(`Confirmer le virement de ${p.amount} vers ${p.creator} (${p.method}) ?`)) return;
+
+      p.status = 'PAID';
+      savePayouts();
+      renderAll();
+      showToast(`💸 Virement de ${p.amount} transféré à ${p.creator} avec succès !`, "✅");
+    }
+
+    function triggerAutoUnlockSimulation() {
+      const randomUser = "Utilisateur #" + Math.floor(10000 + Math.random() * 90000);
+      const isVip = Math.random() > 0.5;
+      const newTx = isVip ? {
+        id: "tx-" + Date.now(),
+        type: "VIP_PASS",
+        user: randomUser,
+        amount: "+29,99 $",
+        item: "Adhésion VIP Illimitée",
+        unlocked: "Tous les épisodes et chapitres récents débloqués",
+        date: "À l'instant"
+      } : {
+        id: "tx-" + Date.now(),
+        type: "COINS",
+        user: randomUser,
+        amount: "+19,99 $",
+        item: "Pack 2 200 Pièces",
+        unlocked: "Déblocage Épisodes 10-35 Série 'L'Héritier Secret'",
+        date: "À l'instant"
+      };
+
+      TRANSACTIONS.unshift(newTx);
+      saveTransactions();
+      renderAll();
+      showToast(`⚡ Simulation : Paiement reçu de ${randomUser} • Épisodes débloqués automatiquement !`, "🔓");
+    }
+
+    // ================= CRUD DRAMAS & NOVELS =================
     function createDrama() {
       const title = document.getElementById('form-drama-title').value.trim();
       const genre = document.getElementById('form-drama-genre').value.trim();
@@ -764,6 +1136,9 @@
         const parsed = JSON.parse(area.value);
         if (Array.isArray(parsed.dramas)) { DRAMAS = parsed.dramas; saveDramas(); }
         if (Array.isArray(parsed.novels)) { NOVELS = parsed.novels; saveNovels(); }
+        if (Array.isArray(parsed.creators)) { CREATORS = parsed.creators; saveCreators(); }
+        if (Array.isArray(parsed.payouts)) { PAYOUTS = parsed.payouts; savePayouts(); }
+        if (Array.isArray(parsed.transactions)) { TRANSACTIONS = parsed.transactions; saveTransactions(); }
         if (parsed.hero) { HERO = parsed.hero; saveHeroStorage(); }
         renderAll();
         showToast("✅ Base de données importée et synchronisée !");
@@ -773,13 +1148,19 @@
     }
 
     function resetDefaults() {
-      if (!confirm("Rétablir toutes les séries et romans d'origine ?")) return;
+      if (!confirm("Rétablir toutes les données d'origine ?")) return;
       localStorage.removeItem('dramaxoxo_dramas');
       localStorage.removeItem('dramaxoxo_novels');
       localStorage.removeItem('dramaxoxo_hero');
+      localStorage.removeItem('dramaxoxo_creator_applications');
+      localStorage.removeItem('dramaxoxo_payouts');
+      localStorage.removeItem('dramaxoxo_transactions');
       DRAMAS = [...INITIAL_DRAMAS];
       NOVELS = [...INITIAL_NOVELS];
       HERO = { ...DEFAULT_HERO };
+      CREATORS = [...INITIAL_CREATORS_APPLICATIONS];
+      PAYOUTS = [...INITIAL_PAYOUTS];
+      TRANSACTIONS = [...INITIAL_TRANSACTIONS];
       renderAll();
       showToast("🔄 Données d'origine restaurées.");
     }

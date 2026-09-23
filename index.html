@@ -3178,6 +3178,33 @@
         return;
       }
 
+      const projectTitle = (creatorFormFormat === 'series') ? 
+        (document.getElementById('creator-series-title')?.value.trim() || 'Projet Série') : 
+        (document.getElementById('creator-novel-title')?.value.trim() || 'Projet Roman');
+      const projectGenre = (creatorFormFormat === 'series') ? 
+        (document.getElementById('creator-series-genre')?.value || 'Romance & Vengeance') : 
+        (document.getElementById('creator-novel-genre')?.value || 'Romance & Suspense');
+      const projectSynopsis = document.getElementById('creator-synopsis')?.value.trim() || 'Projet créateur officiel soumis via DRAMA XOXO Studio.';
+      
+      const newApp = {
+        id: 'app-' + Date.now(),
+        name,
+        email,
+        format: creatorFormFormat,
+        title: projectTitle,
+        genre: projectGenre,
+        synopsis: projectSynopsis,
+        file: creatorUploadedFileName || (creatorFormFormat === 'series' ? 'teaser_pilot_vertical_916.mp4 (42 MB)' : 'manuscrit_sample_chapitres.pdf (2.8 MB)'),
+        status: 'PENDING',
+        date: 'À l\'instant'
+      };
+
+      try {
+        let apps = JSON.parse(localStorage.getItem('dramaxoxo_creator_applications') || '[]');
+        apps.unshift(newApp);
+        localStorage.setItem('dramaxoxo_creator_applications', JSON.stringify(apps));
+      } catch(e) {}
+
       showToast('🎉 Candidature soumise avec succès ! Examen sous 24h.');
       setTimeout(() => {
         switchBottomNav('profile');
@@ -3193,7 +3220,22 @@
     function buyCoinPackage(amount, bonus, price) {
       userCoins += (amount + bonus);
       closeModal('modal-coin-store');
-      showToast(`🎉 Achat réussi (${price}) : +${amount + bonus} Pièces créditées !`);
+      
+      try {
+        let txs = JSON.parse(localStorage.getItem('dramaxoxo_transactions') || '[]');
+        txs.unshift({
+          id: 'tx-' + Date.now(),
+          type: 'COINS',
+          user: 'Marie Stanley',
+          amount: '+' + price,
+          item: 'Pack ' + (amount + bonus) + ' Pièces',
+          unlocked: '🔓 Épisodes et chapitres payants débloqués automatiquement',
+          date: 'À l\'instant'
+        });
+        localStorage.setItem('dramaxoxo_transactions', JSON.stringify(txs));
+      } catch(e) {}
+
+      showToast(`🎉 Achat réussi (${price}) : +${amount + bonus} Pièces créditées ! Déblocage automatique actif.`);
       refreshCurrentScreen();
     }
 
