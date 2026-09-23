@@ -82,7 +82,7 @@
             ADMINISTRATRICE
           </span>
         </div>
-        <p class="text-[11px] text-slate-400">Direction Générale & Finance • Marie Stanley</p>
+        <p class="text-[11px] text-slate-400">Direction Générale, Créateurs & Finance • Marie Stanley</p>
       </div>
     </div>
 
@@ -118,7 +118,7 @@
       📖 Romans Réels (<span id="novels-count-badge">0</span>)
     </button>
     <button onclick="switchTab('creators')" id="tab-creators" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
-      📝 Candidatures Créateurs (<span id="creators-count-badge">0</span>)
+      📝 Candidatures & Thrillers (<span id="creators-count-badge">0</span>)
     </button>
     <button onclick="switchTab('finance')" id="tab-finance" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
       💰 Finance & Déblocages
@@ -183,9 +183,9 @@
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>📝</span> Modération Candidatures
+            <span>📝</span> Modération & Thrillers
           </h3>
-          <p class="text-xs text-slate-400">Validez ou rejetez les demandes des créateurs de mini-séries et d'auteurs de romans.</p>
+          <p class="text-xs text-slate-400">Visualisez les trailers vidéo et lisez les manuscrits soumis avant d'approuver.</p>
           <button onclick="switchTab('creators')" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">
             Examiner les Candidatures ›
           </button>
@@ -328,12 +328,12 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 4: CREATORS APPLICATIONS MODERATION ==================== -->
+    <!-- ==================== TAB 4: CREATORS APPLICATIONS & THRILLER INSPECTOR ==================== -->
     <section id="view-creators" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h2 class="text-base sm:text-lg font-bold text-white">📝 Candidatures Créateurs & Postulants</h2>
-          <p class="text-xs text-slate-400">Examinez les dossiers des postulants (Mini-Séries et Romans), approuvez ou rejetez en un clic.</p>
+          <h2 class="text-base sm:text-lg font-bold text-white">📝 Candidatures Créateurs & Visualisation Thrillers</h2>
+          <p class="text-xs text-slate-400">Examinez les demandes, visionnez les trailers / thrillers vidéo et lisez les manuscrits soumis avant d'approuver.</p>
         </div>
         <div class="flex gap-2">
           <select id="filter-creator-status" onchange="renderCreatorsApplications()" class="bg-[#1A1A28] border border-white/10 text-white text-xs px-3 py-1.5 rounded-xl font-bold outline-none">
@@ -352,8 +352,6 @@
 
     <!-- ==================== TAB 5: FINANCE & AUTO-UNLOCK ENGINE ==================== -->
     <section id="view-finance" class="hidden space-y-6">
-      
-      <!-- Financial Overview Banner -->
       <div class="bg-gradient-to-r from-emerald-950/40 via-[#12121E] to-[#161626] p-6 rounded-2xl border border-emerald-500/30 space-y-4">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
@@ -415,17 +413,13 @@
           <h4 class="font-bold text-sm text-white">💸 Demandes de Virements & Paiements Auteurs</h4>
           <span class="text-xs text-slate-400">Virements Stripe / Bank / PayPal</span>
         </div>
-        <div id="payouts-list" class="space-y-3">
-          <!-- Injected by JS -->
-        </div>
+        <div id="payouts-list" class="space-y-3"></div>
       </div>
 
       <!-- Live Transaction Stream -->
       <div class="space-y-3">
         <h4 class="font-bold text-sm text-white">⚡ Journal des Transactions & Déblocages en Direct</h4>
-        <div id="transactions-stream" class="space-y-2 max-h-80 overflow-y-auto pr-1">
-          <!-- Injected by JS -->
-        </div>
+        <div id="transactions-stream" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
       </div>
     </section>
 
@@ -502,6 +496,118 @@
 
   </main>
 
+  <!-- ========================================================================= -->
+  <!-- MODAL: CREATOR APPLICATION REVIEW & THRILLER / MANUSCRIPT INSPECTOR -->
+  <!-- ========================================================================= -->
+  <div id="modal-creator-review" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-[#141422] border border-purple-500/40 rounded-3xl max-w-3xl w-full p-5 sm:p-7 space-y-5 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button onclick="closeCreatorReviewModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#202032] hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition">
+        ✕
+      </button>
+
+      <!-- Header Info -->
+      <div class="flex items-center gap-3 pr-10">
+        <div id="review-modal-icon" class="w-12 h-12 rounded-2xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-2xl border border-purple-500/30 flex-shrink-0">
+          🎬
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 id="review-modal-name" class="text-base sm:text-lg font-black text-white">Nom du Créateur</h3>
+            <span id="review-modal-badge" class="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              EN ATTENTE
+            </span>
+          </div>
+          <p id="review-modal-email-date" class="text-xs text-slate-400">email@domaine.com • Postulé le 23 Sep 2026</p>
+        </div>
+      </div>
+
+      <!-- Project Metadata Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#10101C] rounded-2xl border border-white/5 text-xs">
+        <div>
+          <span class="text-slate-400 block text-[11px]">Titre de l'Œuvre :</span>
+          <span id="review-modal-title" class="font-extrabold text-white text-sm">Titre</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[11px]">Format / Catégorie :</span>
+          <span id="review-modal-format" class="font-extrabold text-rose-400">Mini-Série Vidéo (9:16)</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[11px]">Genre :</span>
+          <span id="review-modal-genre" class="font-bold text-slate-200">Romance & Suspense</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[11px]">Droits & Propriété Intellectuelle :</span>
+          <span class="font-bold text-emerald-400">✓ Certifiés à 100% par le créateur</span>
+        </div>
+      </div>
+
+      <!-- Synopsis -->
+      <div class="space-y-1.5 text-xs">
+        <h4 class="font-bold text-slate-300 flex items-center gap-1.5">
+          <span>📜</span> Synopsis & Pitch du Projet :
+        </h4>
+        <div id="review-modal-synopsis" class="p-3.5 bg-[#181828] rounded-xl border border-white/5 text-slate-300 leading-relaxed text-xs">
+          <!-- Synopsis text -->
+        </div>
+      </div>
+
+      <!-- MEDIA VIEWER CONTAINER (VIDEO THRILLER OR NOVEL MANUSCRIPT) -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <h4 id="review-modal-media-title" class="font-bold text-sm text-white flex items-center gap-2">
+            <span>🎬</span> Visualisation du Thriller / Teaser Soumis :
+          </h4>
+          <span id="review-modal-file-size" class="text-[10px] text-emerald-400 font-mono bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
+            45.2 MB
+          </span>
+        </div>
+
+        <!-- Video Player Box (For Series) -->
+        <div id="review-video-box" class="bg-[#0B0B12] rounded-2xl overflow-hidden border border-white/10 relative">
+          <video
+            id="review-video-player"
+            controls
+            playsinline
+            class="w-full max-h-[360px] object-contain bg-black"
+            poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80"
+          >
+            <source id="review-video-source" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la lecture vidéo.
+          </video>
+        </div>
+
+        <!-- Manuscript Reader Box (For Novels) -->
+        <div id="review-manuscript-box" class="hidden bg-[#0F0F1A] p-5 rounded-2xl border border-white/10 max-h-[320px] overflow-y-auto space-y-3 font-serif text-slate-200 text-xs leading-relaxed">
+          <div class="flex justify-between items-center border-b border-white/10 pb-2 mb-2 font-sans text-[11px] text-slate-400">
+            <span>📑 Extrait officiel soumis pour publication</span>
+            <span>2 450 mots • Chapitres 1-3</span>
+          </div>
+          <div id="review-manuscript-text" class="space-y-2.5">
+            <!-- Manuscript text injected -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Moderation Decisions & Actions -->
+      <div class="space-y-3 pt-2 border-t border-white/10">
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <button onclick="applyReviewDecision('APPROVED')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs py-3 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+            <span>✅</span> Approuver la Candidature & Notifier
+          </button>
+          <button onclick="applyReviewDecision('REJECTED')" class="flex-1 bg-rose-900/40 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-black text-xs py-3 rounded-xl transition flex items-center justify-center gap-2">
+            <span>❌</span> Rejeter la Candidature
+          </button>
+          <button onclick="downloadCandidateFile()" class="bg-[#202032] hover:bg-[#2e2e44] text-slate-200 font-bold text-xs px-4 py-3 rounded-xl transition flex items-center justify-center gap-1.5">
+            <span>📥</span> Télécharger
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     // ================= DATA LAYER =================
     const INITIAL_DRAMAS = [
@@ -550,12 +656,13 @@
         id: "app-101",
         name: "Marc-Antoine Désir",
         email: "marcantoine.prod@gmail.com",
-        format: "series", // 'series' | 'novel'
+        format: "series",
         title: "Les Secrets du Cap-Haïtien",
         genre: "Suspense & Romance Tropicale",
-        synopsis: "Une saga familiale au cœur des plantations historiques où disparitions et amours interdites se croisent.",
+        synopsis: "Une saga familiale captivante au cœur des plantations historiques et des falaises caraïbes. Lorsque l'héritière d'une distillerie centenaire découvre un testament secret, une guerre sans merci s'engage entre amour impossible et vengeance ancestrale.",
         file: "teaser_pilote_vertical_916.mp4 (45 MB)",
-        status: "PENDING", // 'PENDING' | 'APPROVED' | 'REJECTED'
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        status: "PENDING",
         date: "Aujourd'hui à 14:15"
       },
       {
@@ -565,8 +672,15 @@
         format: "novel",
         title: "La Flamme d'un Amour Interdit",
         genre: "Romance Passionnée",
-        synopsis: "Une jeune pianiste prodige tombe sous le charme du critique musical le plus impitoyable de Paris.",
-        file: "manuscrit_complet_chapitres1-10.pdf (3.8 MB)",
+        synopsis: "Une jeune pianiste prodige d'origine modeste est invitée à se produire dans le cercle le plus sélect de Paris. Dès sa première répétition, elle croise le regard du critique musical le plus impitoyable et craint de la haute société.",
+        file: "manuscrit_complet_chapitres1-3.pdf (3.8 MB)",
+        manuscriptText: `
+          <p><strong>Chapitre 1 : L'Arpège du Destin</strong></p>
+          <p>Le silence régnait dans l'immense salle Gaveau avant que ses doigts ne touchent les touches d'ivoire. Solange ferma les yeux un court instant, laissant résonner en elle l'écho de ses origines caribéennes.</p>
+          <p>Dans la loge d'honneur au premier balcon, une silhouette immobile ne détachait pas son regard de la jeune virtuose. C'était Alexandre de Saint-Germain, le critique dont une simple chronique pouvait briser une carrière ou couronner une reine.</p>
+          <p><strong>Chapitre 2 : La Rencontre des Ombres</strong></p>
+          <p>À l'issue du concert, les applaudissements retentirent en rafale. Mais en coulisses, Alexandre l'attendait déjà dans la pénombre du couloir des artistes...</p>
+        `,
         status: "PENDING",
         date: "Hier à 18:30"
       },
@@ -577,8 +691,9 @@
         format: "series",
         title: "Le Dernier Pacte du Parrain",
         genre: "Action & Mafia",
-        synopsis: "Un jeune détective infiltré doit choisir entre sa loyauté envers la police et son devoir fraternel.",
+        synopsis: "Un jeune détective infiltré doit choisir entre sa loyauté envers la police et son devoir fraternel après la chute du cartel de Brooklyn.",
         file: "episode_1_master_4k.mp4 (110 MB)",
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         status: "APPROVED",
         date: "21 Sep 2026"
       }
@@ -610,6 +725,7 @@
     let CREATORS = loadCreators();
     let PAYOUTS = loadPayouts();
     let TRANSACTIONS = loadTransactions();
+    let activeReviewCandidateId = null;
 
     function loadDramas() {
       try {
@@ -806,7 +922,7 @@
       }
     }
 
-    // ================= CREATORS MODERATION =================
+    // ================= CREATORS MODERATION & REVIEW =================
     function renderCreatorsApplications() {
       const container = document.getElementById('creators-applications-list');
       if (!container) return;
@@ -855,28 +971,100 @@
             </p>
           </div>
 
-          <!-- Action Buttons -->
-          <div class="flex gap-2 pt-1">
+          <!-- Action Buttons with VIEW / REVISE button -->
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="openCreatorReviewModal('${c.id}')" class="bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-500 hover:to-rose-500 text-white font-black text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-rose-600/20">
+              <span>👁️</span> Voir le Dossier & Visualiser le Thriller / Fichier
+            </button>
+
             ${c.status !== 'APPROVED' ? `
-              <button onclick="setCreatorStatus('${c.id}', 'APPROVED')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20">
-                <span>✅</span> Approuver & Donner Accès Créateur
+              <button onclick="setCreatorStatus('${c.id}', 'APPROVED')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1">
+                <span>✅</span> Approuver
               </button>
             ` : ''}
 
             ${c.status !== 'REJECTED' ? `
-              <button onclick="setCreatorStatus('${c.id}', 'REJECTED')" class="flex-1 bg-rose-900/40 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-extrabold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5">
-                <span>❌</span> Rejeter la Candidature
-              </button>
-            ` : ''}
-
-            ${c.status !== 'PENDING' ? `
-              <button onclick="setCreatorStatus('${c.id}', 'PENDING')" class="bg-[#202030] hover:bg-[#2c2c40] text-slate-300 font-bold text-xs px-3 py-2 rounded-xl transition">
-                Remettre en attente
+              <button onclick="setCreatorStatus('${c.id}', 'REJECTED')" class="bg-rose-900/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1">
+                <span>❌</span> Rejeter
               </button>
             ` : ''}
           </div>
         </div>
       `).join('');
+    }
+
+    function openCreatorReviewModal(appId) {
+      const candidate = CREATORS.find(c => c.id === appId);
+      if (!candidate) return;
+      activeReviewCandidateId = appId;
+
+      document.getElementById('review-modal-name').innerText = candidate.name;
+      document.getElementById('review-modal-email-date').innerText = `${candidate.email} • Postulé le ${candidate.date}`;
+      document.getElementById('review-modal-title').innerText = candidate.title;
+      document.getElementById('review-modal-genre').innerText = candidate.genre;
+      document.getElementById('review-modal-synopsis').innerText = candidate.synopsis;
+      document.getElementById('review-modal-file-size').innerText = candidate.file;
+
+      const iconEl = document.getElementById('review-modal-icon');
+      const formatEl = document.getElementById('review-modal-format');
+      const badgeEl = document.getElementById('review-modal-badge');
+      const mediaTitle = document.getElementById('review-modal-media-title');
+      const videoBox = document.getElementById('review-video-box');
+      const manuscriptBox = document.getElementById('review-manuscript-box');
+      const videoPlayer = document.getElementById('review-video-player');
+
+      badgeEl.innerText = candidate.status === 'PENDING' ? 'EN ATTENTE' : (candidate.status === 'APPROVED' ? 'APPROUVÉE' : 'REJETÉE');
+      badgeEl.className = `text-[9px] font-black px-2 py-0.5 rounded-full ${candidate.status === 'PENDING' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (candidate.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30')}`;
+
+      if (candidate.format === 'series') {
+        iconEl.innerText = '🎬';
+        formatEl.innerText = 'Mini-Série Vidéo Verticale (9:16)';
+        mediaTitle.innerHTML = '<span>🎬</span> Visualisation du Thriller / Teaser Vidéo Soumis :';
+        videoBox.classList.remove('hidden');
+        manuscriptBox.classList.add('hidden');
+        
+        const videoSource = document.getElementById('review-video-source');
+        videoSource.src = candidate.videoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+        videoPlayer.load();
+      } else {
+        iconEl.innerText = '📖';
+        formatEl.innerText = 'Roman Numérique / Manuscrit Texte';
+        mediaTitle.innerHTML = '<span>📖</span> Lecture du Manuscrit / Extrait Soumis :';
+        videoBox.classList.add('hidden');
+        manuscriptBox.classList.remove('hidden');
+        videoPlayer.pause();
+
+        const manuscriptContent = document.getElementById('review-manuscript-text');
+        manuscriptContent.innerHTML = candidate.manuscriptText || `
+          <p><strong>Chapitre 1 : L'Inconnu de minuit</strong></p>
+          <p>La pluie s'abattait avec fracas sur les toits d'ardoise. Assise à sa table d'écriture, ${candidate.name} contemplait le manuscrit original de « ${candidate.title} ».</p>
+          <p>« Rien n'est plus dangereux qu'un secret révélé trop tôt », murmura la protagoniste avant de refermer le tiroir en acajou...</p>
+        `;
+      }
+
+      const modal = document.getElementById('modal-creator-review');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeCreatorReviewModal() {
+      const modal = document.getElementById('modal-creator-review');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      const videoPlayer = document.getElementById('review-video-player');
+      if (videoPlayer) videoPlayer.pause();
+    }
+
+    function applyReviewDecision(decision) {
+      if (!activeReviewCandidateId) return;
+      setCreatorStatus(activeReviewCandidateId, decision);
+      closeCreatorReviewModal();
+    }
+
+    function downloadCandidateFile() {
+      const candidate = CREATORS.find(c => c.id === activeReviewCandidateId);
+      if (!candidate) return;
+      showToast(`📥 Téléchargement de "${candidate.file}" lancé avec succès !`, "💾");
     }
 
     function setCreatorStatus(appId, newStatus) {
