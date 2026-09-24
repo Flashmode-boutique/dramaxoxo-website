@@ -947,6 +947,112 @@
 
     <!-- ==================== MODALS ==================== -->
 
+    <!-- Onboarding & Auth Modal (Google, Email, Spectateur) -->
+    <div class="modal-overlay" id="modal-auth" onclick="closeModalOnOverlay(event, 'modal-auth')">
+      <div class="modal-sheet" style="max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header" style="border-bottom:none; padding-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:36px; height:36px; background:linear-gradient(135deg, #ff2a55, #f43f5e); border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:16px; box-shadow:0 4px 14px rgba(255,42,85,0.4);">XO</div>
+            <div>
+              <h3 class="modal-title" style="font-size:16px; font-weight:900; color:#fff; margin:0;">DRAMA XOXO</h3>
+              <p style="font-size:10px; color:#ff2a55; font-weight:700; margin:0;">Mini-séries & Romans Exclusifs</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" onclick="closeAuthModal()">✕</button>
+        </div>
+
+        <div id="auth-content-container" style="margin-top:10px;">
+          <!-- Default Auth Choice View -->
+          <div id="auth-choice-view">
+            <div style="text-align:center; padding:10px 0 16px 0;">
+              <h4 style="font-size:16px; font-weight:900; color:#fff; margin:0 0 6px 0;">Bienvenue sur DRAMA XOXO</h4>
+              <p style="font-size:11px; color:#9ca3af; margin:0; line-height:1.4;">Rejoignez des millions de passionnés de mini-séries verticales et de romans captivants.</p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+              <!-- Google (Gmail) Sign-In Button -->
+              <button onclick="handleGoogleAuthPrompt()" style="width:100%; background:#fff; color:#1f2937; border:none; border-radius:14px; padding:12px 16px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 14px rgba(0,0,0,0.3); transition:transform 0.1s ease;">
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Continuer avec Google (Gmail)</span>
+              </button>
+
+              <!-- Email Sign-In / Register Button -->
+              <button onclick="showEmailAuthForm()" style="width:100%; background:#1e1e2d; border:1px solid #3b3b54; color:#fff; border-radius:14px; padding:12px 16px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <span>✉️</span>
+                <span>Continuer avec Email</span>
+              </button>
+
+              <!-- Watch as Spectator / Guest Option -->
+              <div style="text-align:center; margin:8px 0 4px 0;">
+                <span style="font-size:10px; color:#6b7280; font-weight:700; text-transform:uppercase;">— OU —</span>
+              </div>
+
+              <button onclick="continueAsGuest()" style="width:100%; background:transparent; border:1.5px dashed #4b5563; color:#d1d5db; border-radius:14px; padding:11px 16px; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <span>👀</span>
+                <span>Regarder en tant que Spectateur (Invité)</span>
+              </button>
+            </div>
+
+            <p style="font-size:9px; color:#6b7280; text-align:center; margin:0; line-height:1.4;">
+              En continuant, vous acceptez nos <span style="color:#a1a1aa; text-decoration:underline; cursor:pointer;" onclick="openPolicyModal('terms')">Conditions Générales</span> et notre <span style="color:#a1a1aa; text-decoration:underline; cursor:pointer;" onclick="openPolicyModal('privacy')">Politique de Confidentialité</span>.
+            </p>
+          </div>
+
+          <!-- Email Form View -->
+          <div id="auth-email-view" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h4 style="font-size:14px; font-weight:800; color:#fff; margin:0;" id="auth-email-title">Créer un compte Email</h4>
+              <button onclick="showAuthChoices()" style="background:none; border:none; color:#ff2a55; font-size:11px; font-weight:800; cursor:pointer;">‹ Retour</button>
+            </div>
+
+            <div class="payment-input-group">
+              <label class="payment-input-label">Nom ou Pseudo :</label>
+              <input type="text" id="auth-input-name" class="payment-input" placeholder="Ex: Jean Dupont" value="">
+            </div>
+            <div class="payment-input-group">
+              <label class="payment-input-label">Adresse Email :</label>
+              <input type="email" id="auth-input-email" class="payment-input" placeholder="nom@exemple.com" value="">
+            </div>
+            <div class="payment-input-group" style="margin-bottom:14px;">
+              <label class="payment-input-label">Mot de Passe :</label>
+              <input type="password" id="auth-input-password" class="payment-input" placeholder="••••••••" value="">
+            </div>
+
+            <button onclick="handleEmailAuthSubmit()" style="width:100%; background:linear-gradient(135deg, #ff2a55, #f43f5e); border:none; border-radius:14px; padding:12px; color:#fff; font-size:13px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(255,42,85,0.4); margin-bottom:10px;">
+              Valider et Continuer
+            </button>
+          </div>
+
+          <!-- Google Quick Simulation Dialog -->
+          <div id="auth-google-view" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h4 style="font-size:14px; font-weight:800; color:#fff; margin:0;">Connexion rapide Google</h4>
+              <button onclick="showAuthChoices()" style="background:none; border:none; color:#ff2a55; font-size:11px; font-weight:800; cursor:pointer;">‹ Retour</button>
+            </div>
+            <p style="font-size:11px; color:#9ca3af; margin-bottom:12px;">Sélectionnez votre compte Gmail pour une connexion instantanée en un clic :</p>
+            
+            <div class="payment-input-group">
+              <label class="payment-input-label">Votre Prénom / Nom :</label>
+              <input type="text" id="auth-google-name" class="payment-input" placeholder="Ex: Alex Moreau" value="">
+            </div>
+            <div class="payment-input-group" style="margin-bottom:14px;">
+              <label class="payment-input-label">Adresse Gmail :</label>
+              <input type="email" id="auth-google-email" class="payment-input" placeholder="alex.moreau@gmail.com" value="">
+            </div>
+
+            <button onclick="handleGoogleAuthSubmit()" style="width:100%; background:#fff; color:#111827; border:none; border-radius:14px; padding:12px; font-size:13px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span>Continuer avec ce compte Google</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 0. Interactive Payment Checkout Modal (Banner / Sheet Localisé Multi-Devises) -->
     <div class="modal-overlay" id="modal-payment-checkout" onclick="closeModalOnOverlay(event, 'modal-payment-checkout')">
       <div class="modal-sheet" style="max-height: 92vh; overflow-y: auto;">
@@ -1158,7 +1264,7 @@
         </div>
         <div id="ai-chat-messages" style="height:220px; overflow-y:auto; background:#101018; border-radius:12px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
           <div id="ai-chat-greeting" style="background:#222234; padding:8px 10px; border-radius:10px; font-size:12px; color:#e5e7eb; align-self:flex-start; max-width:85%;">
-            Bonjour Marie ! 👋 Je suis l'assistant IA de DRAMA XOXO. Comment puis-je vous aider ?
+            Bonjour ! 👋 Je suis l'assistant IA de DRAMA XOXO. Comment puis-je vous aider ?
           </div>
         </div>
         <div style="display:flex; gap:6px;">
@@ -1404,7 +1510,7 @@
         taskCenterTitle: "🎁 Tâches & Récompenses (Gagner des Pièces)",
         taskCenterSub: "Complétez les missions ci-dessous pour débloquer vos séries et romans gratuitement !",
         taskDone: "✓ Terminé",
-        aiGreeting: "Bonjour Marie ! 👋 Je suis l'assistant IA de DRAMA XOXO. Comment puis-je vous aider ?",
+        aiGreeting: "Bonjour ! 👋 Je suis l'assistant IA de DRAMA XOXO. Comment puis-je vous aider ?",
         close: "Fermer",
         settingsTitle: "Paramètres",
         manageMembership: "Manage Membership",
@@ -1527,7 +1633,7 @@
         taskCenterTitle: "🎁 Tasks & Rewards (Earn Free Coins)",
         taskCenterSub: "Complete these missions to unlock series and web novels for free!",
         taskDone: "✓ Completed",
-        aiGreeting: "Hello Marie! 👋 I am DRAMA XOXO AI assistant. How can I help you today?",
+        aiGreeting: "Hello! 👋 I am the DRAMA XOXO AI assistant. How can I help you today?",
         close: "Close",
         settingsTitle: "Settings",
         manageMembership: "Manage Membership",
@@ -1650,7 +1756,7 @@
         taskCenterTitle: "🎁 Tareas y Recompensas (Monedas Gratis)",
         taskCenterSub: "¡Completa estas misiones para desbloquear series y novelas gratis!",
         taskDone: "✓ Completado",
-        aiGreeting: "¡Hola Marie! 👋 Soy el asistente IA de DRAMA XOXO. ¿En qué puedo ayudarte?",
+        aiGreeting: "¡Hola! 👋 Soy el asistente IA de DRAMA XOXO. ¿En qué puedo ayudarte?",
         close: "Cerrar",
         settingsTitle: "Ajustes",
         manageMembership: "Administrar Membresía",
@@ -1773,7 +1879,7 @@
         taskCenterTitle: "🎁 Misyon & Kado (Genyen Pyès Gratis)",
         taskCenterSub: "Fè misyon sa yo pou debloke seri ak roman gratis !",
         taskDone: "✓ Fini",
-        aiGreeting: "Bonjou Marie ! 👋 Mwen se asistan IA DRAMA XOXO. Kijan mwen ka ede w jodi a ?",
+        aiGreeting: "Bonjou ! 👋 Mwen se asistan IA DRAMA XOXO. Kijan mwen ka ede w jodi a ?",
         close: "Fèmen",
         settingsTitle: "Paramèt",
         manageMembership: "Jere Manm",
@@ -1923,6 +2029,30 @@
     let activeNovelId = 'nov-1';
     let activeChapterId = 'nov-1-ch-1';
 
+    function getStoredUser() {
+      try {
+        var u = localStorage.getItem('dramaxoxo_user');
+        if (u) return JSON.parse(u);
+      } catch(e) {}
+      return null;
+    }
+
+    function saveStoredUser(user) {
+      try {
+        localStorage.setItem('dramaxoxo_user', JSON.stringify(user));
+      } catch(e) {}
+    }
+
+    let currentUser = getStoredUser() || {
+      isGuest: true,
+      name: 'Spectateur Invité',
+      email: '',
+      id: 'GUEST-' + Math.floor(100000 + Math.random() * 900000),
+      avatar: '👤',
+      provider: 'guest',
+      following: 0
+    };
+
     let settingsState = {
       theme: 'dark', // 'dark' | 'oled' | 'light'
       cacheSizeMB: 14.9,
@@ -1930,7 +2060,7 @@
       personalizedRecs: true,
       doNotSellInfo: false,
       agreeMarketing: true,
-      isLoggedIn: true
+      isLoggedIn: !currentUser.isGuest
     };
 
     const INITIAL_NOVELS = [
@@ -3123,6 +3253,9 @@
     // ================= PROFILE VIEW (100% MULTILINGUAL & WORKING) =================
     function renderProfileView() {
       const pane = document.getElementById('main-content-view');
+      const isGuest = currentUser.isGuest;
+      const initialLetter = (currentUser.name && currentUser.name.trim() && currentUser.name !== 'Spectateur Invité') ? currentUser.name.trim()[0].toUpperCase() : '👤';
+      
       pane.innerHTML = `
         <!-- Header Profile -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -3134,28 +3267,40 @@
         </div>
 
         <!-- User Info Card -->
-        ${settingsState.isLoggedIn ? `
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
-            <div style="width:56px; height:56px; border-radius:50%; background:#c026d3; color:#fff; font-size:24px; font-weight:900; display:flex; align-items:center; justify-content:center;">M</div>
-            <div style="flex:1;">
-              <div style="display:flex; align-items:center; gap:6px;">
-                <span style="font-size:16px; font-weight:800; color:#fff;">Marie Stanley soeur</span>
-                <span style="background:#20202e; color:#9ca3af; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px;">VIEWER</span>
+        ${!isGuest ? `
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; background:#181826; padding:14px; border-radius:16px; border:1px solid #28283c;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg, #ff2a55, #c026d3); color:#fff; font-size:20px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(255,42,85,0.3);">
+                ${initialLetter}
               </div>
-              <p style="font-size:12px; color:#8e8e9f; margin-top:2px;">mariestanley@virtualsis.com</p>
-              <p style="font-size:11px; color:#6b7280; margin-top:2px;">ID 241253839 <span style="cursor:pointer;" onclick="showToast('ID 241253839 copié !')">📋</span> | Following 0</p>
+              <div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:16px; font-weight:800; color:#fff;">${currentUser.name}</span>
+                  <span style="background:${isVip ? '#e11d48' : '#20202e'}; color:${isVip ? '#fff' : '#9ca3af'}; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px;">
+                    ${isVip ? '👑 VIP' : (currentUser.provider === 'google' ? 'GOOGLE' : 'MEMBRE')}
+                  </span>
+                </div>
+                <p style="font-size:12px; color:#8e8e9f; margin-top:2px;">${currentUser.email || 'Compte vérifié'}</p>
+                <p style="font-size:11px; color:#6b7280; margin-top:2px;">ID ${currentUser.id} <span style="cursor:pointer;" onclick="showToast('ID copié !')">📋</span> | Following ${currentUser.following || 0}</p>
+              </div>
             </div>
+            <button onclick="handleUserLogout()" style="background:#262638; border:1px solid #3b3b50; color:#9ca3af; font-size:10px; font-weight:700; padding:6px 10px; border-radius:10px; cursor:pointer;">Déconnexion</button>
           </div>
         ` : `
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; background:#181826; padding:12px; border-radius:14px; border:1px solid #28283c;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; background:#181826; padding:14px; border-radius:16px; border:1px solid #28283c;">
             <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:48px; height:48px; border-radius:50%; background:#374151; color:#9ca3af; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center;">👤</div>
+              <div style="width:48px; height:48px; border-radius:50%; background:#2a2a3e; color:#9ca3af; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; border:1px solid #3b3b54;">
+                👤
+              </div>
               <div>
-                <span style="font-size:15px; font-weight:800; color:#fff;">Mode Invité</span>
-                <p style="font-size:11px; color:#9ca3af; margin-top:2px;">Connectez-vous pour synchroniser vos pièces</p>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:15px; font-weight:800; color:#fff;">Spectateur Invité</span>
+                  <span style="background:#20202e; color:#9ca3af; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px;">SPECTATEUR</span>
+                </div>
+                <p style="font-size:11px; color:#9ca3af; margin-top:2px;">ID: ${currentUser.id} • Connectez-vous pour vos favoris</p>
               </div>
             </div>
-            <button style="background:#ff2a55; border:none; color:#fff; font-size:11px; font-weight:800; padding:6px 14px; border-radius:14px; cursor:pointer;" onclick="handleLogoutClick()">Se connecter</button>
+            <button style="background:linear-gradient(135deg, #ff2a55, #f43f5e); border:none; color:#fff; font-size:11px; font-weight:800; padding:8px 14px; border-radius:14px; cursor:pointer; box-shadow:0 4px 12px rgba(255,42,85,0.4);" onclick="openAuthModal()">Se connecter</button>
           </div>
         `}
 
@@ -3271,23 +3416,13 @@
         </div>
 
         <!-- Become a Creator Card -->
-        <div style="background:#1c112c; border:1.5px solid #7c3aed; border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px; margin-bottom:14px; cursor:pointer;" onclick="openCreatorStudio()">
+        <div style="background:#1c112c; border:1.5px solid #7c3aed; border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px; margin-bottom:24px; cursor:pointer;" onclick="openCreatorStudio()">
           <div style="width:42px; height:42px; border-radius:10px; background:#2e1b4e; display:flex; align-items:center; justify-content:center; font-size:20px;">🎬</div>
           <div style="flex:1;">
             <h4 style="font-size:13px; font-weight:800; color:#fff; line-height:16px;">${t('creatorCardTitle')}</h4>
             <p style="font-size:10px; color:#c4b5fd; margin-top:2px;">${t('creatorCardSub')}</p>
           </div>
           <button style="background:#3b1e63; border:1px solid #8b5cf6; color:#e9d5ff; font-size:11px; font-weight:800; padding:6px 12px; border-radius:14px; cursor:pointer;">${t('applyBtn')}</button>
-        </div>
-
-        <!-- Admin Studio Back-Office Card -->
-        <div style="background:linear-gradient(135deg, #1f1122 0%, #2a0815 100%); border:1.5px solid #ff2a55; border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px; margin-bottom:24px; cursor:pointer;" onclick="openAdminStudioModal()">
-          <div style="width:42px; height:42px; border-radius:10px; background:#470d1e; display:flex; align-items:center; justify-content:center; font-size:20px;">🛠️</div>
-          <div style="flex:1;">
-            <h4 style="font-size:13px; font-weight:800; color:#fff; line-height:16px;">Studio Admin DRAMA XOXO</h4>
-            <p style="font-size:10px; color:#fca5a5; margin-top:2px;">Modifier l'interface, ajouter de vraies séries & romans</p>
-          </div>
-          <button style="background:#ff2a55; border:none; color:#fff; font-size:11px; font-weight:800; padding:6px 12px; border-radius:14px; cursor:pointer;">Gérer ›</button>
         </div>
       `;
     }
@@ -3350,12 +3485,12 @@
           <!-- Common Fields -->
           <div style="margin-bottom:12px;">
             <label style="display:block; font-size:10px; font-weight:800; color:#9ca3af; letter-spacing:0.5px; margin-bottom:6px; text-transform:uppercase;">${t('fullNameLabel')}</label>
-            <input type="text" id="creator-fullname" value="Marie Stanley Imbry" placeholder="Ex: Marie Stanley Imbry" style="width:100%; box-sizing:border-box; background:#1f1f2e; border:1px solid #2f2f45; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none;">
+            <input type="text" id="creator-fullname" value="${currentUser.isGuest ? '' : currentUser.name}" placeholder="Ex: Jean Dupont" style="width:100%; box-sizing:border-box; background:#1f1f2e; border:1px solid #2f2f45; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none;">
           </div>
 
           <div style="margin-bottom:12px;">
             <label style="display:block; font-size:10px; font-weight:800; color:#9ca3af; letter-spacing:0.5px; margin-bottom:6px; text-transform:uppercase;">${t('emailLabel')}</label>
-            <input type="email" id="creator-email" value="mariestanley@virtualsis.com" placeholder="votre.email@exemple.com" style="width:100%; box-sizing:border-box; background:#1f1f2e; border:1px solid #2f2f45; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none;">
+            <input type="email" id="creator-email" value="${currentUser.isGuest ? '' : (currentUser.email || '')}" placeholder="votre.email@exemple.com" style="width:100%; box-sizing:border-box; background:#1f1f2e; border:1px solid #2f2f45; border-radius:10px; padding:12px; color:#fff; font-size:13px; outline:none;">
           </div>
 
           <!-- Dynamic Questions based on Format -->
@@ -3784,7 +3919,7 @@
             <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Paiement sécurisé via votre solde ou compte bancaire lié</p>
             <div class="payment-input-group" style="text-align:left;">
               <label class="payment-input-label">Email PayPal du compte :</label>
-              <input type="email" id="pay-paypal-email" class="payment-input" placeholder="votre-email@domaine.com" value="marie.stanley@example.com">
+              <input type="email" id="pay-paypal-email" class="payment-input" placeholder="votre-email@domaine.com" value="${currentUser.isGuest ? '' : (currentUser.email || '')}">
             </div>
           </div>
         `;
@@ -3812,7 +3947,7 @@
           </div>
           <div class="payment-input-group" style="margin-bottom:4px;">
             <label class="payment-input-label">Titulaire de la Carte :</label>
-            <input type="text" id="pay-card-name" class="payment-input" placeholder="Marie Stanley Imbry" value="">
+            <input type="text" id="pay-card-name" class="payment-input" placeholder="Ex: Jean Dupont" value="${currentUser.isGuest ? '' : currentUser.name}">
           </div>
         `;
       }
@@ -4092,7 +4227,7 @@
           txs.unshift({
             id: 'TX-' + Math.floor(100000 + Math.random() * 900000),
             type: activeCheckoutItem.type === 'vip' ? 'VIP' : 'COINS',
-            user: 'Marie Stanley Imbry',
+            user: currentUser.name || 'Spectateur Invité',
             amount: amountFormatted,
             currency: cfg.code,
             method: `${methodObj.icon} ${methodObj.name}`,
@@ -4279,12 +4414,6 @@
             <span class="settings-item-value">${getThemeLabel()} ›</span>
           </div>
 
-          <!-- Admin Studio (Back-Office) -->
-          <div class="settings-list-item" style="border-left: 3px solid #ff2a55; padding-left: 10px; background: rgba(255,42,85,0.06);" onclick="closeModal('modal-settings'); openAdminStudioModal();">
-            <span class="settings-item-label" style="color:#ff2a55; font-weight:800;">🛠️ Studio Admin DRAMA XOXO</span>
-            <span class="settings-item-value" style="color:#ff2a55;">Éditer ›</span>
-          </div>
-
           <!-- 3. Clear Cache -->
           <div class="settings-list-item" onclick="handleClearCache()">
             <span class="settings-item-label">${t('clearCache')}</span>
@@ -4445,18 +4574,165 @@
     }
 
     function handleLogoutClick() {
-      if (settingsState.isLoggedIn) {
-        if (confirm("Voulez-vous vraiment vous déconnecter de votre compte Marie Stanley ?")) {
-          settingsState.isLoggedIn = false;
-          closeModal('modal-settings');
-          refreshCurrentScreen();
-          showToast("👋 Déconnexion réussie. Navigation en mode invité.");
-        }
+      if (!currentUser.isGuest) {
+        handleUserLogout();
       } else {
-        settingsState.isLoggedIn = true;
+        closeModal('modal-settings');
+        openAuthModal();
+      }
+    }
+
+    function handleUserLogout() {
+      if (confirm(`Voulez-vous vraiment vous déconnecter du compte ${currentUser.name} ?`)) {
+        currentUser = {
+          isGuest: true,
+          name: 'Spectateur Invité',
+          email: '',
+          id: 'GUEST-' + Math.floor(100000 + Math.random() * 900000),
+          avatar: '👤',
+          provider: 'guest',
+          following: 0
+        };
+        saveStoredUser(currentUser);
+        settingsState.isLoggedIn = false;
         closeModal('modal-settings');
         refreshCurrentScreen();
-        showToast("👋 Bon retour parmi nous, Marie !");
+        showToast("👋 Déconnexion réussie. Navigation en mode Spectateur.");
+      }
+    }
+
+    function openAuthModal() {
+      showAuthChoices();
+      const modal = document.getElementById('modal-auth');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeAuthModal() {
+      localStorage.setItem('dramaxoxo_onboarding_seen', 'true');
+      closeModal('modal-auth');
+    }
+
+    function showAuthChoices() {
+      const choiceView = document.getElementById('auth-choice-view');
+      const emailView = document.getElementById('auth-email-view');
+      const googleView = document.getElementById('auth-google-view');
+      if (choiceView) choiceView.style.display = 'block';
+      if (emailView) emailView.style.display = 'none';
+      if (googleView) googleView.style.display = 'none';
+    }
+
+    function showEmailAuthForm() {
+      const choiceView = document.getElementById('auth-choice-view');
+      const emailView = document.getElementById('auth-email-view');
+      const googleView = document.getElementById('auth-google-view');
+      if (choiceView) choiceView.style.display = 'none';
+      if (emailView) emailView.style.display = 'block';
+      if (googleView) googleView.style.display = 'none';
+    }
+
+    function handleGoogleAuthPrompt() {
+      const choiceView = document.getElementById('auth-choice-view');
+      const emailView = document.getElementById('auth-email-view');
+      const googleView = document.getElementById('auth-google-view');
+      if (choiceView) choiceView.style.display = 'none';
+      if (emailView) emailView.style.display = 'none';
+      if (googleView) googleView.style.display = 'block';
+    }
+
+    function handleGoogleAuthSubmit() {
+      const nameInp = document.getElementById('auth-google-name');
+      const emailInp = document.getElementById('auth-google-email');
+      const name = (nameInp && nameInp.value.trim()) ? nameInp.value.trim() : 'Utilisateur Google';
+      const email = (emailInp && emailInp.value.trim()) ? emailInp.value.trim() : 'utilisateur.google@gmail.com';
+
+      currentUser = {
+        isGuest: false,
+        name: name,
+        email: email,
+        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+        avatar: name[0].toUpperCase(),
+        provider: 'google',
+        following: 0
+      };
+      saveStoredUser(currentUser);
+      localStorage.setItem('dramaxoxo_onboarding_seen', 'true');
+      settingsState.isLoggedIn = true;
+      userCoins += 20;
+
+      closeModal('modal-auth');
+      refreshCurrentScreen();
+      showToast(`🎉 Bienvenue ${currentUser.name} ! Compte Google connecté (+20 Pièces offertes).`);
+    }
+
+    function handleEmailAuthSubmit() {
+      const nameInp = document.getElementById('auth-input-name');
+      const emailInp = document.getElementById('auth-input-email');
+      const passInp = document.getElementById('auth-input-password');
+
+      const name = nameInp ? nameInp.value.trim() : '';
+      const email = emailInp ? emailInp.value.trim() : '';
+      const pass = passInp ? passInp.value.trim() : '';
+
+      if (!name) {
+        showToast('❌ Veuillez entrer votre nom ou pseudo.');
+        if (nameInp) nameInp.focus();
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showToast('❌ Veuillez entrer une adresse email valide.');
+        if (emailInp) emailInp.focus();
+        return;
+      }
+      if (pass.length < 4) {
+        showToast('❌ Le mot de passe doit comporter au moins 4 caractères.');
+        if (passInp) passInp.focus();
+        return;
+      }
+
+      currentUser = {
+        isGuest: false,
+        name: name,
+        email: email,
+        id: 'USR-' + Math.floor(100000 + Math.random() * 900000),
+        avatar: name[0].toUpperCase(),
+        provider: 'email',
+        following: 0
+      };
+      saveStoredUser(currentUser);
+      localStorage.setItem('dramaxoxo_onboarding_seen', 'true');
+      settingsState.isLoggedIn = true;
+      userCoins += 20;
+
+      closeModal('modal-auth');
+      refreshCurrentScreen();
+      showToast(`🎉 Bienvenue ${currentUser.name} ! Votre compte est créé (+20 Pièces offertes).`);
+    }
+
+    function continueAsGuest() {
+      currentUser = {
+        isGuest: true,
+        name: 'Spectateur Invité',
+        email: '',
+        id: 'GUEST-' + Math.floor(100000 + Math.random() * 900000),
+        avatar: '👤',
+        provider: 'guest',
+        following: 0
+      };
+      saveStoredUser(currentUser);
+      localStorage.setItem('dramaxoxo_onboarding_seen', 'true');
+      settingsState.isLoggedIn = false;
+
+      closeModal('modal-auth');
+      refreshCurrentScreen();
+      showToast("👀 Mode Spectateur activé. Bon visionnage sur DRAMA XOXO !");
+    }
+
+    function checkVisitorOnboarding() {
+      const hasSeenOnboarding = localStorage.getItem('dramaxoxo_onboarding_seen');
+      if (!hasSeenOnboarding && currentUser.isGuest) {
+        setTimeout(function() {
+          openAuthModal();
+        }, 900);
       }
     }
 
@@ -4601,7 +4877,7 @@
             <div style="display:flex; flex-direction:column; gap:8px;">
               <input class="admin-input" id="admin-new-novel-title" placeholder="Titre du roman (ex: L'Ombre de la Couronne)">
               <div style="display:flex; gap:6px;">
-                <input class="admin-input" style="flex:1;" id="admin-new-novel-author" placeholder="Auteur (ex: Marie Stanley)">
+                <input class="admin-input" style="flex:1;" id="admin-new-novel-author" placeholder="Auteur (ex: Aurore Valmont)">
                 <input class="admin-input" style="flex:1;" id="admin-new-novel-genre" placeholder="Genre (ex: Milliardaire & Drame)">
               </div>
               <div style="display:flex; gap:6px;">
@@ -4967,6 +5243,7 @@
 
     // ================= INITIALIZATION =================
     refreshCurrentScreen();
+    checkVisitorOnboarding();
   </script>
 </body>
 </html>
