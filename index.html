@@ -18,12 +18,15 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       justify-content: center;
+      align-items: center;
       padding: 10px;
       min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
     }
     .phone-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       background-color: #0c0c14;
       border: 3px solid #222234;
       border-radius: 36px;
@@ -32,7 +35,25 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      height: 860px;
+      height: 92vh;
+      max-height: 900px;
+      min-height: 600px;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0;
+        margin: 0;
+        align-items: stretch;
+      }
+      .phone-container {
+        max-width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        max-height: none;
+        border: none;
+        border-radius: 0;
+      }
     }
 
     /* Top Bar */
@@ -2308,7 +2329,7 @@
           </div>
 
           <!-- Hero New Release -->
-          <div class="hero-banner" onclick="openVideoPlayer('Le Secret Inavouable de l\\'Héritier')" style="margin-bottom:16px;">
+          <div class="hero-banner" onclick="openHeroVideoPlayer()" style="margin-bottom:16px;">
             <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80" class="hero-img" alt="Nouveauté">
             <div class="hero-overlay">
               <span class="hero-tag" style="background:#2563eb;">✨ SORTIE DU JOUR</span>
@@ -2447,7 +2468,7 @@
           </div>
 
           <!-- Hero Banner réagissant à la langue et personnalisable -->
-          <div class="hero-banner" onclick="openVideoPlayer('${heroConfig.title || t('heroTitle')}')">
+          <div class="hero-banner" onclick="openHeroVideoPlayer()">
             <img src="${heroConfig.img || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80'}" class="hero-img" alt="Hero">
             <div class="hero-overlay">
               <span class="hero-tag">${heroConfig.tag || t('heroTag')}</span>
@@ -2755,8 +2776,6 @@
     }
 
     // ================= MEMBERSHIP & VIP VIEW (100% MATCHING SCREENSHOTS) =================
-    let selectedMembershipPlan = 'weekly'; // 'weekly' | 'annual'
-
     const MEMBERS_DRAMAS = [
       {
         title: "The Dominant Heir's Triumphant Return",
@@ -4251,6 +4270,11 @@
 
     function openVideoPlayer(title) {
       showToast(`🎬 Lecture de "${title}" (Lecteur vidéo vertical actif)`);
+    }
+
+    function openHeroVideoPlayer() {
+      const title = (typeof heroConfig !== 'undefined' && heroConfig && heroConfig.title) ? heroConfig.title : t('heroTitle');
+      openVideoPlayer(title);
     }
 
     // ================= ADMIN STUDIO (BACK-OFFICE CRUD & LIVE SYNC) =================
