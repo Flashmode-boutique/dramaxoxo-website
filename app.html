@@ -759,6 +759,88 @@
       background: #ff2a55;
       color: #fff;
     }
+
+    /* Payment Checkout & Localized Methods Styles */
+    .checkout-curr-btn {
+      padding: 7px 4px;
+      border-radius: 8px;
+      border: 1.5px solid #28283c;
+      background: #141420;
+      color: #9ca3af;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.15s ease;
+    }
+    .checkout-curr-btn.active {
+      border-color: #ff2a55;
+      background: rgba(255, 42, 85, 0.15);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(255, 42, 85, 0.25);
+    }
+    .payment-method-card {
+      border: 1.5px solid #28283c;
+      background: #151522;
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .payment-method-card:hover {
+      border-color: #3f3f5a;
+    }
+    .payment-method-card.active {
+      border-color: #ff2a55;
+      background: rgba(255, 42, 85, 0.12);
+      box-shadow: 0 4px 14px rgba(255, 42, 85, 0.2);
+    }
+    .payment-input-group {
+      margin-bottom: 10px;
+    }
+    .payment-input-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .payment-input {
+      width: 100%;
+      background: #0d0d16;
+      border: 1px solid #28283c;
+      border-radius: 8px;
+      color: #fff;
+      padding: 9px 12px;
+      font-size: 12px;
+      outline: none;
+      box-sizing: border-box;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+    .payment-input:focus {
+      border-color: #ff2a55;
+    }
+    .checkout-spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -823,39 +905,94 @@
 
     <!-- ==================== MODALS ==================== -->
 
-    <!-- 1. Coin Store Modal (Recharge Boutique) -->
+    <!-- 0. Interactive Payment Checkout Modal (Banner / Sheet Localisé Multi-Devises) -->
+    <div class="modal-overlay" id="modal-payment-checkout" onclick="closeModalOnOverlay(event, 'modal-payment-checkout')">
+      <div class="modal-sheet" style="max-height: 92vh; overflow-y: auto;">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">🔒</span>
+            <div>
+              <h3 class="modal-title" style="margin: 0; font-size: 15px;" id="checkout-modal-title">Paiement Sécurisé DRAMA XOXO</h3>
+              <p style="font-size: 10px; color: #10b981; margin: 0; font-weight: 700;">● Connexion Cryptée SSL 256-Bit</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-payment-checkout')">✕</button>
+        </div>
+
+        <!-- Country / Currency Selector Bar -->
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">🌍 Pays & Devise Détectés :</span>
+            <span id="detected-country-tag" style="font-size: 9px; color: #ff2a55; font-weight: 800; background: rgba(255,42,85,0.15); padding: 2px 6px; border-radius: 6px;">📍 Localisation Auto</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;" id="checkout-currency-selector">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Selected Item Summary Card -->
+        <div style="background: linear-gradient(135deg, #181828 0%, #1f142b 100%); border: 1.5px solid #ff2a55; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(255,42,85,0.2);">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div id="checkout-item-icon" style="font-size: 26px; width: 42px; height: 42px; background: rgba(255,42,85,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">👑</div>
+            <div>
+              <h4 id="checkout-item-name" style="font-size: 13px; font-weight: 800; color: #fff; margin: 0;">Abonnement VIP Mensuel</h4>
+              <p id="checkout-item-desc" style="font-size: 10px; color: #a1a1aa; margin: 2px 0 0 0;">Accès illimité à toutes les séries et romans</p>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div id="checkout-item-price" style="font-size: 18px; font-weight: 900; color: #ff2a55;">$29.99</div>
+            <span id="checkout-item-badge" style="font-size: 8px; font-weight: 800; background: #10b981; color: #022c22; padding: 2px 6px; border-radius: 6px;">DÉBLOCAGE IMMÉDIAT</span>
+          </div>
+        </div>
+
+        <!-- Payment Methods Grid -->
+        <div style="margin-bottom: 14px;">
+          <p style="font-size: 11px; font-weight: 800; color: #fff; margin-bottom: 8px;">💳 Choisissez votre mode de paiement :</p>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;" id="checkout-methods-grid">
+            <!-- Methods dynamically populated based on country -->
+          </div>
+        </div>
+
+        <!-- Dynamic Payment Form Container -->
+        <div id="checkout-form-container" style="background: #12121e; border: 1px solid #28283c; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+          <!-- Form rendered dynamically based on selected payment method -->
+        </div>
+
+        <!-- Confirm Pay Action Button -->
+        <button id="checkout-pay-btn" onclick="processPaymentCheckout()" style="width: 100%; background: linear-gradient(135deg, #ff2a55, #f43f5e); border: none; border-radius: 14px; padding: 14px; color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 20px rgba(255,42,85,0.5); display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s ease;">
+          <span id="checkout-btn-lbl">🔒 Confirmer et Payer</span>
+          <span id="checkout-btn-amount">$29.99</span>
+        </button>
+
+        <!-- Security Guarantee Bar -->
+        <div style="margin-top: 12px; display: flex; justify-content: center; gap: 14px; color: #6b7280; font-size: 9px; font-weight: 600;">
+          <span>🔒 Crypté SSL 256-bit</span>
+          <span>⚡ Déblocage Immédiat</span>
+          <span>🛡️ Garantie DRAMA XOXO</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Coin Store Modal (Recharge Boutique Dynamique) -->
     <div class="modal-overlay" id="modal-coin-store" onclick="closeModalOnOverlay(event, 'modal-coin-store')">
       <div class="modal-sheet">
         <div class="modal-header">
           <h3 class="modal-title" id="txt-store-title">🪙 Recharger des Pièces</h3>
           <button class="modal-close-btn" onclick="closeModal('modal-coin-store')">✕</button>
         </div>
-        <p style="font-size: 11px; color: #9ca3af; margin-bottom: 14px;">
+        <p style="font-size: 11px; color: #9ca3af; margin-bottom: 10px;">
           <span id="txt-store-bal-lbl">Votre solde actuel :</span> <strong style="color:#fbbf24;" id="store-modal-balance">195 Pièces</strong>
         </p>
-        <div class="store-grid">
-          <div class="store-item" onclick="buyCoinPackage(100, 0, '0,99 $')">
-            <p class="store-coins">🪙 100</p>
-            <p class="store-bonus" id="txt-pack-1">Pack Découverte</p>
-            <span class="store-price">0,99 $</span>
-          </div>
-          <div class="store-item" style="border-color:#ec4899;" onclick="buyCoinPackage(500, 50, '4,99 $')">
-            <p class="store-coins">🪙 550</p>
-            <p class="store-bonus">+50 Bonus ✨</p>
-            <span class="store-price">4,99 $</span>
-          </div>
-          <div class="store-item" style="border-color:#f59e0b;" onclick="buyCoinPackage(1200, 150, '9,99 $')">
-            <p class="store-coins">🪙 1 350</p>
-            <p class="store-bonus">+150 Bonus 🔥</p>
-            <span class="store-price">9,99 $</span>
-          </div>
-          <div class="store-item" onclick="buyCoinPackage(3000, 500, '24,99 $')">
-            <p class="store-coins">🪙 3 500</p>
-            <p class="store-bonus">+500 Bonus 👑</p>
-            <span class="store-price">24,99 $</span>
-          </div>
+        
+        <!-- Quick Currency Selector in Coin Store -->
+        <div style="display: flex; gap: 4px; margin-bottom: 12px;" id="coin-store-currency-bar">
+          <!-- Populated by JS -->
         </div>
-        <button style="width:100%; background:#222234; border:none; color:#9ca3af; padding:10px; border-radius:12px; font-size:11px; font-weight:700; cursor:pointer;" id="txt-store-close" onclick="closeModal('modal-coin-store')">Fermer</button>
+
+        <div class="store-grid" id="coin-store-grid-container">
+          <!-- Populated dynamically by JS according to localized currency -->
+        </div>
+        <button style="width:100%; background:#222234; border:none; color:#9ca3af; padding:10px; border-radius:12px; font-size:11px; font-weight:700; cursor:pointer; margin-top:10px;" id="txt-store-close" onclick="closeModal('modal-coin-store')">Fermer</button>
       </div>
     </div>
 
@@ -1614,9 +1751,125 @@
       }
     };
 
-    // ================= GLOBAL STATE =================
+    // ================= GLOBAL STATE & MULTI-CURRENCY CONFIG =================
+    const CURRENCY_CONFIG = {
+      HTG: {
+        code: 'HTG',
+        symbol: 'HTG',
+        flag: '🇭🇹',
+        name: 'Haïti (Gourdes)',
+        countryName: 'Haïti',
+        vipPlans: {
+          weekly: { title: 'Pass Hebdomadaire', price: 1350, display: '1 350 HTG', original: '2 700 HTG', period: '/semaine', sub: '1 350 HTG la 1ère semaine, puis 2 700 HTG/sem', badge: 'REMISE 50%' },
+          monthly: { title: 'Pass Mensuel VIP', price: 3950, display: '3 950 HTG', original: '6 500 HTG', period: '/mois', sub: '🔥 LE PLUS POPULAIRE • Accès illimité 30 jours', badge: 'LE PLUS POPULAIRE' },
+          annual: { title: 'Pass Annuel VIP', price: 13500, display: '13 500 HTG', original: '27 000 HTG', period: '/an', sub: '👑 MEILLEURE OFFRE • 1 an complet (-50%)', badge: 'MEILLEURE OFFRE' }
+        },
+        coinPacks: [
+          { coins: 100, bonus: 0, priceDisplay: '135 HTG', price: 135, label: 'Pack Découverte' },
+          { coins: 500, bonus: 50, priceDisplay: '675 HTG', price: 675, label: '+50 Bonus ✨' },
+          { coins: 1200, bonus: 150, priceDisplay: '1 350 HTG', price: 1350, label: '+150 Bonus 🔥' },
+          { coins: 3000, bonus: 500, priceDisplay: '3 400 HTG', price: 3400, label: '+500 Bonus 👑' }
+        ],
+        methods: [
+          { id: 'moncash', name: 'MonCash', icon: '📱', desc: 'Digicel Haïti (Paiement direct)', badge: 'POPULAIRE' },
+          { id: 'natcash', name: 'Natcash', icon: '📲', desc: 'Natcom Haïti (Code PIN / OTP)', badge: 'INSTANT' },
+          { id: 'card', name: 'Carte Bancaire', icon: '💳', desc: 'Sogebank, Unibank, Visa, MC', badge: 'SÉCURISÉ' },
+          { id: 'paypal', name: 'PayPal', icon: '🅿️', desc: 'Paiement international sécurisé', badge: 'RAPIDE' }
+        ]
+      },
+      USD: {
+        code: 'USD',
+        symbol: '$',
+        flag: '🇺🇸',
+        name: 'USA & International ($)',
+        countryName: 'United States / Global',
+        vipPlans: {
+          weekly: { title: 'Weekly Pass', price: 9.99, display: '$9.99', original: '$19.99', period: '/week', sub: '$9.99 for the 1st week, then $19.99/week', badge: '50% OFF' },
+          monthly: { title: 'Monthly VIP Pass', price: 29.99, display: '$29.99', original: '$49.99', period: '/month', sub: '🔥 MOST POPULAR • Unlimited streaming & reading', badge: 'MOST POPULAR' },
+          annual: { title: 'Annual VIP Pass', price: 99.99, display: '$99.99', original: '$199.99', period: '/year', sub: '👑 BEST VALUE • 1 Full Year Access (Save 50%)', badge: 'BEST VALUE' }
+        },
+        coinPacks: [
+          { coins: 100, bonus: 0, priceDisplay: '$0.99', price: 0.99, label: 'Starter Pack' },
+          { coins: 500, bonus: 50, priceDisplay: '$4.99', price: 4.99, label: '+50 Bonus ✨' },
+          { coins: 1200, bonus: 150, priceDisplay: '$9.99', price: 9.99, label: '+150 Bonus 🔥' },
+          { coins: 3000, bonus: 500, priceDisplay: '$24.99', price: 24.99, label: '+500 Bonus 👑' }
+        ],
+        methods: [
+          { id: 'applepay', name: 'Apple Pay', icon: '🍏', desc: 'Touch ID / Face ID 1-Tap', badge: 'EXPRESS' },
+          { id: 'card', name: 'Credit / Debit Card', icon: '💳', desc: 'Visa, Mastercard, Amex, Discover', badge: 'SECURE' },
+          { id: 'paypal', name: 'PayPal', icon: '🅿️', desc: 'Instant PayPal checkout', badge: 'TRUSTED' },
+          { id: 'googlepay', name: 'Google Pay', icon: '🟢', desc: 'Fast checkout with Google', badge: '1-TAP' }
+        ]
+      },
+      EUR: {
+        code: 'EUR',
+        symbol: '€',
+        flag: '🇫🇷',
+        name: 'France & Europe (€)',
+        countryName: 'France / Union Européenne',
+        vipPlans: {
+          weekly: { title: 'Pass Hebdomadaire', price: 9.99, display: '9,99 €', original: '19,99 €', period: '/semaine', sub: '9,99 € la 1ère semaine, puis 19,99 €/sem', badge: 'REMISE 50%' },
+          monthly: { title: 'Pass Mensuel VIP', price: 29.99, display: '29,99 €', original: '49,99 €', period: '/mois', sub: '🔥 LE PLUS POPULAIRE • Accès illimité sans publicité', badge: 'LE PLUS POPULAIRE' },
+          annual: { title: 'Pass Annuel VIP', price: 99.99, display: '99,99 €', original: '199,99 €', period: '/an', sub: '👑 MEILLEURE OFFRE • 1 an complet (-50%)', badge: 'MEILLEURE OFFRE' }
+        },
+        coinPacks: [
+          { coins: 100, bonus: 0, priceDisplay: '0,99 €', price: 0.99, label: 'Pack Découverte' },
+          { coins: 500, bonus: 50, priceDisplay: '4,99 €', price: 4.99, label: '+50 Bonus ✨' },
+          { coins: 1200, bonus: 150, priceDisplay: '9,99 €', price: 9.99, label: '+150 Bonus 🔥' },
+          { coins: 3000, bonus: 500, priceDisplay: '24,99 €', price: 24.99, label: '+500 Bonus 👑' }
+        ],
+        methods: [
+          { id: 'applepay', name: 'Apple Pay', icon: '🍏', desc: 'Validation biométrique sécurisée', badge: '1-CLIC' },
+          { id: 'card', name: 'Carte Bancaire / CB', icon: '💳', desc: 'Visa, Mastercard, CB France', badge: '3D SECURE' },
+          { id: 'paypal', name: 'PayPal', icon: '🅿️', desc: 'Paiement direct et sécurisé', badge: 'INSTANT' },
+          { id: 'googlepay', name: 'Google Pay', icon: '🟢', desc: 'Paiement rapide Android / Web', badge: 'RAPIDE' }
+        ]
+      },
+      CAD: {
+        code: 'CAD',
+        symbol: 'CAD $',
+        flag: '🇨🇦',
+        name: 'Canada (CAD $)',
+        countryName: 'Canada',
+        vipPlans: {
+          weekly: { title: 'Weekly Pass', price: 12.99, display: '12.99 CAD $', original: '24.99 CAD $', period: '/semaine', sub: '12.99 CAD $ la 1ère semaine, puis 24.99 CAD $', badge: '50% OFF' },
+          monthly: { title: 'Monthly VIP Pass', price: 39.99, display: '39.99 CAD $', original: '64.99 CAD $', period: '/mois', sub: '🔥 LE PLUS POPULAIRE • Accès VIP complet 30 jours', badge: 'LE PLUS POPULAIRE' },
+          annual: { title: 'Annual VIP Pass', price: 134.99, display: '134.99 CAD $', original: '269.99 CAD $', period: '/an', sub: '👑 MEILLEURE OFFRE • 1 an complet (Économisez 50%)', badge: 'MEILLEURE OFFRE' }
+        },
+        coinPacks: [
+          { coins: 100, bonus: 0, priceDisplay: '1.49 CAD $', price: 1.49, label: 'Pack Découverte' },
+          { coins: 500, bonus: 50, priceDisplay: '6.99 CAD $', price: 6.99, label: '+50 Bonus ✨' },
+          { coins: 1200, bonus: 150, priceDisplay: '13.99 CAD $', price: 13.99, label: '+150 Bonus 🔥' },
+          { coins: 3000, bonus: 500, priceDisplay: '34.99 CAD $', price: 34.99, label: '+500 Bonus 👑' }
+        ],
+        methods: [
+          { id: 'applepay', name: 'Apple Pay', icon: '🍏', desc: '1-Touch Pay', badge: 'EXPRESS' },
+          { id: 'card', name: 'Credit / Debit Card', icon: '💳', desc: 'Interac, Visa, Mastercard', badge: 'SECURE' },
+          { id: 'paypal', name: 'PayPal', icon: '🅿️', desc: 'Instant transfer', badge: 'TRUSTED' },
+          { id: 'googlepay', name: 'Google Pay', icon: '🟢', desc: 'Google Wallet checkout', badge: 'FAST' }
+        ]
+      }
+    };
+
+    function detectUserCurrency() {
+      const saved = localStorage.getItem('dramaxoxo_currency');
+      if (saved && CURRENCY_CONFIG[saved]) return saved;
+      try {
+        const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
+        const lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if (tz.includes('port-au-prince') || tz.includes('haiti') || lang.includes('ht')) return 'HTG';
+        if (tz.includes('paris') || tz.includes('europe') || tz.includes('berlin') || tz.includes('madrid') || lang.includes('fr-fr') || lang.includes('es-es')) return 'EUR';
+        if (tz.includes('toronto') || tz.includes('montreal') || tz.includes('vancouver') || lang.includes('ca')) return 'CAD';
+      } catch(e) {}
+      return 'USD';
+    }
+
     let userCoins = 195;
     let isVip = false;
+    let currentCurrency = detectUserCurrency();
+    let selectedMembershipPlan = 'monthly';
+    let activeCheckoutItem = { type: 'vip', planKey: 'monthly', packIndex: 0 };
+    let activePaymentMethod = (currentCurrency === 'HTG' ? 'moncash' : 'applepay');
     let currentLang = 'fr';
     let currentBottomNav = 'home';
     let currentHomeTab = 'popular';
@@ -2542,146 +2795,178 @@
       renderVipPassView();
     }
 
+    function changeAppCurrency(currencyCode) {
+      if (!CURRENCY_CONFIG[currencyCode]) return;
+      currentCurrency = currencyCode;
+      localStorage.setItem('dramaxoxo_currency', currencyCode);
+      
+      // Update default payment method based on country
+      if (currencyCode === 'HTG') {
+        activePaymentMethod = 'moncash';
+      } else {
+        activePaymentMethod = 'applepay';
+      }
+      
+      if (currentViewMode === 'vip_pass' || currentHomeTab === 'vip') {
+        renderVipPassView();
+      }
+      renderCoinStoreItems();
+      showToast(`Devise mise à jour : ${CURRENCY_CONFIG[currencyCode].name} ${CURRENCY_CONFIG[currencyCode].flag}`);
+    }
+
     function renderVipPassView() {
       const pane = document.getElementById('main-content-view');
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      const plans = cfg.vipPlans;
+
       pane.innerHTML = `
         <div style="position:relative; min-height:100%; padding-bottom:80px;">
           
           <!-- Top Hero Background with Mosaic effect & Header -->
-          <div style="position:relative; margin:-14px -14px 16px -14px; padding:20px 14px 14px 14px; background:linear-gradient(180deg, rgba(16,16,24,0.65) 0%, rgba(10,10,16,0.98) 100%), url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&auto=format&fit=crop&q=80'); background-size:cover; background-position:center;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-              <h2 style="font-size:24px; font-weight:900; color:#fff; margin:0; letter-spacing:-0.5px;">Join Membership</h2>
-              <button style="background:none; border:none; color:#d1d5db; font-size:14px; font-weight:600; cursor:pointer;" onclick="restoreStoreKitPurchases()">Restore</button>
+          <div style="position:relative; margin:-14px -14px 16px -14px; padding:18px 14px 14px 14px; background:linear-gradient(180deg, rgba(16,16,24,0.7) 0%, rgba(10,10,16,0.98) 100%), url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&auto=format&fit=crop&q=80'); background-size:cover; background-position:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div>
+                <h2 style="font-size:22px; font-weight:900; color:#fff; margin:0; letter-spacing:-0.5px;">👑 Adhésion Pass VIP</h2>
+                <p style="font-size:10px; color:#a1a1aa; margin-top:2px;">Accès total et illimité à 100% des séries et romans</p>
+              </div>
+              <button style="background:none; border:none; color:#d1d5db; font-size:13px; font-weight:600; cursor:pointer;" onclick="restoreStoreKitPurchases()">Restaurer</button>
+            </div>
+
+            <!-- Country / Currency Selector Bar -->
+            <div style="background:rgba(20,20,32,0.85); border:1px solid #28283c; border-radius:12px; padding:6px 8px; margin-bottom:14px; backdrop-filter:blur(8px);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:9px; font-weight:800; color:#9ca3af; text-transform:uppercase;">📍 Devise & Localisation :</span>
+                <span style="font-size:9px; color:#ff2a55; font-weight:800;">${cfg.name}</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px;">
+                <button class="checkout-curr-btn ${currentCurrency==='HTG'?'active':''}" onclick="changeAppCurrency('HTG')">
+                  <span>🇭🇹 HTG</span>
+                  <span style="font-size:8px; opacity:0.8;">Gourdes</span>
+                </button>
+                <button class="checkout-curr-btn ${currentCurrency==='USD'?'active':''}" onclick="changeAppCurrency('USD')">
+                  <span>🇺🇸 USD</span>
+                  <span style="font-size:8px; opacity:0.8;">$ Dollar</span>
+                </button>
+                <button class="checkout-curr-btn ${currentCurrency==='EUR'?'active':''}" onclick="changeAppCurrency('EUR')">
+                  <span>🇫🇷 EUR</span>
+                  <span style="font-size:8px; opacity:0.8;">€ Euro</span>
+                </button>
+                <button class="checkout-curr-btn ${currentCurrency==='CAD'?'active':''}" onclick="changeAppCurrency('CAD')">
+                  <span>🇨🇦 CAD</span>
+                  <span style="font-size:8px; opacity:0.8;">CAD $</span>
+                </button>
+              </div>
             </div>
 
             <!-- Card 1: Weekly Membership -->
             <div 
               onclick="selectMembershipPlan('weekly')" 
-              style="display:flex; border-radius:14px; overflow:hidden; border:2px solid ${selectedMembershipPlan === 'weekly' ? '#ff2a55' : '#28283c'}; background:#151522; margin-bottom:12px; cursor:pointer; position:relative; box-shadow:0 6px 20px rgba(0,0,0,0.4); transition:all 0.2s ease;"
+              style="display:flex; border-radius:14px; overflow:hidden; border:2px solid ${selectedMembershipPlan === 'weekly' ? '#ff2a55' : '#28283c'}; background:#151522; margin-bottom:10px; cursor:pointer; position:relative; box-shadow:0 6px 20px rgba(0,0,0,0.4); transition:all 0.2s ease;"
             >
-              <!-- Left indicator -->
-              <div style="width:52px; background:${selectedMembershipPlan === 'weekly' ? '#ff2a55' : '#222232'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <div style="width:48px; background:${selectedMembershipPlan === 'weekly' ? '#ff2a55' : '#222232'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <div style="width:22px; height:22px; border-radius:50%; border:2px solid ${selectedMembershipPlan === 'weekly' ? '#fff' : '#6b7280'}; background:${selectedMembershipPlan === 'weekly' ? '#fff' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
                   ${selectedMembershipPlan === 'weekly' ? '<span style="color:#ff2a55; font-size:13px; font-weight:900;">✓</span>' : ''}
                 </div>
               </div>
-              <!-- Content -->
-              <div style="flex:1; padding:12px 14px; position:relative;">
+              <div style="flex:1; padding:10px 14px; position:relative;">
                 <div style="position:absolute; top:8px; right:10px; background:#c084fc; color:#3b0764; font-size:9px; font-weight:900; padding:2px 8px; border-radius:10px;">
-                  Discount 23:59:30
+                  ${plans.weekly.badge}
                 </div>
-                <h4 style="font-size:14px; font-weight:800; color:#fff; margin:0 0 4px 0;">Weekly Membership</h4>
+                <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 3px 0;">Pass Hebdomadaire (7 Jours)</h4>
                 <div style="display:flex; align-items:baseline; gap:6px;">
-                  <span style="font-size:20px; font-weight:900; color:#fff;">$9.99</span>
-                  <span style="font-size:12px; color:#6b7280; text-decoration:line-through;">$19.99</span>
+                  <span style="font-size:18px; font-weight:900; color:#fff;">${plans.weekly.display}</span>
+                  <span style="font-size:11px; color:#6b7280; text-decoration:line-through;">${plans.weekly.original}</span>
                 </div>
-                <p style="font-size:10px; color:#9ca3af; margin:3px 0 0 0;">$9.99 for the first week, then $19.99/week</p>
+                <p style="font-size:9px; color:#9ca3af; margin:2px 0 0 0;">${plans.weekly.sub}</p>
               </div>
             </div>
 
-            <!-- Card 2: Annual Membership -->
+            <!-- Card 2: Monthly Membership (NEW & LE PLUS POPULAIRE) -->
+            <div 
+              onclick="selectMembershipPlan('monthly')" 
+              style="display:flex; border-radius:14px; overflow:hidden; border:2.5px solid ${selectedMembershipPlan === 'monthly' ? '#ff2a55' : '#4a2574'}; background:linear-gradient(135deg, #19142b 0%, #151522 100%); margin-bottom:10px; cursor:pointer; position:relative; box-shadow:0 8px 24px rgba(255,42,85,0.3); transition:all 0.2s ease;"
+            >
+              <div style="width:48px; background:${selectedMembershipPlan === 'monthly' ? '#ff2a55' : '#3b1d5c'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <div style="width:22px; height:22px; border-radius:50%; border:2px solid ${selectedMembershipPlan === 'monthly' ? '#fff' : '#c084fc'}; background:${selectedMembershipPlan === 'monthly' ? '#fff' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
+                  ${selectedMembershipPlan === 'monthly' ? '<span style="color:#ff2a55; font-size:13px; font-weight:900;">✓</span>' : ''}
+                </div>
+              </div>
+              <div style="flex:1; padding:12px 14px; position:relative;">
+                <div style="position:absolute; top:8px; right:10px; background:linear-gradient(90deg, #ff2a55, #f43f5e); color:#fff; font-size:9px; font-weight:900; padding:3px 8px; border-radius:10px; box-shadow:0 2px 8px rgba(255,42,85,0.5);">
+                  🔥 LE PLUS POPULAIRE
+                </div>
+                <h4 style="font-size:14px; font-weight:900; color:#fff; margin:0 0 3px 0;">👑 Pass Mensuel VIP (1 Mois)</h4>
+                <div style="display:flex; align-items:baseline; gap:6px;">
+                  <span style="font-size:20px; font-weight:900; color:#ff2a55;">${plans.monthly.display}</span>
+                  <span style="font-size:12px; color:#6b7280; text-decoration:line-through;">${plans.monthly.original}</span>
+                </div>
+                <p style="font-size:10px; color:#c4b5fd; margin:2px 0 0 0; font-weight:600;">${plans.monthly.sub}</p>
+              </div>
+            </div>
+
+            <!-- Card 3: Annual Membership -->
             <div 
               onclick="selectMembershipPlan('annual')" 
               style="display:flex; border-radius:14px; overflow:hidden; border:2px solid ${selectedMembershipPlan === 'annual' ? '#ff2a55' : '#28283c'}; background:#151522; margin-bottom:4px; cursor:pointer; position:relative; box-shadow:0 6px 20px rgba(0,0,0,0.4); transition:all 0.2s ease;"
             >
-              <!-- Left indicator -->
-              <div style="width:52px; background:${selectedMembershipPlan === 'annual' ? '#ff2a55' : '#222232'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <div style="width:48px; background:${selectedMembershipPlan === 'annual' ? '#ff2a55' : '#222232'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <div style="width:22px; height:22px; border-radius:50%; border:2px solid ${selectedMembershipPlan === 'annual' ? '#fff' : '#6b7280'}; background:${selectedMembershipPlan === 'annual' ? '#fff' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
                   ${selectedMembershipPlan === 'annual' ? '<span style="color:#ff2a55; font-size:13px; font-weight:900;">✓</span>' : ''}
                 </div>
               </div>
-              <!-- Content -->
-              <div style="flex:1; padding:14px 14px; position:relative;">
-                <div style="position:absolute; top:8px; right:10px; background:#c084fc; color:#3b0764; font-size:9px; font-weight:900; padding:2px 8px; border-radius:10px;">
-                  Time limited offer
+              <div style="flex:1; padding:10px 14px; position:relative;">
+                <div style="position:absolute; top:8px; right:10px; background:#fbbf24; color:#451a03; font-size:9px; font-weight:900; padding:2px 8px; border-radius:10px;">
+                  ${plans.annual.badge}
                 </div>
-                <h4 style="font-size:14px; font-weight:800; color:#fff; margin:0 0 4px 0;">Annual Membership</h4>
+                <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 3px 0;">Pass Annuel VIP (1 An)</h4>
                 <div style="display:flex; align-items:baseline; gap:6px;">
-                  <span style="font-size:20px; font-weight:900; color:#fff;">$149.99/year</span>
+                  <span style="font-size:18px; font-weight:900; color:#fbbf24;">${plans.annual.display}</span>
+                  <span style="font-size:11px; color:#6b7280; text-decoration:line-through;">${plans.annual.original}</span>
                 </div>
+                <p style="font-size:9px; color:#9ca3af; margin:2px 0 0 0;">${plans.annual.sub}</p>
               </div>
             </div>
           </div>
 
           <!-- Section: Why Join? -->
           <div style="margin-bottom:24px;">
-            <h3 style="font-size:20px; font-weight:900; color:#fff; margin:0 0 16px 0;">Why Join?</h3>
+            <h3 style="font-size:18px; font-weight:900; color:#fff; margin:0 0 14px 0;">✨ Privilèges Membre VIP</h3>
             
-            <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; flex-direction:column; gap:14px;">
               
               <!-- 1. Unlimited access -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">🎬</div>
+              <div style="display:flex; gap:12px; align-items:center; background:#12121e; padding:10px 12px; border-radius:12px; border:1px solid #222234;">
+                <div style="font-size:22px;">🎬</div>
                 <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Unlimited access to <strong>16,000+</strong> series</p>
-                  <p style="font-size:11px; color:#8e8e9f; margin:2px 0 0 0;">100+ fresh dramas every week</p>
+                  <p style="font-size:13px; font-weight:800; color:#fff; margin:0;">Accès illimité à +16 000 épisodes & romans</p>
+                  <p style="font-size:10px; color:#8e8e9f; margin:2px 0 0 0;">Plus de 100 nouvelles séries et chapitres chaque semaine</p>
                 </div>
               </div>
 
-              <!-- 2. Download -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">📥</div>
+              <!-- 2. Auto Unlock -->
+              <div style="display:flex; gap:12px; align-items:center; background:#12121e; padding:10px 12px; border-radius:12px; border:1px solid #222234;">
+                <div style="font-size:22px;">🔓</div>
                 <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Download</p>
+                  <p style="font-size:13px; font-weight:800; color:#fff; margin:0;">Déblocage automatique 0 pièce</p>
+                  <p style="font-size:10px; color:#8e8e9f; margin:2px 0 0 0;">Tous les contenus payants s'ouvrent sans dépenser de jetons</p>
                 </div>
               </div>
 
-              <!-- 3. Daily member points -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">⚡</div>
+              <!-- 3. Ad-free -->
+              <div style="display:flex; gap:12px; align-items:center; background:#12121e; padding:10px 12px; border-radius:12px; border:1px solid #222234;">
+                <div style="font-size:22px;">🚫</div>
                 <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Daily member points</p>
+                  <p style="font-size:13px; font-weight:800; color:#fff; margin:0;">100% Sans Publicité</p>
+                  <p style="font-size:10px; color:#8e8e9f; margin:2px 0 0 0;">Streaming haute vitesse Ultra HD 1080p / 4K</p>
                 </div>
               </div>
 
-              <!-- 4. Members-only dramas -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">🌟</div>
+              <!-- 4. Haïti & International -->
+              <div style="display:flex; gap:12px; align-items:center; background:#12121e; padding:10px 12px; border-radius:12px; border:1px solid #222234;">
+                <div style="font-size:22px;">📱</div>
                 <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Members-only dramas</p>
-                </div>
-              </div>
-
-              <!-- 5. 1080p quality -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">📺</div>
-                <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">1080p quality</p>
-                </div>
-              </div>
-
-              <!-- 6. Gift dramas to friends -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">🎁</div>
-                <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Gift dramas to friends</p>
-                  <p style="font-size:11px; color:#8e8e9f; margin:2px 0 0 0;">3 times weekly</p>
-                </div>
-              </div>
-
-              <!-- 7. Gift a membership to a friend -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">🎀</div>
-                <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Gift a membership to a friend</p>
-                  <p style="font-size:11px; color:#8e8e9f; margin:2px 0 0 0;">Once weekly</p>
-                </div>
-              </div>
-
-              <!-- 8. Members-only themes -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">🎨</div>
-                <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Members-only themes</p>
-                  <p style="font-size:11px; color:#8e8e9f; margin:2px 0 0 0;">Members can change theme in Settings</p>
-                </div>
-              </div>
-
-              <!-- 9. Ad-free -->
-              <div style="display:flex; gap:14px; align-items:center;">
-                <div style="width:28px; font-size:20px; text-align:center;">🚫</div>
-                <div>
-                  <p style="font-size:14px; font-weight:700; color:#fff; margin:0;">Ad-free</p>
+                  <p style="font-size:13px; font-weight:800; color:#fff; margin:0;">MonCash, Natcash, Apple Pay & Cartes</p>
+                  <p style="font-size:10px; color:#8e8e9f; margin:2px 0 0 0;">Paiement simple et direct adapté à votre pays</p>
                 </div>
               </div>
 
@@ -2690,7 +2975,7 @@
 
           <!-- Section: Members-only dramas -->
           <div style="margin-bottom:24px;">
-            <h3 style="font-size:20px; font-weight:900; color:#fff; margin:0 0 14px 0;">Members-only dramas</h3>
+            <h3 style="font-size:18px; font-weight:900; color:#fff; margin:0 0 12px 0;">👑 Séries réservées aux Membres</h3>
             
             <div class="drama-grid">
               ${MEMBERS_DRAMAS.map(d => `
@@ -2714,11 +2999,11 @@
               onclick="subscribeMembership()" 
               style="width:100%; background:linear-gradient(135deg, #ff2a55, #f43f5e); border:none; border-radius:30px; padding:12px 20px; color:#fff; cursor:pointer; box-shadow:0 8px 25px rgba(255,42,85,0.6); display:flex; flex-direction:column; align-items:center; justify-content:center; transition:transform 0.1s ease;"
             >
-              <span style="font-size:17px; font-weight:900; letter-spacing:0.3px;">
-                ${isVip ? '👑 VIP Member Active' : 'Join Now'}
+              <span style="font-size:16px; font-weight:900; letter-spacing:0.3px;">
+                ${isVip ? '👑 VIP Membre Actif' : '🔒 Activer mon Pass VIP — ' + plans[selectedMembershipPlan].display}
               </span>
               <span style="font-size:10px; color:rgba(255,255,255,0.85); margin-top:2px;">
-                ${isVip ? 'Enjoy unlimited access to all series & novels' : 'Auto-renew • Cancel anytime'}
+                ${isVip ? 'Accès illimité à toutes les séries et romans actif' : 'MonCash, Natcash, Apple Pay, Carte • Sans engagement'}
               </span>
             </button>
           </div>
@@ -2732,11 +3017,7 @@
         showToast("👑 Vous êtes déjà Membre VIP Privilège !");
         return;
       }
-      isVip = true;
-      const planName = selectedMembershipPlan === 'weekly' ? 'Hebdomadaire ($9.99/sem)' : 'Annuel ($149.99/an)';
-      showToast(`🎉 Félicitations ! Adhésion VIP ${planName} activée.`);
-      renderVipPassView();
-      refreshCurrentScreen();
+      openPaymentCheckoutModal('vip', selectedMembershipPlan);
     }
 
     // ================= MY LIST VIEW (INTERACTIVE SÉRIES & ROMANS TABS) =================
@@ -3211,32 +3492,391 @@
       }, 1500);
     }
 
-    // ================= MODAL OPERATIONS =================
+    // ================= PAYMENT CHECKOUT & COIN STORE OPERATIONS =================
     function openCoinStoreModal() {
-      document.getElementById('store-modal-balance').innerText = userCoins + " Pièces";
+      const balEl = document.getElementById('store-modal-balance');
+      if (balEl) balEl.innerText = userCoins + " Pièces";
+      renderCoinStoreItems();
       document.getElementById('modal-coin-store').style.display = 'flex';
     }
 
-    function buyCoinPackage(amount, bonus, price) {
-      userCoins += (amount + bonus);
+    function renderCoinStoreItems() {
+      const barEl = document.getElementById('coin-store-currency-bar');
+      const gridEl = document.getElementById('coin-store-grid-container');
+      if (!gridEl) return;
+
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      
+      if (barEl) {
+        barEl.innerHTML = `
+          <button class="checkout-curr-btn ${currentCurrency==='HTG'?'active':''}" style="flex:1;" onclick="changeAppCurrency('HTG')">🇭🇹 HTG</button>
+          <button class="checkout-curr-btn ${currentCurrency==='USD'?'active':''}" style="flex:1;" onclick="changeAppCurrency('USD')">🇺🇸 USD</button>
+          <button class="checkout-curr-btn ${currentCurrency==='EUR'?'active':''}" style="flex:1;" onclick="changeAppCurrency('EUR')">🇫🇷 EUR</button>
+          <button class="checkout-curr-btn ${currentCurrency==='CAD'?'active':''}" style="flex:1;" onclick="changeAppCurrency('CAD')">🇨🇦 CAD</button>
+        `;
+      }
+
+      gridEl.innerHTML = cfg.coinPacks.map((pack, idx) => `
+        <div class="store-item" style="border-color:${idx === 1 ? '#ec4899' : (idx === 2 ? '#f59e0b' : (idx === 3 ? '#a855f7' : '#28283c'))};" onclick="openPaymentCheckoutModal('coins', ${idx})">
+          <p class="store-coins">🪙 ${pack.coins + pack.bonus}</p>
+          <p class="store-bonus">${pack.label}</p>
+          <span class="store-price">${pack.priceDisplay}</span>
+        </div>
+      `).join('');
+    }
+
+    function openPaymentCheckoutModal(type, target) {
+      activeCheckoutItem = {
+        type: type,
+        planKey: (type === 'vip' ? (target || 'monthly') : 'monthly'),
+        packIndex: (type === 'coins' ? (typeof target === 'number' ? target : 0) : 0)
+      };
+
+      // Set default payment method if none
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      const validMethods = cfg.methods.map(m => m.id);
+      if (!validMethods.includes(activePaymentMethod)) {
+        activePaymentMethod = (currentCurrency === 'HTG' ? 'moncash' : 'applepay');
+      }
+
+      // Close coin store if open
       closeModal('modal-coin-store');
       
-      try {
-        let txs = JSON.parse(localStorage.getItem('dramaxoxo_transactions') || '[]');
-        txs.unshift({
-          id: 'tx-' + Date.now(),
-          type: 'COINS',
-          user: 'Marie Stanley',
-          amount: '+' + price,
-          item: 'Pack ' + (amount + bonus) + ' Pièces',
-          unlocked: '🔓 Épisodes et chapitres payants débloqués automatiquement',
-          date: 'À l\'instant'
-        });
-        localStorage.setItem('dramaxoxo_transactions', JSON.stringify(txs));
-      } catch(e) {}
+      renderPaymentCheckoutModal();
+      document.getElementById('modal-payment-checkout').style.display = 'flex';
+    }
 
-      showToast(`🎉 Achat réussi (${price}) : +${amount + bonus} Pièces créditées ! Déblocage automatique actif.`);
-      refreshCurrentScreen();
+    function renderPaymentCheckoutModal() {
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+
+      // Render currency pills
+      const currSelector = document.getElementById('checkout-currency-selector');
+      if (currSelector) {
+        currSelector.innerHTML = `
+          <button class="checkout-curr-btn ${currentCurrency==='HTG'?'active':''}" onclick="changeAppCurrency('HTG'); renderPaymentCheckoutModal();">
+            <span>🇭🇹 HTG</span>
+            <span style="font-size:8px; opacity:0.8;">Gourdes</span>
+          </button>
+          <button class="checkout-curr-btn ${currentCurrency==='USD'?'active':''}" onclick="changeAppCurrency('USD'); renderPaymentCheckoutModal();">
+            <span>🇺🇸 USD</span>
+            <span style="font-size:8px; opacity:0.8;">Dollar</span>
+          </button>
+          <button class="checkout-curr-btn ${currentCurrency==='EUR'?'active':''}" onclick="changeAppCurrency('EUR'); renderPaymentCheckoutModal();">
+            <span>🇫🇷 EUR</span>
+            <span style="font-size:8px; opacity:0.8;">Euro</span>
+          </button>
+          <button class="checkout-curr-btn ${currentCurrency==='CAD'?'active':''}" onclick="changeAppCurrency('CAD'); renderPaymentCheckoutModal();">
+            <span>🇨🇦 CAD</span>
+            <span style="font-size:8px; opacity:0.8;">CAD $</span>
+          </button>
+        `;
+      }
+
+      // Populate item summary
+      let itemName = '';
+      let itemDesc = '';
+      let itemPrice = '';
+      let itemIcon = '👑';
+
+      if (activeCheckoutItem.type === 'vip') {
+        const plan = cfg.vipPlans[activeCheckoutItem.planKey] || cfg.vipPlans.monthly;
+        itemName = plan.title;
+        itemDesc = plan.sub;
+        itemPrice = plan.display;
+        itemIcon = '👑';
+      } else {
+        const pack = cfg.coinPacks[activeCheckoutItem.packIndex] || cfg.coinPacks[0];
+        itemName = `Pack ${pack.coins + pack.bonus} Pièces`;
+        itemDesc = `Débloque automatiquement les épisodes & chapitres (${pack.label})`;
+        itemPrice = pack.priceDisplay;
+        itemIcon = '🪙';
+      }
+
+      const iconEl = document.getElementById('checkout-item-icon');
+      const nameEl = document.getElementById('checkout-item-name');
+      const descEl = document.getElementById('checkout-item-desc');
+      const priceEl = document.getElementById('checkout-item-price');
+      const btnAmountEl = document.getElementById('checkout-btn-amount');
+
+      if (iconEl) iconEl.innerText = itemIcon;
+      if (nameEl) nameEl.innerText = itemName;
+      if (descEl) descEl.innerText = itemDesc;
+      if (priceEl) priceEl.innerText = itemPrice;
+      if (btnAmountEl) btnAmountEl.innerText = itemPrice;
+
+      // Populate payment methods
+      const methodsGrid = document.getElementById('checkout-methods-grid');
+      if (methodsGrid) {
+        methodsGrid.innerHTML = cfg.methods.map(m => `
+          <div class="payment-method-card ${activePaymentMethod === m.id ? 'active' : ''}" onclick="selectPaymentMethod('${m.id}')">
+            <span style="font-size: 22px;">${m.icon}</span>
+            <div style="flex: 1; min-width: 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h5 style="font-size: 11px; font-weight: 800; color: #fff; margin: 0;">${m.name}</h5>
+                <span style="font-size: 8px; font-weight: 800; color: #ff2a55; background: rgba(255,42,85,0.15); padding: 1px 4px; border-radius: 4px;">${m.badge}</span>
+              </div>
+              <p style="font-size: 9px; color: #9ca3af; margin: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.desc}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render payment input form
+      renderPaymentForm(activePaymentMethod, itemPrice);
+    }
+
+    function selectPaymentMethod(methodId) {
+      activePaymentMethod = methodId;
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      const price = (activeCheckoutItem.type === 'vip') ? 
+        cfg.vipPlans[activeCheckoutItem.planKey].display : 
+        cfg.coinPacks[activeCheckoutItem.packIndex].priceDisplay;
+      
+      document.querySelectorAll('.payment-method-card').forEach(el => {
+        el.classList.remove('active');
+      });
+      renderPaymentForm(methodId, price);
+
+      const cards = document.querySelectorAll('.payment-method-card');
+      const methods = cfg.methods;
+      methods.forEach((m, idx) => {
+        if (m.id === methodId && cards[idx]) {
+          cards[idx].classList.add('active');
+        }
+      });
+    }
+
+    function renderPaymentForm(methodId, priceDisplay) {
+      const formContainer = document.getElementById('checkout-form-container');
+      const btnLbl = document.getElementById('checkout-btn-lbl');
+      if (!formContainer) return;
+
+      if (methodId === 'moncash') {
+        if (btnLbl) btnLbl.innerText = '🔒 Payer avec MonCash';
+        formContainer.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <div style="width:28px; height:28px; background:#dc2626; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:12px;">MC</div>
+            <div>
+              <p style="font-size:11px; font-weight:800; color:#fff; margin:0;">MonCash (Digicel Haïti)</p>
+              <p style="font-size:9px; color:#10b981; margin:0; font-weight:700;">● Débit sécurisé immédiat en Gourdes (HTG)</p>
+            </div>
+          </div>
+          <div class="payment-input-group">
+            <label class="payment-input-label">Numéro de Téléphone Digicel :</label>
+            <div style="display:flex; align-items:center; background:#0d0d16; border:1px solid #28283c; border-radius:8px; padding-left:10px;">
+              <span style="color:#9ca3af; font-size:12px; font-weight:700; margin-right:6px;">🇭🇹 +509</span>
+              <input type="tel" id="pay-moncash-phone" class="payment-input" style="border:none; padding-left:0;" placeholder="3XXX XXXX" value="3842 9012">
+            </div>
+          </div>
+          <div class="payment-input-group" style="margin-bottom:6px;">
+            <label class="payment-input-label">Code PIN / Code Secret MonCash :</label>
+            <input type="password" id="pay-moncash-pin" class="payment-input" maxlength="6" placeholder="••••" value="1234">
+          </div>
+          <p style="font-size:9px; color:#9ca3af; margin-top:6px; line-height:1.4;">Un SMS de confirmation avec code OTP vous sera envoyé directement sur votre ligne Digicel.</p>
+        `;
+      } else if (methodId === 'natcash') {
+        if (btnLbl) btnLbl.innerText = '🔒 Payer avec Natcash';
+        formContainer.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <div style="width:28px; height:28px; background:#2563eb; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:12px;">NC</div>
+            <div>
+              <p style="font-size:11px; font-weight:800; color:#fff; margin:0;">Natcash (Natcom Haïti)</p>
+              <p style="font-size:9px; color:#10b981; margin:0; font-weight:700;">● Portefeuille mobile officiel Natcom</p>
+            </div>
+          </div>
+          <div class="payment-input-group">
+            <label class="payment-input-label">Numéro Natcom :</label>
+            <div style="display:flex; align-items:center; background:#0d0d16; border:1px solid #28283c; border-radius:8px; padding-left:10px;">
+              <span style="color:#9ca3af; font-size:12px; font-weight:700; margin-right:6px;">🇭🇹 +509</span>
+              <input type="tel" id="pay-natcash-phone" class="payment-input" style="border:none; padding-left:0;" placeholder="4XXX XXXX" value="4412 8834">
+            </div>
+          </div>
+          <div class="payment-input-group" style="margin-bottom:6px;">
+            <label class="payment-input-label">Code PIN Natcash :</label>
+            <input type="password" id="pay-natcash-pin" class="payment-input" maxlength="6" placeholder="••••" value="1234">
+          </div>
+          <p style="font-size:9px; color:#9ca3af; margin-top:6px; line-height:1.4;">Transaction instantanée et sans frais supplémentaires sur le réseau Natcom.</p>
+        `;
+      } else if (methodId === 'applepay') {
+        if (btnLbl) btnLbl.innerText = '🍏 Payer avec Apple Pay';
+        formContainer.innerHTML = `
+          <div style="text-align:center; padding:10px 0;">
+            <div style="font-size:36px; margin-bottom:6px;">🍏</div>
+            <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 4px 0;">Apple Pay Express Checkout</h4>
+            <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Validation biométrique via Face ID ou Touch ID</p>
+            <div style="background:#000; border:1px solid #333; border-radius:10px; padding:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span style="font-size:14px; font-weight:800; color:#fff;">Pay</span>
+              <span style="font-size:11px; color:#10b981; font-weight:700;">● Carte par défaut prête</span>
+            </div>
+          </div>
+        `;
+      } else if (methodId === 'googlepay') {
+        if (btnLbl) btnLbl.innerText = '🟢 Payer avec Google Pay';
+        formContainer.innerHTML = `
+          <div style="text-align:center; padding:10px 0;">
+            <div style="font-size:36px; margin-bottom:6px;">🟢</div>
+            <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 4px 0;">Google Pay 1-Tap</h4>
+            <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Paiement rapide via votre compte Google Wallet</p>
+            <div style="background:#1e293b; border:1px solid #334155; border-radius:10px; padding:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span style="font-size:13px; font-weight:800; color:#fff;">G Pay</span>
+              <span style="font-size:11px; color:#10b981; font-weight:700;">● Vérification instantanée</span>
+            </div>
+          </div>
+        `;
+      } else if (methodId === 'paypal') {
+        if (btnLbl) btnLbl.innerText = '🅿️ Payer avec PayPal';
+        formContainer.innerHTML = `
+          <div style="text-align:center; padding:10px 0;">
+            <div style="font-size:36px; margin-bottom:6px;">🅿️</div>
+            <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 4px 0;">PayPal International</h4>
+            <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Paiement sécurisé via votre solde ou compte bancaire lié</p>
+            <div class="payment-input-group" style="text-align:left;">
+              <label class="payment-input-label">Email PayPal du compte :</label>
+              <input type="email" id="pay-paypal-email" class="payment-input" placeholder="votre-email@domaine.com" value="marie.stanley@example.com">
+            </div>
+          </div>
+        `;
+      } else {
+        // Credit / Debit Card Form
+        if (btnLbl) btnLbl.innerText = '💳 Payer par Carte Bancaire';
+        formContainer.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:11px; font-weight:800; color:#fff;">Informations de la Carte :</span>
+            <div style="display:flex; gap:4px; font-size:13px;">💳 💳 💳</div>
+          </div>
+          <div class="payment-input-group">
+            <label class="payment-input-label">Numéro de Carte :</label>
+            <input type="text" id="pay-card-num" class="payment-input" maxlength="19" placeholder="4532 •••• •••• 8921" value="4532 8920 1489 3321" oninput="formatCardNumInput(this)">
+          </div>
+          <div style="display:flex; gap:8px;">
+            <div class="payment-input-group" style="flex:1;">
+              <label class="payment-input-label">Expiration (MM/AA) :</label>
+              <input type="text" id="pay-card-exp" class="payment-input" maxlength="5" placeholder="12/28" value="08/28">
+            </div>
+            <div class="payment-input-group" style="flex:1;">
+              <label class="payment-input-label">Cryptogramme (CVC) :</label>
+              <input type="password" id="pay-card-cvc" class="payment-input" maxlength="4" placeholder="889" value="889">
+            </div>
+          </div>
+          <div class="payment-input-group" style="margin-bottom:4px;">
+            <label class="payment-input-label">Titulaire de la Carte :</label>
+            <input type="text" id="pay-card-name" class="payment-input" placeholder="Marie Stanley Imbry" value="Marie Stanley Imbry">
+          </div>
+        `;
+      }
+    }
+
+    function formatCardNumInput(el) {
+      let v = el.value.replace(/\D/g, '');
+      let matches = v.match(/\d{4,16}/g);
+      let match = matches && matches[0] || '';
+      let parts = [];
+      for (let i = 0, len = match.length; i < len; i += 4) {
+        parts.push(match.substring(i, i + 4));
+      }
+      if (parts.length) {
+        el.value = parts.join(' ');
+      }
+    }
+
+    function processPaymentCheckout() {
+      const btn = document.getElementById('checkout-pay-btn');
+      const origHtml = btn ? btn.innerHTML : '';
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      
+      let amountFormatted = '';
+      let itemName = '';
+      let coinsToAdd = 0;
+
+      if (activeCheckoutItem.type === 'vip') {
+        const plan = cfg.vipPlans[activeCheckoutItem.planKey] || cfg.vipPlans.monthly;
+        amountFormatted = plan.display;
+        itemName = plan.title;
+      } else {
+        const pack = cfg.coinPacks[activeCheckoutItem.packIndex] || cfg.coinPacks[0];
+        amountFormatted = pack.priceDisplay;
+        itemName = `Pack ${pack.coins + pack.bonus} Pièces`;
+        coinsToAdd = pack.coins + pack.bonus;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.9';
+        btn.innerHTML = `<span class="checkout-spinner"></span> <span>Traitement bancaire sécurisé...</span>`;
+      }
+
+      setTimeout(() => {
+        // Execute fulfillment
+        if (activeCheckoutItem.type === 'vip') {
+          isVip = true;
+          // Auto unlock all chapters for current active novel
+          if (typeof NOVELS !== 'undefined') {
+            NOVELS.forEach(n => {
+              for (let i = 1; i <= n.chaptersCount; i++) {
+                unlockedChapters.add(`${n.id}-ch-${i}`);
+              }
+            });
+          }
+        } else {
+          userCoins += coinsToAdd;
+        }
+
+        // Record financial transaction for Admin Studio Ledger
+        try {
+          let txs = JSON.parse(localStorage.getItem('dramaxoxo_transactions') || '[]');
+          const methodObj = cfg.methods.find(m => m.id === activePaymentMethod) || { name: 'Paiement Sécurisé', icon: '💳' };
+          txs.unshift({
+            id: 'TX-' + Math.floor(100000 + Math.random() * 900000),
+            type: activeCheckoutItem.type === 'vip' ? 'VIP' : 'COINS',
+            user: 'Marie Stanley Imbry',
+            amount: amountFormatted,
+            currency: cfg.code,
+            method: `${methodObj.icon} ${methodObj.name}`,
+            country: cfg.flag + ' ' + cfg.countryName,
+            item: itemName,
+            unlocked: '🔓 Épisodes et chapitres payants débloqués automatiquement sans frais',
+            date: 'À l\'instant'
+          });
+          localStorage.setItem('dramaxoxo_transactions', JSON.stringify(txs));
+        } catch(e) {}
+
+        // Replace modal content with celebratory success animation
+        const formContainer = document.getElementById('checkout-form-container');
+        if (formContainer) {
+          formContainer.innerHTML = `
+            <div style="text-align:center; padding:16px 0;">
+              <div style="width:54px; height:54px; background:linear-gradient(135deg, #10b981, #059669); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; font-size:26px; color:#fff; box-shadow:0 6px 20px rgba(16,185,129,0.4);">
+                ✓
+              </div>
+              <h3 style="font-size:16px; font-weight:900; color:#fff; margin:0 0 4px 0;">🎉 PAIEMENT VALIDÉ AVEC SUCCÈS !</h3>
+              <p style="font-size:11px; color:#10b981; font-weight:700; margin:0 0 6px 0;">Transaction #${Math.floor(100000 + Math.random() * 900000)} approuvée</p>
+              <p style="font-size:11px; color:#d1d5db; margin:0;">
+                ${activeCheckoutItem.type === 'vip' ? 
+                  '👑 Votre adhésion VIP Illimitée est active. Toutes les séries et romans sont débloqués !' : 
+                  `🪙 +${coinsToAdd} Pièces ajoutées avec succès à votre solde !`}
+              </p>
+            </div>
+          `;
+        }
+
+        if (btn) {
+          btn.innerHTML = `<span>✓ Terminé</span>`;
+          btn.style.background = '#10b981';
+        }
+
+        setTimeout(() => {
+          closeModal('modal-payment-checkout');
+          if (btn) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.innerHTML = origHtml;
+            btn.style.background = 'linear-gradient(135deg, #ff2a55, #f43f5e)';
+          }
+          showToast(`🎉 Félicitations ! ${itemName} activé avec succès (${amountFormatted}).`);
+          refreshCurrentScreen();
+        }, 1400);
+
+      }, 1100);
     }
 
     function openDailyRewardsModal() {
