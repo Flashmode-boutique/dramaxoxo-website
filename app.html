@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>DRAMA XOXO — Streaming & Romans</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -11,11 +14,15 @@
       padding: 0;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-    body {
+    html, body {
       background-color: #07070d;
       color: #f3f4f6;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -23,6 +30,8 @@
       min-height: 100vh;
       min-height: 100dvh;
       overflow-x: hidden;
+      font-size: 13px;
+      line-height: 1.5;
     }
     .phone-container {
       width: 100%;
@@ -745,31 +754,38 @@
     @keyframes marqueeSlide {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
-    /* Payment Checkout & Localized Methods Styles */
+    }
+
+    /* Payment Checkout & Localized Methods Styles (Clean Modern Luxury UI) */
     .checkout-curr-btn {
-      padding: 7px 4px;
-      border-radius: 8px;
-      border: 1.5px solid #28283c;
-      background: #141420;
-      color: #9ca3af;
-      font-size: 10px;
-      font-weight: 800;
+      padding: 8px 4px;
+      border-radius: 10px;
+      border: 1.5px solid #232338;
+      background: #11111d;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 2px;
       transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .checkout-curr-btn:hover {
+      border-color: #3b3b55;
+      color: #ffffff;
     }
     .checkout-curr-btn.active {
       border-color: #ff2a55;
-      background: rgba(255, 42, 85, 0.15);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(255, 42, 85, 0.25);
+      background: rgba(255, 42, 85, 0.14);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 42, 85, 0.25);
     }
     .payment-method-card {
-      border: 1.5px solid #28283c;
-      background: #151522;
+      border: 1.5px solid #232338;
+      background: #12121e;
       border-radius: 12px;
       padding: 10px 12px;
       display: flex;
@@ -779,51 +795,61 @@
       transition: all 0.15s ease;
     }
     .payment-method-card:hover {
-      border-color: #3f3f5a;
+      border-color: #3b3b55;
+      background: #161626;
     }
     .payment-method-card.active {
       border-color: #ff2a55;
       background: rgba(255, 42, 85, 0.12);
-      box-shadow: 0 4px 14px rgba(255, 42, 85, 0.2);
+      box-shadow: 0 4px 16px rgba(255, 42, 85, 0.22);
     }
     .payment-input-group {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
     .payment-input-label {
-      font-size: 10px;
-      font-weight: 800;
-      color: #9ca3af;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      letter-spacing: 0.4px;
       display: block;
     }
     .payment-input {
       width: 100%;
-      background: #0d0d16;
-      border: 1px solid #28283c;
-      border-radius: 8px;
-      color: #fff;
-      padding: 9px 12px;
-      font-size: 12px;
+      background: #090912;
+      border: 1.5px solid #232338;
+      border-radius: 10px;
+      color: #ffffff;
+      padding: 11px 13px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
       outline: none;
       box-sizing: border-box;
-      font-family: inherit;
-      transition: border-color 0.15s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+    .payment-input::placeholder {
+      color: #525266;
     }
     .payment-input:focus {
       border-color: #ff2a55;
+      background: #0d0d18;
+      box-shadow: 0 0 0 3px rgba(255, 42, 85, 0.18), inset 0 1px 3px rgba(0, 0, 0, 0.4);
     }
     .payment-input.error {
       border-color: #ef4444 !important;
       background: rgba(239, 68, 68, 0.08) !important;
-      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
     }
     .payment-error-banner {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid #ef4444;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.5);
       border-radius: 10px;
-      padding: 9px 12px;
+      padding: 10px 12px;
       margin-bottom: 12px;
       display: flex;
       align-items: flex-start;
@@ -1021,63 +1047,63 @@
     <div class="modal-overlay" id="modal-payment-checkout" onclick="closeModalOnOverlay(event, 'modal-payment-checkout')">
       <div class="modal-sheet" style="max-height: 92vh; overflow-y: auto;">
         <div class="modal-header">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 18px;">🔒</span>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 34px; height: 34px; background: rgba(255,42,85,0.15); border: 1px solid rgba(255,42,85,0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔒</div>
             <div>
-              <h3 class="modal-title" style="margin: 0; font-size: 15px;" id="checkout-modal-title">Paiement Sécurisé DRAMA XOXO</h3>
-              <p style="font-size: 10px; color: #10b981; margin: 0; font-weight: 700;">● Connexion Cryptée SSL 256-Bit</p>
+              <h3 class="modal-title" style="margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -0.01em;" id="checkout-modal-title">Paiement Sécurisé DRAMA XOXO</h3>
+              <p style="font-size: 11px; color: #10b981; margin: 1px 0 0 0; font-weight: 600;">● Connexion Cryptée SSL 256-Bit</p>
             </div>
           </div>
           <button class="modal-close-btn" onclick="closeModal('modal-payment-checkout')">✕</button>
         </div>
 
         <!-- Country / Currency Selector Bar -->
-        <div style="margin-bottom: 12px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">🌍 Pays & Devise Détectés :</span>
-            <span id="detected-country-tag" style="font-size: 9px; color: #ff2a55; font-weight: 800; background: rgba(255,42,85,0.15); padding: 2px 6px; border-radius: 6px;">📍 Localisation Auto</span>
+        <div style="margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px;">🌍 Pays & Devise Détectés</span>
+            <span id="detected-country-tag" style="font-size: 10px; color: #ff2a55; font-weight: 700; background: rgba(255,42,85,0.12); padding: 2px 8px; border-radius: 8px; border: 1px solid rgba(255,42,85,0.2);">📍 Localisation Auto</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;" id="checkout-currency-selector">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;" id="checkout-currency-selector">
             <!-- Populated dynamically by JS -->
           </div>
         </div>
 
         <!-- Selected Item Summary Card -->
-        <div style="background: linear-gradient(135deg, #181828 0%, #1f142b 100%); border: 1.5px solid #ff2a55; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(255,42,85,0.2);">
+        <div style="background: linear-gradient(135deg, #141424 0%, #1c1328 100%); border: 1.5px solid #ff2a55; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 6px 20px rgba(255,42,85,0.18);">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div id="checkout-item-icon" style="font-size: 26px; width: 42px; height: 42px; background: rgba(255,42,85,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">👑</div>
+            <div id="checkout-item-icon" style="font-size: 24px; width: 40px; height: 40px; background: rgba(255,42,85,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">👑</div>
             <div>
-              <h4 id="checkout-item-name" style="font-size: 13px; font-weight: 800; color: #fff; margin: 0;">Abonnement VIP Mensuel</h4>
-              <p id="checkout-item-desc" style="font-size: 10px; color: #a1a1aa; margin: 2px 0 0 0;">Accès illimité à toutes les séries et romans</p>
+              <h4 id="checkout-item-name" style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0;">Abonnement VIP Mensuel</h4>
+              <p id="checkout-item-desc" style="font-size: 11px; color: #94a3b8; margin: 2px 0 0 0;">Accès illimité à toutes les séries et romans</p>
             </div>
           </div>
           <div style="text-align: right;">
-            <div id="checkout-item-price" style="font-size: 18px; font-weight: 900; color: #ff2a55;">$29.99</div>
-            <span id="checkout-item-badge" style="font-size: 8px; font-weight: 800; background: #10b981; color: #022c22; padding: 2px 6px; border-radius: 6px;">DÉBLOCAGE IMMÉDIAT</span>
+            <div id="checkout-item-price" style="font-size: 18px; font-weight: 800; color: #ff2a55; letter-spacing: -0.02em;">$29.99</div>
+            <span id="checkout-item-badge" style="font-size: 9px; font-weight: 700; background: #059669; color: #ffffff; padding: 2px 6px; border-radius: 6px;">DÉBLOCAGE IMMÉDIAT</span>
           </div>
         </div>
 
         <!-- Payment Methods Grid -->
         <div style="margin-bottom: 14px;">
-          <p style="font-size: 11px; font-weight: 800; color: #fff; margin-bottom: 8px;">💳 Choisissez votre mode de paiement :</p>
+          <p style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px;">💳 Choisissez votre mode de paiement :</p>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;" id="checkout-methods-grid">
             <!-- Methods dynamically populated based on country -->
           </div>
         </div>
 
         <!-- Dynamic Payment Form Container -->
-        <div id="checkout-form-container" style="background: #12121e; border: 1px solid #28283c; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div id="checkout-form-container" style="background: #0d0d17; border: 1px solid #232338; border-radius: 14px; padding: 14px; margin-bottom: 14px;">
           <!-- Form rendered dynamically based on selected payment method -->
         </div>
 
         <!-- Confirm Pay Action Button -->
-        <button id="checkout-pay-btn" onclick="processPaymentCheckout()" style="width: 100%; background: linear-gradient(135deg, #ff2a55, #f43f5e); border: none; border-radius: 14px; padding: 14px; color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 20px rgba(255,42,85,0.5); display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s ease;">
+        <button id="checkout-pay-btn" onclick="processPaymentCheckout()" style="width: 100%; background: linear-gradient(135deg, #ff2a55 0%, #ff4b6e 100%); border: none; border-radius: 14px; padding: 14px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 24px rgba(255,42,85,0.4); display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s ease;">
           <span id="checkout-btn-lbl">🔒 Confirmer et Payer</span>
           <span id="checkout-btn-amount">$29.99</span>
         </button>
 
         <!-- Security Guarantee Bar -->
-        <div style="margin-top: 12px; display: flex; justify-content: center; gap: 14px; color: #6b7280; font-size: 9px; font-weight: 600;">
+        <div style="margin-top: 14px; display: flex; justify-content: center; gap: 14px; color: #94a3b8; font-size: 10px; font-weight: 600;">
           <span>🔒 Crypté SSL 256-bit</span>
           <span>⚡ Déblocage Immédiat</span>
           <span>🛡️ Garantie DRAMA XOXO</span>
@@ -3767,48 +3793,48 @@
       if (methodId === 'moncash') {
         if (btnLbl) btnLbl.innerText = '🔒 Payer avec MonCash';
         formContainer.innerHTML = `
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-            <div style="width:28px; height:28px; background:#dc2626; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:12px;">MC</div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:32px; height:32px; background:#dc2626; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:13px; letter-spacing:0.5px;">MC</div>
             <div>
-              <p style="font-size:11px; font-weight:800; color:#fff; margin:0;">MonCash (Digicel Haïti)</p>
-              <p style="font-size:9px; color:#10b981; margin:0; font-weight:700;">● Débit sécurisé immédiat en Gourdes (HTG)</p>
+              <p style="font-size:12px; font-weight:700; color:#fff; margin:0;">MonCash (Digicel Haïti)</p>
+              <p style="font-size:10px; color:#10b981; margin:0; font-weight:600;">● Débit sécurisé immédiat en Gourdes (HTG)</p>
             </div>
           </div>
           <div class="payment-input-group">
-            <label class="payment-input-label">Numéro de Téléphone Digicel :</label>
-            <div style="display:flex; align-items:center; background:#0d0d16; border:1px solid #28283c; border-radius:8px; padding-left:10px;">
-              <span style="color:#9ca3af; font-size:12px; font-weight:700; margin-right:6px;">🇭🇹 +509</span>
-              <input type="tel" id="pay-moncash-phone" class="payment-input" style="border:none; padding-left:0;" placeholder="3XXX XXXX" value="3842 9012">
+            <label class="payment-input-label">Numéro de Téléphone Digicel</label>
+            <div style="display:flex; align-items:center; background:#090912; border:1.5px solid #232338; border-radius:10px; padding:0 12px; transition:border-color 0.15s ease;">
+              <span style="color:#94a3b8; font-size:12px; font-weight:700; margin-right:8px; white-space:nowrap;">🇭🇹 +509</span>
+              <input type="tel" id="pay-moncash-phone" class="payment-input" style="border:none; padding:11px 0; background:transparent; box-shadow:none;" placeholder="3XXX XXXX" value="3842 9012" oninput="formatPhoneInput(this)">
             </div>
           </div>
-          <div class="payment-input-group" style="margin-bottom:6px;">
-            <label class="payment-input-label">Code PIN / Code Secret MonCash :</label>
+          <div class="payment-input-group">
+            <label class="payment-input-label">Code PIN Secret MonCash</label>
             <input type="password" id="pay-moncash-pin" class="payment-input" maxlength="6" placeholder="••••" value="1234">
           </div>
-          <p style="font-size:9px; color:#9ca3af; margin-top:6px; line-height:1.4;">Un SMS de confirmation avec code OTP vous sera envoyé directement sur votre ligne Digicel.</p>
+          <p style="font-size:10px; color:#94a3b8; margin-top:6px; line-height:1.4;">Un SMS de confirmation avec code OTP vous sera envoyé directement sur votre ligne Digicel.</p>
         `;
       } else if (methodId === 'natcash') {
         if (btnLbl) btnLbl.innerText = '🔒 Payer avec Natcash';
         formContainer.innerHTML = `
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-            <div style="width:28px; height:28px; background:#2563eb; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:12px;">NC</div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:32px; height:32px; background:#2563eb; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:13px; letter-spacing:0.5px;">NC</div>
             <div>
-              <p style="font-size:11px; font-weight:800; color:#fff; margin:0;">Natcash (Natcom Haïti)</p>
-              <p style="font-size:9px; color:#10b981; margin:0; font-weight:700;">● Portefeuille mobile officiel Natcom</p>
+              <p style="font-size:12px; font-weight:700; color:#fff; margin:0;">Natcash (Natcom Haïti)</p>
+              <p style="font-size:10px; color:#10b981; margin:0; font-weight:600;">● Portefeuille mobile officiel Natcom</p>
             </div>
           </div>
           <div class="payment-input-group">
-            <label class="payment-input-label">Numéro Natcom :</label>
-            <div style="display:flex; align-items:center; background:#0d0d16; border:1px solid #28283c; border-radius:8px; padding-left:10px;">
-              <span style="color:#9ca3af; font-size:12px; font-weight:700; margin-right:6px;">🇭🇹 +509</span>
-              <input type="tel" id="pay-natcash-phone" class="payment-input" style="border:none; padding-left:0;" placeholder="4XXX XXXX" value="4412 8834">
+            <label class="payment-input-label">Numéro Natcom</label>
+            <div style="display:flex; align-items:center; background:#090912; border:1.5px solid #232338; border-radius:10px; padding:0 12px; transition:border-color 0.15s ease;">
+              <span style="color:#94a3b8; font-size:12px; font-weight:700; margin-right:8px; white-space:nowrap;">🇭🇹 +509</span>
+              <input type="tel" id="pay-natcash-phone" class="payment-input" style="border:none; padding:11px 0; background:transparent; box-shadow:none;" placeholder="4XXX XXXX" value="4412 8834" oninput="formatPhoneInput(this)">
             </div>
           </div>
-          <div class="payment-input-group" style="margin-bottom:6px;">
-            <label class="payment-input-label">Code PIN Natcash :</label>
+          <div class="payment-input-group">
+            <label class="payment-input-label">Code PIN Natcash</label>
             <input type="password" id="pay-natcash-pin" class="payment-input" maxlength="6" placeholder="••••" value="1234">
           </div>
-          <p style="font-size:9px; color:#9ca3af; margin-top:6px; line-height:1.4;">Transaction instantanée et sans frais supplémentaires sur le réseau Natcom.</p>
+          <p style="font-size:10px; color:#94a3b8; margin-top:6px; line-height:1.4;">Transaction instantanée et sans frais supplémentaires sur le réseau Natcom.</p>
         `;
       } else if (methodId === 'applepay') {
         if (btnLbl) btnLbl.innerHTML = '<span style="font-weight:900; letter-spacing:-0.2px; font-family:-apple-system,BlinkMacSystemFont,\'SF Pro Display\',sans-serif;"><span style="font-size:15px; margin-right:1px;"></span>Pay</span> <span>— Confirmer et Payer</span>';
@@ -3819,14 +3845,14 @@
                 <span style="font-size:25px; margin-right:3px; position:relative; top:-2px;"></span>Pay
               </span>
             </div>
-            <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 4px 0;">Apple Pay Express</h4>
-            <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Paiement biométrique rapide par Touch ID / Face ID</p>
-            <div style="background:#09090f; border:1px solid #28283c; border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+            <h4 style="font-size:13px; font-weight:700; color:#fff; margin:0 0 4px 0;">Apple Pay Express</h4>
+            <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Paiement biométrique rapide par Touch ID / Face ID</p>
+            <div style="background:#090912; border:1.5px solid #232338; border-radius:10px; padding:11px 14px; display:flex; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:8px;">
                 <span style="font-size:14px;">💳</span>
-                <span style="font-size:11px; color:#fff; font-weight:700;">Carte Apple Wallet enregistrée</span>
+                <span style="font-size:12px; color:#fff; font-weight:600;">Carte Apple Wallet enregistrée</span>
               </div>
-              <span style="font-size:10px; color:#10b981; font-weight:800;">● Prête</span>
+              <span style="font-size:10px; color:#10b981; font-weight:700;">● Prête</span>
             </div>
           </div>
         `;
@@ -3837,14 +3863,14 @@
             <div style="display:inline-flex; align-items:center; justify-content:center; background:#1e293b; border:1.5px solid #334155; border-radius:12px; padding:8px 20px; margin-bottom:10px;">
               <span style="font-size:16px; font-weight:900; color:#fff; letter-spacing:0.5px;">G<span style="color:#60a5fa;">Pay</span></span>
             </div>
-            <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 4px 0;">Google Pay 1-Tap</h4>
-            <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Paiement rapide via votre compte Google Wallet</p>
-            <div style="background:#09090f; border:1px solid #28283c; border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+            <h4 style="font-size:13px; font-weight:700; color:#fff; margin:0 0 4px 0;">Google Pay 1-Tap</h4>
+            <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Paiement rapide via votre compte Google Wallet</p>
+            <div style="background:#090912; border:1.5px solid #232338; border-radius:10px; padding:11px 14px; display:flex; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:8px;">
                 <span style="font-size:14px;">💳</span>
-                <span style="font-size:11px; color:#fff; font-weight:700;">Google Wallet actif</span>
+                <span style="font-size:12px; color:#fff; font-weight:600;">Google Wallet actif</span>
               </div>
-              <span style="font-size:10px; color:#10b981; font-weight:800;">● Prêt</span>
+              <span style="font-size:10px; color:#10b981; font-weight:700;">● Prêt</span>
             </div>
           </div>
         `;
@@ -3853,10 +3879,10 @@
         formContainer.innerHTML = `
           <div style="text-align:center; padding:10px 0;">
             <div style="font-size:36px; margin-bottom:6px;">🅿️</div>
-            <h4 style="font-size:13px; font-weight:800; color:#fff; margin:0 0 4px 0;">PayPal International</h4>
-            <p style="font-size:10px; color:#9ca3af; margin:0 0 10px 0;">Paiement sécurisé via votre solde ou compte bancaire lié</p>
+            <h4 style="font-size:13px; font-weight:700; color:#fff; margin:0 0 4px 0;">PayPal International</h4>
+            <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Paiement sécurisé via votre solde ou compte bancaire lié</p>
             <div class="payment-input-group" style="text-align:left;">
-              <label class="payment-input-label">Email PayPal du compte :</label>
+              <label class="payment-input-label">Email PayPal du compte</label>
               <input type="email" id="pay-paypal-email" class="payment-input" placeholder="votre-email@domaine.com" value="${currentUser.isGuest ? '' : (currentUser.email || '')}">
             </div>
           </div>
@@ -3865,26 +3891,26 @@
         // Credit / Debit Card Form
         if (btnLbl) btnLbl.innerText = '💳 Payer par Carte Bancaire';
         formContainer.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span style="font-size:11px; font-weight:800; color:#fff;">Informations de la Carte :</span>
-            <div id="pay-card-brand-badge" style="font-size:11px; font-weight:800; color:#9ca3af;">CB / Visa / Mastercard / Amex</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.4px;">Informations de la Carte</span>
+            <div id="pay-card-brand-badge" style="font-size:11px; font-weight:700; color:#94a3b8;">CB / Visa / Mastercard / Amex</div>
           </div>
           <div class="payment-input-group">
-            <label class="payment-input-label">Numéro de Carte :</label>
+            <label class="payment-input-label">Numéro de Carte</label>
             <input type="text" id="pay-card-num" class="payment-input" maxlength="19" placeholder="4242 •••• •••• 4242" value="" oninput="formatCardNumInput(this)">
           </div>
-          <div style="display:flex; gap:8px;">
-            <div class="payment-input-group" style="flex:1;">
-              <label class="payment-input-label">Expiration (MM/AA) :</label>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="payment-input-group">
+              <label class="payment-input-label">Expiration (MM/AA)</label>
               <input type="text" id="pay-card-exp" class="payment-input" maxlength="5" placeholder="12/28" value="" oninput="formatCardExpInput(this)">
             </div>
-            <div class="payment-input-group" style="flex:1;">
-              <label class="payment-input-label">Cryptogramme (CVC) :</label>
+            <div class="payment-input-group">
+              <label class="payment-input-label">Cryptogramme (CVC)</label>
               <input type="password" id="pay-card-cvc" class="payment-input" maxlength="4" placeholder="123" value="">
             </div>
           </div>
-          <div class="payment-input-group" style="margin-bottom:4px;">
-            <label class="payment-input-label">Titulaire de la Carte :</label>
+          <div class="payment-input-group" style="margin-bottom:2px;">
+            <label class="payment-input-label">Titulaire de la Carte</label>
             <input type="text" id="pay-card-name" class="payment-input" placeholder="Ex: Jean Dupont" value="${currentUser.isGuest ? '' : currentUser.name}">
           </div>
         `;
