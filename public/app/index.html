@@ -850,6 +850,27 @@
     .payment-input:focus {
       border-color: #ff2a55;
     }
+    .payment-input.error {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
+    }
+    .payment-error-banner {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      border-radius: 10px;
+      padding: 9px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      animation: checkoutShake 0.35s ease-in-out;
+    }
+    @keyframes checkoutShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
     .checkout-spinner {
       display: inline-block;
       width: 18px;
@@ -3773,58 +3794,270 @@
         formContainer.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <span style="font-size:11px; font-weight:800; color:#fff;">Informations de la Carte :</span>
-            <div style="display:flex; gap:4px; font-size:13px;">💳 💳 💳</div>
+            <div id="pay-card-brand-badge" style="font-size:11px; font-weight:800; color:#9ca3af;">CB / Visa / Mastercard / Amex</div>
           </div>
           <div class="payment-input-group">
             <label class="payment-input-label">Numéro de Carte :</label>
-            <input type="text" id="pay-card-num" class="payment-input" maxlength="19" placeholder="4532 •••• •••• 8921" value="4532 8920 1489 3321" oninput="formatCardNumInput(this)">
+            <input type="text" id="pay-card-num" class="payment-input" maxlength="19" placeholder="4242 •••• •••• 4242" value="" oninput="formatCardNumInput(this)">
           </div>
           <div style="display:flex; gap:8px;">
             <div class="payment-input-group" style="flex:1;">
               <label class="payment-input-label">Expiration (MM/AA) :</label>
-              <input type="text" id="pay-card-exp" class="payment-input" maxlength="5" placeholder="12/28" value="08/28">
+              <input type="text" id="pay-card-exp" class="payment-input" maxlength="5" placeholder="12/28" value="" oninput="formatCardExpInput(this)">
             </div>
             <div class="payment-input-group" style="flex:1;">
               <label class="payment-input-label">Cryptogramme (CVC) :</label>
-              <input type="password" id="pay-card-cvc" class="payment-input" maxlength="4" placeholder="889" value="889">
+              <input type="password" id="pay-card-cvc" class="payment-input" maxlength="4" placeholder="123" value="">
             </div>
           </div>
           <div class="payment-input-group" style="margin-bottom:4px;">
             <label class="payment-input-label">Titulaire de la Carte :</label>
-            <input type="text" id="pay-card-name" class="payment-input" placeholder="Marie Stanley Imbry" value="Marie Stanley Imbry">
+            <input type="text" id="pay-card-name" class="payment-input" placeholder="Marie Stanley Imbry" value="">
           </div>
         `;
       }
     }
 
-    function formatCardNumInput(el) {
-      let v = el.value.replace(/\D/g, '');
-      let matches = v.match(/\d{4,16}/g);
-      let match = matches && matches[0] || '';
-      let parts = [];
-      for (let i = 0, len = match.length; i < len; i += 4) {
-        parts.push(match.substring(i, i + 4));
+    function checkLuhn(digits) {
+      if (!digits || digits.length < 13 || digits.length > 19) return false;
+      if (/^(\d)\1+$/.test(digits)) return false;
+      var sum = 0, shouldDouble = false;
+      for (var i = digits.length - 1; i >= 0; i--) {
+        var digit = parseInt(digits.charAt(i), 10);
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
       }
-      if (parts.length) {
-        el.value = parts.join(' ');
+      return (sum % 10 === 0);
+    }
+
+    function detectCardBrand(digits) {
+      if (!digits) return null;
+      if (digits.startsWith('4')) return 'Visa';
+      if (/^(5[1-5]|2[2-7])/.test(digits)) return 'Mastercard';
+      if (/^3[47]/.test(digits)) return 'American Express';
+      if (/^(6011|65|64[4-9]|622)/.test(digits)) return 'Discover';
+      if (/^(30[0-5]|36|38)/.test(digits)) return 'Diners Club';
+      if (/^35(2[89]|[3-8][0-9])/.test(digits)) return 'JCB';
+      if (/^62/.test(digits)) return 'UnionPay';
+      return null;
+    }
+
+    function formatCardNumInput(el) {
+      var v = el.value.replace(/\D/g, '').slice(0, 19);
+      var parts = [];
+      for (var i = 0; i < v.length; i += 4) {
+        parts.push(v.substring(i, i + 4));
+      }
+      el.value = parts.join(' ');
+      el.classList.remove('error');
+
+      var badge = document.getElementById('pay-card-brand-badge');
+      if (badge) {
+        var brand = detectCardBrand(v);
+        if (brand === 'Visa') badge.innerHTML = '<span style="color:#60a5fa; font-weight:900;">💳 Visa</span>';
+        else if (brand === 'Mastercard') badge.innerHTML = '<span style="color:#f59e0b; font-weight:900;">💳 Mastercard</span>';
+        else if (brand === 'American Express') badge.innerHTML = '<span style="color:#38bdf8; font-weight:900;">💳 Amex</span>';
+        else if (brand === 'Discover') badge.innerHTML = '<span style="color:#f97316; font-weight:900;">💳 Discover</span>';
+        else if (brand === 'JCB') badge.innerHTML = '<span style="color:#34d399; font-weight:900;">💳 JCB</span>';
+        else if (brand === 'UnionPay') badge.innerHTML = '<span style="color:#a78bfa; font-weight:900;">💳 UnionPay</span>';
+        else badge.innerHTML = '<span style="color:#9ca3af;">CB / Visa / Mastercard / Amex</span>';
       }
     }
 
+    function formatCardExpInput(el) {
+      var v = el.value.replace(/\D/g, '').slice(0, 4);
+      if (v.length >= 3) {
+        el.value = v.substring(0, 2) + '/' + v.substring(2);
+      } else {
+        el.value = v;
+      }
+      el.classList.remove('error');
+    }
+
+    function formatPhoneInput(el) {
+      var v = el.value.replace(/\D/g, '').slice(0, 8);
+      if (v.length > 4) {
+        el.value = v.substring(0, 4) + ' ' + v.substring(4);
+      } else {
+        el.value = v;
+      }
+      el.classList.remove('error');
+    }
+
+    function showPaymentValidationError(fieldId, message) {
+      document.querySelectorAll('.payment-input').forEach(function(inp) { inp.classList.remove('error'); });
+      var prevBanner = document.getElementById('checkout-error-banner');
+      if (prevBanner) prevBanner.remove();
+
+      var formContainer = document.getElementById('checkout-form-container');
+      if (formContainer) {
+        var banner = document.createElement('div');
+        banner.id = 'checkout-error-banner';
+        banner.className = 'payment-error-banner';
+        banner.innerHTML = `
+          <span style="font-size:16px;">⚠️</span>
+          <div style="flex:1;">
+            <div style="font-size:11px; font-weight:800; color:#ef4444;">Échec de validation du paiement</div>
+            <div style="font-size:10px; color:#fca5a5; line-height:1.3; margin-top:2px;">${message}</div>
+          </div>
+        `;
+        formContainer.insertBefore(banner, formContainer.firstChild);
+      }
+
+      if (fieldId) {
+        var field = document.getElementById(fieldId);
+        if (field) {
+          field.classList.add('error');
+          field.focus();
+        }
+      }
+
+      showToast('❌ ' + message);
+    }
+
+    function validatePaymentDetails(methodId) {
+      if (methodId === 'card') {
+        var numEl = document.getElementById('pay-card-num');
+        var expEl = document.getElementById('pay-card-exp');
+        var cvcEl = document.getElementById('pay-card-cvc');
+        var nameEl = document.getElementById('pay-card-name');
+
+        var numVal = numEl ? numEl.value : '';
+        var expVal = expEl ? expEl.value : '';
+        var cvcVal = cvcEl ? cvcEl.value : '';
+        var nameVal = nameEl ? nameEl.value : '';
+
+        var digits = numVal.replace(/\D/g, '');
+        if (!digits) {
+          return { valid: false, fieldId: 'pay-card-num', message: 'Veuillez saisir votre numéro de carte bancaire.' };
+        }
+        var brand = detectCardBrand(digits);
+        if (!brand) {
+          return { valid: false, fieldId: 'pay-card-num', message: 'Numéro de carte non reconnu par les réseaux interbancaires autorisés (Visa, Mastercard, Amex, Discover).' };
+        }
+        if (!checkLuhn(digits)) {
+          return { valid: false, fieldId: 'pay-card-num', message: 'Numéro de carte bancaire invalide (échec du contrôle de sécurité de l\'algorithme de Luhn / carte fictive).' };
+        }
+        if (brand === 'American Express' && digits.length !== 15) {
+          return { valid: false, fieldId: 'pay-card-num', message: 'Une carte American Express doit comporter exactement 15 chiffres.' };
+        }
+        if (brand !== 'American Express' && (digits.length < 13 || digits.length > 19)) {
+          return { valid: false, fieldId: 'pay-card-num', message: 'Longueur du numéro de carte bancaire invalide.' };
+        }
+
+        var expMatch = expVal.trim().match(/^(\d{2})\s*[\/\-]\s*(\d{2}|\d{4})$/);
+        if (!expMatch) {
+          return { valid: false, fieldId: 'pay-card-exp', message: 'Date d\'expiration invalide. Format requis : MM/AA (ex: 12/28).' };
+        }
+        var mm = parseInt(expMatch[1], 10);
+        if (mm < 1 || mm > 12) {
+          return { valid: false, fieldId: 'pay-card-exp', message: 'Mois d\'expiration invalide (doit être compris entre 01 et 12).' };
+        }
+        var yy = parseInt(expMatch[2], 10);
+        if (yy < 100) yy += 2000;
+        var now = new Date();
+        var curY = now.getFullYear();
+        var curM = now.getMonth() + 1;
+        if (yy < curY || (yy === curY && mm < curM)) {
+          return { valid: false, fieldId: 'pay-card-exp', message: 'Cette carte bancaire a expiré.' };
+        }
+        if (yy > curY + 20) {
+          return { valid: false, fieldId: 'pay-card-exp', message: 'Année d\'expiration invalide.' };
+        }
+
+        var cvcTrim = cvcVal.trim();
+        var reqCvcLen = (brand === 'American Express') ? 4 : 3;
+        if (!/^\d+$/.test(cvcTrim) || (cvcTrim.length !== 3 && cvcTrim.length !== 4)) {
+          return { valid: false, fieldId: 'pay-card-cvc', message: 'Cryptogramme de sécurité (CVC/CVV) invalide (' + reqCvcLen + ' chiffres requis au dos de la carte).' };
+        }
+
+        var nameTrim = nameVal.trim();
+        if (nameTrim.length < 3 || nameTrim.split(/\s+/).length < 2) {
+          return { valid: false, fieldId: 'pay-card-name', message: 'Veuillez renseigner le nom et le prénom complets figurant sur la carte.' };
+        }
+        if (/\d/.test(nameTrim)) {
+          return { valid: false, fieldId: 'pay-card-name', message: 'Le nom du titulaire ne peut pas contenir de chiffres.' };
+        }
+
+        return { valid: true, brand: brand };
+
+      } else if (methodId === 'moncash') {
+        var phoneEl = document.getElementById('pay-moncash-phone');
+        var pinEl = document.getElementById('pay-moncash-pin');
+        var p = phoneEl ? phoneEl.value.replace(/\D/g, '') : '';
+        var pin = pinEl ? pinEl.value.trim() : '';
+
+        if (!p) {
+          return { valid: false, fieldId: 'pay-moncash-phone', message: 'Veuillez saisir votre numéro Digicel MonCash.' };
+        }
+        if (p.length !== 8 || !p.startsWith('3')) {
+          return { valid: false, fieldId: 'pay-moncash-phone', message: 'Numéro MonCash invalide. Il doit comporter 8 chiffres et débuter par 3 (ex: 3842 9012).' };
+        }
+        if (!pin || !/^\d{4,6}$/.test(pin)) {
+          return { valid: false, fieldId: 'pay-moncash-pin', message: 'Code PIN MonCash invalide (4 à 6 chiffres requis).' };
+        }
+        return { valid: true };
+
+      } else if (methodId === 'natcash') {
+        var phoneEl = document.getElementById('pay-natcash-phone');
+        var pinEl = document.getElementById('pay-natcash-pin');
+        var p = phoneEl ? phoneEl.value.replace(/\D/g, '') : '';
+        var pin = pinEl ? pinEl.value.trim() : '';
+
+        if (!p) {
+          return { valid: false, fieldId: 'pay-natcash-phone', message: 'Veuillez saisir votre numéro Natcom Natcash.' };
+        }
+        if (p.length !== 8 || (!p.startsWith('4') && !p.startsWith('22'))) {
+          return { valid: false, fieldId: 'pay-natcash-phone', message: 'Numéro Natcash invalide. Il doit comporter 8 chiffres et débuter par 4 ou 22 (ex: 4412 8834).' };
+        }
+        if (!pin || !/^\d{4,6}$/.test(pin)) {
+          return { valid: false, fieldId: 'pay-natcash-pin', message: 'Code PIN Natcash invalide (4 à 6 chiffres requis).' };
+        }
+        return { valid: true };
+
+      } else if (methodId === 'paypal') {
+        var emailEl = document.getElementById('pay-paypal-email');
+        var em = emailEl ? emailEl.value.trim() : '';
+        if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+          return { valid: false, fieldId: 'pay-paypal-email', message: 'Adresse email PayPal invalide (ex: utilisateur@domaine.com).' };
+        }
+        return { valid: true };
+      }
+
+      return { valid: true };
+    }
+
     function processPaymentCheckout() {
-      const btn = document.getElementById('checkout-pay-btn');
-      const origHtml = btn ? btn.innerHTML : '';
-      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      // 1. Run autonomous validation check
+      var validation = validatePaymentDetails(activePaymentMethod);
+      if (!validation.valid) {
+        showPaymentValidationError(validation.fieldId, validation.message);
+        return; // Reject transaction and abort immediately
+      }
+
+      // Clear previous error banners & styles
+      var prevBanner = document.getElementById('checkout-error-banner');
+      if (prevBanner) prevBanner.remove();
+      document.querySelectorAll('.payment-input').forEach(function(inp) { inp.classList.remove('error'); });
+
+      var btn = document.getElementById('checkout-pay-btn');
+      var origHtml = btn ? btn.innerHTML : '';
+      var cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
       
-      let amountFormatted = '';
-      let itemName = '';
-      let coinsToAdd = 0;
+      var amountFormatted = '';
+      var itemName = '';
+      var coinsToAdd = 0;
 
       if (activeCheckoutItem.type === 'vip') {
-        const plan = cfg.vipPlans[activeCheckoutItem.planKey] || cfg.vipPlans.monthly;
+        var plan = cfg.vipPlans[activeCheckoutItem.planKey] || cfg.vipPlans.monthly;
         amountFormatted = plan.display;
         itemName = plan.title;
       } else {
-        const pack = cfg.coinPacks[activeCheckoutItem.packIndex] || cfg.coinPacks[0];
+        var pack = cfg.coinPacks[activeCheckoutItem.packIndex] || cfg.coinPacks[0];
         amountFormatted = pack.priceDisplay;
         itemName = `Pack ${pack.coins + pack.bonus} Pièces`;
         coinsToAdd = pack.coins + pack.bonus;
