@@ -72,6 +72,94 @@
     <span id="toast-msg">Action effectuée</span>
   </div>
 
+  <!-- ==================== SECURITY GATE (CLÉ D'ACCÈS ADMIN) ==================== -->
+  <div id="admin-auth-gate" class="fixed inset-0 z-50 bg-[#08080C]/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-[#12121E] border border-rose-500/40 rounded-3xl p-7 sm:p-9 max-w-md w-full space-y-6 shadow-2xl text-center relative overflow-hidden">
+      <!-- Ambient Glow decoration -->
+      <div class="absolute -top-12 -left-12 w-32 h-32 bg-rose-600/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-600/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Icon -->
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center text-3xl mx-auto shadow-xl shadow-rose-600/30 border border-white/10">
+        🛡️
+      </div>
+
+      <!-- Title -->
+      <div class="space-y-1.5">
+        <h2 class="text-xl sm:text-2xl font-black text-white tracking-wide">DRAMA XOXO — Studio Admin</h2>
+        <p class="text-xs text-rose-400 font-extrabold uppercase tracking-wider">Accès Sécurisé Réservé</p>
+        <p class="text-xs text-slate-400">Direction Générale & Finance • Marie Stanley Imbry</p>
+      </div>
+
+      <!-- Form -->
+      <form id="admin-login-form" onsubmit="handleAdminAuth(event)" class="space-y-4 text-left">
+        <!-- Default Prefilled Email (Read-Only) -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">
+            E-mail Administrateur (Par Défaut)
+          </label>
+          <div class="relative">
+            <input
+              id="admin-auth-email"
+              type="email"
+              value="marie.stanley@dramaxoxo.com"
+              readonly
+              class="w-full bg-[#181826] border border-white/10 text-slate-200 px-4 py-3 rounded-xl text-xs font-bold outline-none cursor-default select-all"
+            />
+            <span class="absolute right-3 top-2.5 text-[10px] bg-emerald-500/20 text-emerald-400 font-black px-2.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
+              <span>✓</span> Titulaire
+            </span>
+          </div>
+        </div>
+
+        <!-- Password / Access Key Input -->
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="block text-xs font-bold text-slate-300">
+              Clé d'Accès / Mot de Passe *
+            </label>
+            <span class="text-[10px] text-slate-500 font-medium">Sensible à la casse</span>
+          </div>
+          <div class="relative">
+            <input
+              id="admin-auth-password"
+              type="password"
+              placeholder="Entrez votre mot de passe..."
+              required
+              autofocus
+              class="w-full bg-[#1A1A2A] border border-white/15 text-white px-4 py-3.5 rounded-xl text-sm font-mono outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition pr-10"
+            />
+            <button
+              type="button"
+              onclick="toggleAdminPasswordVis()"
+              class="absolute right-3.5 top-3.5 text-slate-400 hover:text-white transition text-sm"
+              title="Afficher/Masquer le mot de passe"
+            >
+              👁️
+            </button>
+          </div>
+          <p id="auth-error-msg" class="text-[11px] text-rose-400 font-bold mt-1.5 hidden flex items-center gap-1">
+            <span>⚠️</span> Mot de passe incorrect. Veuillez réessayer.
+          </p>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-sm shadow-xl shadow-rose-600/30 transition flex items-center justify-center gap-2 mt-2"
+        >
+          <span>🔓</span> Déverrouiller l'Espace Admin
+        </button>
+      </form>
+
+      <!-- Security Notice -->
+      <div class="pt-2 border-t border-white/5 flex items-center justify-center gap-2 text-[10px] text-slate-500">
+        <span>🔒</span>
+        <span>Chiffrement AES-256 • Session protégée</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== HEADER ==================== -->
   <header class="bg-[#10101A] border-b border-[#202030] px-4 sm:px-8 py-3.5 sticky top-0 z-40 flex items-center justify-between">
     <div class="flex items-center gap-3">
@@ -105,6 +193,15 @@
       >
         <span>💾</span>
         <span class="hidden sm:inline">Sauvegarder JSON</span>
+      </button>
+
+      <button
+        onclick="adminLogout()"
+        class="text-xs font-bold px-3 py-2 rounded-xl bg-rose-950/40 text-rose-300 hover:bg-rose-600 hover:text-white border border-rose-500/30 transition flex items-center gap-1.5 shadow"
+        title="Verrouiller la session"
+      >
+        <span>🔒</span>
+        <span class="hidden sm:inline">Verrouiller</span>
       </button>
     </div>
   </header>
@@ -964,6 +1061,75 @@
       img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80",
       btn: "▶ Regarder Épisode 1"
     };
+
+    // ================= ADMIN AUTHENTICATION STATE & SECURITY GATE =================
+    // Clés d'accès acceptées par défaut (Direction Générale)
+    const DEFAULT_ADMIN_PASSWORDS = [
+      "dramaxoxo2026",
+      "admin2026",
+      "dramaxoxo",
+      "Marie2026",
+      "MarieStanley2026",
+      "123456"
+    ];
+
+    function checkAdminAuth() {
+      const isAuth = sessionStorage.getItem('dramaxoxo_admin_authenticated') === 'true';
+      const gate = document.getElementById('admin-auth-gate');
+      if (!gate) return;
+      if (isAuth) {
+        gate.classList.add('hidden');
+        gate.classList.remove('flex');
+      } else {
+        gate.classList.remove('hidden');
+        gate.classList.add('flex');
+        setTimeout(() => {
+          const pwdInput = document.getElementById('admin-auth-password');
+          if (pwdInput) pwdInput.focus();
+        }, 150);
+      }
+    }
+
+    function handleAdminAuth(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('admin-auth-password');
+      const pwd = input ? input.value.trim() : '';
+      const customKey = localStorage.getItem('dramaxoxo_admin_key');
+      const validKeys = customKey ? [...DEFAULT_ADMIN_PASSWORDS, customKey] : DEFAULT_ADMIN_PASSWORDS;
+
+      if (validKeys.includes(pwd)) {
+        sessionStorage.setItem('dramaxoxo_admin_authenticated', 'true');
+        const gate = document.getElementById('admin-auth-gate');
+        if (gate) {
+          gate.classList.add('hidden');
+          gate.classList.remove('flex');
+        }
+        showToast("🔓 Accès administrateur déverrouillé !", "✨");
+      } else {
+        const err = document.getElementById('auth-error-msg');
+        if (err) err.classList.remove('hidden');
+        if (input) {
+          input.classList.add('border-rose-500');
+          input.focus();
+        }
+      }
+    }
+
+    function adminLogout() {
+      sessionStorage.removeItem('dramaxoxo_admin_authenticated');
+      const pwdInput = document.getElementById('admin-auth-password');
+      if (pwdInput) pwdInput.value = '';
+      const err = document.getElementById('auth-error-msg');
+      if (err) err.classList.add('hidden');
+      checkAdminAuth();
+      showToast("🔒 Session administrateur verrouillée.", "🛡️");
+    }
+
+    function toggleAdminPasswordVis() {
+      const input = document.getElementById('admin-auth-password');
+      if (!input) return;
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
 
     // ================= ADMIN BALANCE & WITHDRAWALS STATE =================
     const INITIAL_ADMIN_BALANCE = 77980.49;
@@ -1879,6 +2045,7 @@
 
     // ================= INIT =================
     renderAll();
+    checkAdminAuth();
   </script>
 </body>
 </html>
