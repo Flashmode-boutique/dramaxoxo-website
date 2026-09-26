@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>DRAMA XOXO — Studio d'Administration, Finance & Créateurs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -144,7 +147,7 @@
             <p class="text-[11px] text-emerald-300 font-bold uppercase tracking-wider">Solde Compte Admin</p>
             <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2 py-0.5 rounded-full border border-emerald-500/40">DISPONIBLE</span>
           </div>
-          <h3 class="text-2xl sm:text-3xl font-black text-emerald-400" id="stat-admin-balance">77 980,49 $</h3>
+          <h3 class="text-2xl sm:text-3xl font-black text-emerald-400" id="stat-admin-balance">$77,980.49</h3>
           <div class="flex items-center justify-between pt-1">
             <p class="text-[10px] text-emerald-400/90 font-medium">✓ 100% Retirable</p>
             <button onclick="openWithdrawModal()" class="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-3 py-1 rounded-lg shadow-lg shadow-emerald-600/30 transition flex items-center gap-1">
@@ -203,7 +206,7 @@
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
             <span>💰</span> Finances & Retraits Admin
           </h3>
-          <p class="text-xs text-slate-400">Solde disponible : <strong class="text-emerald-400 font-bold" id="shortcut-admin-bal">77 980,49 $</strong>. Retraits PayPal, Payoneer, Virement & Crypto.</p>
+          <p class="text-xs text-slate-400">Solde disponible : <strong class="text-emerald-400 font-bold" id="shortcut-admin-bal">$77,980.49</strong>. Retraits PayPal, Payoneer, Virement & Crypto.</p>
           <div class="flex gap-2">
             <button onclick="openWithdrawModal()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-1">
               <span>💸</span> Retirer
@@ -398,7 +401,7 @@
               </p>
               <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2 py-0.5 rounded">RETIRABLE</span>
             </div>
-            <p class="text-2xl sm:text-3xl font-black text-emerald-400" id="finance-admin-balance">77 980,49 $</p>
+            <p class="text-2xl sm:text-3xl font-black text-emerald-400" id="finance-admin-balance">$77,980.49</p>
             <p class="text-[10px] text-emerald-400/80 mt-1">PayPal • Payoneer • Bank • Crypto</p>
           </div>
 
@@ -582,7 +585,7 @@
       <div class="p-4 bg-gradient-to-r from-emerald-950/40 to-[#12121E] rounded-2xl border border-emerald-500/35 flex items-center justify-between">
         <div>
           <p class="text-[10px] text-emerald-300 font-bold uppercase tracking-wider">Solde Disponible au Retrait</p>
-          <h4 class="text-2xl font-black text-emerald-400" id="withdraw-modal-available-balance">77 980,49 $</h4>
+          <h4 class="text-2xl font-black text-emerald-400" id="withdraw-modal-available-balance">$77,980.49</h4>
         </div>
         <span class="text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full font-black border border-emerald-500/40">
           ✓ 100% Retirable
@@ -593,7 +596,7 @@
       <div class="space-y-2 text-xs">
         <div class="flex justify-between items-center">
           <label class="font-bold text-slate-200">Montant à Retirer ($ USD) *</label>
-          <span class="text-slate-400 text-[11px]">Min: $50.00 • Max: <span id="withdraw-max-text" class="text-emerald-400 font-bold">77 980,49 $</span></span>
+          <span class="text-slate-400 text-[11px]">Min: $50.00 • Max: <span id="withdraw-max-text" class="text-emerald-400 font-bold">$77,980.49</span></span>
         </div>
         <div class="relative">
           <input
@@ -1000,7 +1003,7 @@
     }
 
     function formatCurrency(val) {
-      return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val) + " $";
+      return "$" + new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
     }
 
     let DRAMAS = loadDramas();

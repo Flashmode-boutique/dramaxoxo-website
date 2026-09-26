@@ -514,34 +514,39 @@ export const ManagerPage: React.FC = () => {
       {activeTab === 'overview' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="p-5 space-y-2 border-emerald-500/40 bg-gradient-to-br from-emerald-950/40 via-brand-surface to-brand-surface shadow-xl">
+              <div className="flex justify-between items-center text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                <span>Solde Compte Admin</span>
+                <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">DISPONIBLE</span>
+              </div>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-400">$77,980.49</p>
+              <div className="flex items-center justify-between pt-1">
+                <p className="text-[11px] text-emerald-400 font-medium">✓ Retirable immédiatement</p>
+                <button onClick={() => setActiveTab('payouts')} className="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-3 py-1 rounded-lg shadow transition">
+                  Retirer 💸
+                </button>
+              </div>
+            </Card>
+
             <Card className="p-5 space-y-2 border-brand-border/80">
               <div className="flex justify-between items-center text-brand-textMuted text-xs">
                 <span>Revenu Brut Global</span>
                 <DollarSign className="w-4 h-4 text-emerald-400" />
               </div>
-              <p className="text-2xl font-black text-white">18 450,00 $</p>
+              <p className="text-2xl font-black text-white">$124,850.00</p>
               <p className="text-[11px] text-emerald-400 flex items-center space-x-1">
                 <TrendingUp className="w-3 h-3" />
-                <span>+24% ce mois</span>
+                <span>+48% ce mois</span>
               </p>
             </Card>
 
             <Card className="p-5 space-y-2 border-brand-border/80">
               <div className="flex justify-between items-center text-brand-textMuted text-xs">
-                <span>Royalties Créateurs ({royaltyRate}%)</span>
+                <span>Royalties Créateurs (70%)</span>
                 <DollarSign className="w-4 h-4 text-purple-400" />
               </div>
-              <p className="text-2xl font-black text-purple-400">12 915,00 $</p>
+              <p className="text-2xl font-black text-purple-400">$32,670.00</p>
               <p className="text-[11px] text-brand-textMuted">Calcul sur base nette éligible</p>
-            </Card>
-
-            <Card className="p-5 space-y-2 border-brand-border/80">
-              <div className="flex justify-between items-center text-brand-textMuted text-xs">
-                <span>Part Plateforme (30%)</span>
-                <DollarSign className="w-4 h-4 text-emerald-400" />
-              </div>
-              <p className="text-2xl font-black text-emerald-400">5 535,00 $</p>
-              <p className="text-[11px] text-emerald-400">Marge nette DRAMA XOXO</p>
             </Card>
 
             <Card className="p-5 space-y-2 border-brand-border/80">
