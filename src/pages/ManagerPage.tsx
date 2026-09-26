@@ -68,7 +68,7 @@ interface PayoutItem {
 
 export const ManagerPage: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminEmail, setAdminEmail] = useState('');
+  const [adminEmail, setAdminEmail] = useState('mariestanleyimbry@yahoo.fr');
   const [otpCode, setOtpCode] = useState('');
   const [otpRequested, setOtpRequested] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -303,7 +303,7 @@ export const ManagerPage: React.FC = () => {
   const fetchNovelsAdmin = async () => {
     setLoadingNovelsAdmin(true);
     try {
-      const email = adminEmail || 'mariestanley@virtualsis.com';
+      const email = adminEmail || 'mariestanleyimbry@yahoo.fr';
       const [resApps, resMod, resLedger] = await Promise.all([
         fetch('/api/admin/novels/applications', { headers: { 'X-User-Email': email } }),
         fetch('/api/admin/novels/moderation', { headers: { 'X-User-Email': email } }),
@@ -327,7 +327,7 @@ export const ManagerPage: React.FC = () => {
 
   const handleReviewNovelApp = async (appId: string, decision: 'APPROVED' | 'REJECTED') => {
     try {
-      const email = adminEmail || 'mariestanley@virtualsis.com';
+      const email = adminEmail || 'mariestanleyimbry@yahoo.fr';
       const res = await fetch(`/api/admin/novels/applications/${appId}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-User-Email': email },
@@ -345,7 +345,7 @@ export const ManagerPage: React.FC = () => {
 
   const handlePublishNovelChapter = async (chapterId: string, publish: boolean) => {
     try {
-      const email = adminEmail || 'mariestanley@virtualsis.com';
+      const email = adminEmail || 'mariestanleyimbry@yahoo.fr';
       const res = await fetch(`/api/admin/novels/chapters/${chapterId}/publish`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-User-Email': email },
