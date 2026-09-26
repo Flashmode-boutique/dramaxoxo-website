@@ -1,0 +1,26 @@
+{
+  "name": "DRAMA XOXO — Studio Admin",
+  "short_name": "Admin DRAMA",
+  "description": "Portail d'Administration, Direction Générale, Finance & Créateurs DRAMA XOXO",
+  "start_url": "/admin.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#08080C",
+  "theme_color": "#E11D48",
+  "orientation": "any",
+  "lang": "fr",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ]
+}

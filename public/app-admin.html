@@ -7,6 +7,18 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>DRAMA XOXO — Studio d'Administration, Finance & Créateurs</title>
+
+  <!-- PWA Standalone Configuration for Admin Studio (Prevents launching spectator site) -->
+  <link rel="manifest" href="/manifest-admin.json" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Admin DRAMA" />
+  <meta name="application-name" content="Admin DRAMA" />
+  <meta name="theme-color" content="#E11D48" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -153,10 +165,19 @@
         </button>
       </form>
 
-      <!-- Security Notice -->
-      <div class="pt-2 border-t border-white/5 flex items-center justify-center gap-2 text-[10px] text-slate-500">
-        <span>🔒</span>
-        <span>Chiffrement AES-256 • Session protégée</span>
+      <!-- Mobile install helper button -->
+      <div class="pt-2 border-t border-white/5 space-y-2">
+        <button
+          type="button"
+          onclick="openMobileInstallModal()"
+          class="text-[11px] text-rose-400 hover:text-rose-300 font-bold flex items-center justify-center gap-1.5 mx-auto py-1 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 transition"
+        >
+          <span>📲</span> Installer l'icône Studio Admin sur téléphone
+        </button>
+        <div class="flex items-center justify-center gap-2 text-[10px] text-slate-500">
+          <span>🔒</span>
+          <span>Chiffrement AES-256 • Session protégée</span>
+        </div>
       </div>
     </div>
   </div>
@@ -178,11 +199,20 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button
+        onclick="openMobileInstallModal()"
+        class="text-xs font-bold px-3 py-2 rounded-xl bg-gradient-to-r from-rose-600/30 to-pink-600/30 text-rose-300 hover:text-white border border-rose-500/40 transition flex items-center gap-1.5 shadow"
+        title="Installer l'icône Admin sur téléphone"
+      >
+        <span>📲</span>
+        <span class="hidden sm:inline">Installer sur Mobile</span>
+      </button>
+
       <a
         href="./"
         target="_blank"
-        class="text-xs font-bold px-3.5 py-2 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600 hover:text-white transition flex items-center gap-1.5 shadow"
+        class="text-xs font-bold px-3 py-2 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600 hover:text-white transition flex items-center gap-1.5 shadow"
       >
         <span>📱</span>
         <span class="hidden sm:inline">Tester l'App Spectateur</span>
@@ -190,7 +220,7 @@
 
       <button
         onclick="exportDatabaseJSON()"
-        class="text-xs font-bold px-3.5 py-2 rounded-xl bg-[#1C1C2A] text-slate-300 hover:text-white hover:bg-[#252538] transition flex items-center gap-1.5"
+        class="text-xs font-bold px-3 py-2 rounded-xl bg-[#1C1C2A] text-slate-300 hover:text-white hover:bg-[#252538] transition flex items-center gap-1.5"
       >
         <span>💾</span>
         <span class="hidden sm:inline">Sauvegarder JSON</span>
@@ -651,6 +681,70 @@
     </section>
 
   </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: INSTALLER SUR MOBILE (iOS & ANDROID) -->
+  <!-- ========================================================================= -->
+  <div id="modal-install-mobile" class="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-[#141422] border border-rose-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+      <button onclick="closeMobileInstallModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#202032] hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition">✕</button>
+
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-rose-600/30">
+          📲
+        </div>
+        <div>
+          <h3 class="text-base sm:text-lg font-black text-white">Installer l'Icône Studio Admin</h3>
+          <p class="text-xs text-rose-400 font-bold">Ouvrir directement l'Administration au lieu du site public</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+        <div class="p-3.5 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-1">
+          <p class="font-extrabold text-white text-xs flex items-center gap-1.5">
+            <span>⚠️</span> Étape 1 : Supprimer l'ancienne icône
+          </p>
+          <p class="text-slate-300 text-[11px]">
+            Si vous aviez déjà installé l'icône DRAMA XOXO sur votre écran d'accueil, <strong>supprimez-la d'abord de votre téléphone</strong> (maintenez votre doigt dessus puis « Supprimer l'app »), car elle était enregistrée avec le lien du site public.
+          </p>
+        </div>
+
+        <!-- Guide iPhone / iPad -->
+        <div class="p-4 rounded-2xl bg-[#1A1A28] border border-white/10 space-y-2.5">
+          <p class="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
+            <span>🍏</span> Sur iPhone / iPad (Safari) :
+          </p>
+          <ol class="list-decimal list-inside space-y-2 text-slate-300 pl-1 text-[11px] sm:text-xs">
+            <li>Ouvrez cette page dans le navigateur <strong>Safari</strong>.</li>
+            <li>Appuyez sur le bouton <strong>Partager</strong> en bas au centre (carré avec flèche vers le haut <span class="bg-white/10 px-1.5 py-0.5 rounded text-white font-mono">📤</span>).</li>
+            <li>Faites défiler le menu et appuyez sur <strong>« Sur l'écran d'accueil »</strong> (<span class="text-rose-400 font-bold">➕</span>).</li>
+            <li>Le nom affiché est automatiquement <strong>« Admin DRAMA »</strong>. Appuyez sur <strong>Ajouter</strong> en haut à droite.</li>
+          </ol>
+        </div>
+
+        <!-- Guide Android -->
+        <div class="p-4 rounded-2xl bg-[#1A1A28] border border-white/10 space-y-2.5">
+          <p class="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
+            <span>🤖</span> Sur Android (Chrome) :
+          </p>
+          <ol class="list-decimal list-inside space-y-2 text-slate-300 pl-1 text-[11px] sm:text-xs">
+            <li>Ouvrez cette page dans <strong>Google Chrome</strong>.</li>
+            <li>Appuyez sur les <strong>trois points verticaux (⋮)</strong> en haut à droite.</li>
+            <li>Sélectionnez <strong>« Installer l'application »</strong> (ou « Ajouter à l'écran d'accueil »).</li>
+            <li>Validez. L'icône <strong>« Admin DRAMA »</strong> s'installe directement !</li>
+          </ol>
+        </div>
+
+        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] flex items-center gap-2">
+          <span>✓</span> L'icône sur votre écran d'accueil lancera désormais <strong>directement</strong> votre Studio Admin avec votre e-mail <strong>mariestanleyimbry@yahoo.fr</strong> et votre solde de <strong>$77,980.49</strong>.
+        </div>
+      </div>
+
+      <button onclick="closeMobileInstallModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs transition shadow-lg shadow-rose-600/30">
+        J'ai compris, fermer
+      </button>
+    </div>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- MODAL: RETRAIT DE FONDS ADMINISTRATEUR (Marie Stanley) -->
@@ -1674,6 +1768,21 @@
       saveTransactions();
       renderAll();
       showToast(`⚡ Simulation : Paiement reçu de ${randomUser} • Épisodes débloqués automatiquement !`, "🔓");
+    }
+
+    // ================= MOBILE INSTALLATION HELPER =================
+    function openMobileInstallModal() {
+      const modal = document.getElementById('modal-install-mobile');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeMobileInstallModal() {
+      const modal = document.getElementById('modal-install-mobile');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
     // ================= ADMIN WITHDRAWALS SYSTEM =================
