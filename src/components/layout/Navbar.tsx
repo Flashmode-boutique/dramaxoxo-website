@@ -54,10 +54,8 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group focus-visible:outline-none">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-red to-rose-400 p-[1.5px] shadow-red-glow transition-transform duration-300 group-hover:scale-105">
-              <div className="w-full h-full bg-brand-bg rounded-[10px] flex items-center justify-center">
-                <span className="font-extrabold text-lg text-brand-red tracking-tighter">XO</span>
-              </div>
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-red-glow transition-transform duration-300 group-hover:scale-105 flex-shrink-0">
+              <img src="/logo-d.svg" alt="DRAMA XOXO" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col">
               <span className="font-black text-xl tracking-wider text-white group-hover:text-white/90">

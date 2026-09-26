@@ -27,10 +27,8 @@ export const Footer: React.FC = () => {
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-4">
             <Link to="/" className="flex items-center space-x-3 group inline-flex">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-red to-rose-400 p-[1.5px] shadow-red-glow">
-                <div className="w-full h-full bg-brand-bg rounded-[10px] flex items-center justify-center">
-                  <span className="font-extrabold text-base text-brand-red tracking-tighter">XO</span>
-                </div>
+              <div className="w-9 h-9 rounded-xl overflow-hidden shadow-red-glow flex-shrink-0">
+                <img src="/logo-d.svg" alt="DRAMA XOXO" className="w-full h-full object-cover" />
               </div>
               <span className="font-black text-xl tracking-wider text-white">
                 DRAMA <span className="text-brand-red">XOXO</span>
