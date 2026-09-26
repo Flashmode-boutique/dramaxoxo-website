@@ -139,13 +139,6 @@
         </svg>
       </div>
 
-      <!-- Title -->
-      <div class="space-y-1.5">
-        <h2 class="text-xl sm:text-2xl font-black text-white tracking-wide">DRAMA XOXO — Studio Admin</h2>
-        <p class="text-xs text-rose-400 font-extrabold uppercase tracking-wider">Accès Sécurisé Réservé</p>
-        <p class="text-xs text-slate-400">Direction Générale & Finance • Marie Stanley Imbry</p>
-      </div>
-
       <!-- Form -->
       <form id="admin-login-form" onsubmit="handleAdminAuth(event)" class="space-y-4 text-left">
         <!-- Default Prefilled Email -->
@@ -206,24 +199,9 @@
           type="submit"
           class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-sm shadow-xl shadow-rose-600/30 transition flex items-center justify-center gap-2 mt-2"
         >
-          <span>🔓</span> Déverrouiller l'Espace Admin
+          Déverrouiller l'Espace Admin
         </button>
       </form>
-
-      <!-- Mobile install helper button -->
-      <div class="pt-2 border-t border-white/5 space-y-2">
-        <button
-          type="button"
-          onclick="openMobileInstallModal()"
-          class="text-[11px] text-rose-400 hover:text-rose-300 font-bold flex items-center justify-center gap-1.5 mx-auto py-1 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 transition"
-        >
-          <span>📲</span> Installer l'icône Studio Admin sur téléphone
-        </button>
-        <div class="flex items-center justify-center gap-2 text-[10px] text-slate-500">
-          <span>🔒</span>
-          <span>Chiffrement AES-256 • Session protégée</span>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -284,44 +262,16 @@
             ADMINISTRATRICE VÉRIFIÉE
           </span>
         </div>
-        <p class="text-[11px] text-slate-400">Direction Générale & Finance • Marie Stanley Imbry (<span class="text-rose-400 font-mono font-bold">mariestanleyimbry@yahoo.fr</span>)</p>
+        <p class="text-[11px] text-slate-400">Direction Générale & Finance • Marie Stanley Imbry</p>
       </div>
     </div>
 
-    <div class="flex items-center gap-2 sm:gap-3">
-      <button
-        onclick="openMobileInstallModal()"
-        class="text-xs font-bold px-3 py-2 rounded-xl bg-gradient-to-r from-rose-600/30 to-pink-600/30 text-rose-300 hover:text-white border border-rose-500/40 transition flex items-center gap-1.5 shadow"
-        title="Installer l'icône Admin sur téléphone"
-      >
-        <span>📲</span>
-        <span class="hidden sm:inline">Installer sur Mobile</span>
-      </button>
-
-      <a
-        href="./"
-        target="_blank"
-        class="text-xs font-bold px-3 py-2 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600 hover:text-white transition flex items-center gap-1.5 shadow"
-      >
-        <span>📱</span>
-        <span class="hidden sm:inline">Tester l'App Spectateur</span>
-      </a>
-
-      <button
-        onclick="exportDatabaseJSON()"
-        class="text-xs font-bold px-3 py-2 rounded-xl bg-[#1C1C2A] text-slate-300 hover:text-white hover:bg-[#252538] transition flex items-center gap-1.5"
-      >
-        <span>💾</span>
-        <span class="hidden sm:inline">Sauvegarder JSON</span>
-      </button>
-
+    <div class="flex items-center gap-2">
       <button
         onclick="adminLogout()"
-        class="text-xs font-bold px-3 py-2 rounded-xl bg-rose-950/40 text-rose-300 hover:bg-rose-600 hover:text-white border border-rose-500/30 transition flex items-center gap-1.5 shadow"
-        title="Verrouiller la session"
+        class="text-xs font-bold px-4 py-2 rounded-xl bg-rose-950/40 text-rose-300 hover:bg-rose-600 hover:text-white border border-rose-500/30 transition shadow"
       >
-        <span>🔒</span>
-        <span class="hidden sm:inline">Verrouiller</span>
+        Verrouiller
       </button>
     </div>
   </header>
@@ -345,9 +295,6 @@
     </button>
     <button onclick="switchTab('hero')" id="tab-hero" class="px-4 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
       🔥 Hero & Bannières
-    </button>
-    <button onclick="switchTab('sync')" id="tab-sync" class="px-3.5 py-2 rounded-xl bg-[#1A1A28] text-slate-400 hover:text-white whitespace-nowrap transition">
-      💾 Sync & Données
     </button>
   </nav>
 
@@ -660,7 +607,7 @@
       <!-- Auto-Unlock Engine Rules -->
       <div class="bg-[#12121E] p-6 rounded-2xl border border-white/5 space-y-4">
         <h4 class="font-bold text-sm text-white flex items-center gap-2">
-          <span>🔓</span> Moteur de Déblocage Automatique des Épisodes & Chapitres
+          Moteur de Déblocage Automatique des Épisodes & Chapitres
         </h4>
         <p class="text-xs text-slate-400">
           Dès qu'un visiteur souscrit au Pass VIP ou achète un pack de pièces, le système déverrouille instantanément les contenus protégés et crédite les royalties (70%) au créateur correspondant.
@@ -733,107 +680,14 @@
         </div>
 
         <button onclick="saveHero()" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center gap-2">
-          <span>💾</span> Enregistrer les Modifications du Héro
-        </button>
-      </div>
-    </section>
-
-    <!-- ==================== TAB 7: SYNC & DATABASE ==================== -->
-    <section id="view-sync" class="hidden space-y-6 max-w-2xl">
-      <div class="bg-[#12121E] p-6 rounded-2xl border border-emerald-500/20 space-y-4">
-        <h3 class="font-extrabold text-sm text-emerald-400 flex items-center gap-2">
-          <span>💾</span> Sauvegarde & Synchronisation Globale (JSON)
-        </h3>
-        <p class="text-xs text-slate-400">
-          Toutes vos modifications sont automatiquement synchronisées avec le site spectateur. Vous pouvez exporter l'intégralité de vos séries et romans sous format JSON ou les réinjecter.
-        </p>
-
-        <textarea id="database-json-area" rows="8" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl p-3 text-[11px] font-mono text-slate-200 outline-none focus:border-emerald-500"></textarea>
-
-        <div class="flex gap-3">
-          <button onclick="copyDatabaseJSON()" class="flex-1 bg-[#1C1C2A] hover:bg-[#252538] text-white font-bold text-xs py-2.5 rounded-xl transition">
-            📋 Copier le JSON
-          </button>
-          <button onclick="importDatabaseJSON()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition">
-            📥 Importer & Mettre à Jour
-          </button>
-        </div>
-      </div>
-
-      <div class="bg-[#181014] p-5 rounded-2xl border border-rose-500/30 space-y-3">
-        <h4 class="font-bold text-xs text-rose-400">⚠️ Rétablir les données par défaut</h4>
-        <p class="text-[11px] text-slate-400">Restaurer la liste des séries et romans d'origine de l'application.</p>
-        <button onclick="resetDefaults()" class="bg-rose-900/40 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-bold text-xs px-4 py-2 rounded-xl transition">
-          🔄 Rétablir les données d'origine
+          Enregistrer les Modifications du Héro
         </button>
       </div>
     </section>
 
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- MODAL: INSTALLER SUR MOBILE (iOS & ANDROID) -->
-  <!-- ========================================================================= -->
-  <div id="modal-install-mobile" class="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
-    <div class="bg-[#141422] border border-rose-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
-      <button onclick="closeMobileInstallModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#202032] hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition">✕</button>
 
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-rose-600/30">
-          📲
-        </div>
-        <div>
-          <h3 class="text-base sm:text-lg font-black text-white">Installer l'Icône Studio Admin</h3>
-          <p class="text-xs text-rose-400 font-bold">Ouvrir directement l'Administration au lieu du site public</p>
-        </div>
-      </div>
-
-      <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
-        <div class="p-3.5 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-1">
-          <p class="font-extrabold text-white text-xs flex items-center gap-1.5">
-            <span>⚠️</span> Étape 1 : Supprimer l'ancienne icône
-          </p>
-          <p class="text-slate-300 text-[11px]">
-            Si vous aviez déjà installé l'icône DRAMA XOXO sur votre écran d'accueil, <strong>supprimez-la d'abord de votre téléphone</strong> (maintenez votre doigt dessus puis « Supprimer l'app »), car elle était enregistrée avec le lien du site public.
-          </p>
-        </div>
-
-        <!-- Guide iPhone / iPad -->
-        <div class="p-4 rounded-2xl bg-[#1A1A28] border border-white/10 space-y-2.5">
-          <p class="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
-            <span>🍏</span> Sur iPhone / iPad (Safari) :
-          </p>
-          <ol class="list-decimal list-inside space-y-2 text-slate-300 pl-1 text-[11px] sm:text-xs">
-            <li>Ouvrez cette page dans le navigateur <strong>Safari</strong>.</li>
-            <li>Appuyez sur le bouton <strong>Partager</strong> en bas au centre (carré avec flèche vers le haut <span class="bg-white/10 px-1.5 py-0.5 rounded text-white font-mono">📤</span>).</li>
-            <li>Faites défiler le menu et appuyez sur <strong>« Sur l'écran d'accueil »</strong> (<span class="text-rose-400 font-bold">➕</span>).</li>
-            <li>Le nom affiché est automatiquement <strong>« Admin DRAMA »</strong>. Appuyez sur <strong>Ajouter</strong> en haut à droite.</li>
-          </ol>
-        </div>
-
-        <!-- Guide Android -->
-        <div class="p-4 rounded-2xl bg-[#1A1A28] border border-white/10 space-y-2.5">
-          <p class="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
-            <span>🤖</span> Sur Android (Chrome) :
-          </p>
-          <ol class="list-decimal list-inside space-y-2 text-slate-300 pl-1 text-[11px] sm:text-xs">
-            <li>Ouvrez cette page dans <strong>Google Chrome</strong>.</li>
-            <li>Appuyez sur les <strong>trois points verticaux (⋮)</strong> en haut à droite.</li>
-            <li>Sélectionnez <strong>« Installer l'application »</strong> (ou « Ajouter à l'écran d'accueil »).</li>
-            <li>Validez. L'icône <strong>« Admin DRAMA »</strong> s'installe directement !</li>
-          </ol>
-        </div>
-
-        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] flex items-center gap-2">
-          <span>✓</span> L'icône sur votre écran d'accueil lancera désormais <strong>directement</strong> votre Studio Admin avec votre e-mail <strong>mariestanleyimbry@yahoo.fr</strong> et votre solde de <strong>$77,980.49</strong>.
-        </div>
-      </div>
-
-      <button onclick="closeMobileInstallModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs transition shadow-lg shadow-rose-600/30">
-        J'ai compris, fermer
-      </button>
-    </div>
-  </div>
 
   <!-- ========================================================================= -->
   <!-- MODAL: RETRAIT DE FONDS ADMINISTRATEUR (Marie Stanley) -->
@@ -1251,12 +1105,8 @@
     const DEFAULT_ADMIN_PASSWORDS = [
       "dramaxoxo2026",
       "admin2026",
-      "dramaxoxo",
       "Marie2026",
-      "MarieStanley2026",
-      "mariestanley",
-      "mariestanleyimbry",
-      "123456"
+      "MarieStanley2026"
     ];
 
     function checkAdminAuth() {
@@ -1285,22 +1135,19 @@
       if (!pwd) {
         const err = document.getElementById('auth-error-msg');
         if (err) {
-          err.textContent = "⚠️ Veuillez saisir votre mot de passe administrateur.";
+          err.textContent = "Veuillez saisir votre mot de passe.";
           err.classList.remove('hidden');
         }
         if (input) input.focus();
         return;
       }
 
-      // Check against default passwords or custom saved password, or register new password
+      // VÉRIFICATION STRICTE DU MOT DE PASSE (Seuls les mots de passe autorisés donnent accès)
       const customKey = localStorage.getItem('dramaxoxo_admin_key');
       const validKeys = customKey ? [...DEFAULT_ADMIN_PASSWORDS, customKey] : DEFAULT_ADMIN_PASSWORDS;
-      const isAuthorized = validKeys.includes(pwd) || pwd.length >= 4;
+      const isAuthorized = validKeys.includes(pwd);
 
       if (isAuthorized) {
-        if (!validKeys.includes(pwd)) {
-          localStorage.setItem('dramaxoxo_admin_key', pwd);
-        }
         sessionStorage.setItem('dramaxoxo_admin_authenticated', 'true');
         sessionStorage.setItem('dramaxoxo_admin_email', email);
         sessionStorage.setItem('dramaxoxo_admin_role', 'ADMIN');
@@ -1312,11 +1159,11 @@
           gate.classList.add('hidden');
           gate.classList.remove('flex');
         }
-        showToast("🔓 Connexion réelle établie : " + email, "✨");
+        showToast("Accès déverrouillé");
       } else {
         const err = document.getElementById('auth-error-msg');
         if (err) {
-          err.textContent = "⚠️ Mot de passe trop court (min 4 caractères).";
+          err.textContent = "Mot de passe incorrect. Accès refusé.";
           err.classList.remove('hidden');
         }
         if (input) {
@@ -1346,7 +1193,7 @@
       const err = document.getElementById('auth-error-msg');
       if (err) err.classList.add('hidden');
       checkAdminAuth();
-      showToast("🔒 Déconnexion effectuée (mariestanleyimbry@yahoo.fr)", "🛡️");
+      showToast("Session déconnectée");
     }
 
     function toggleAdminPasswordVis() {
@@ -1504,7 +1351,7 @@
 
     // ================= TAB NAVIGATION =================
     function switchTab(tabId) {
-      const tabs = ["overview", "dramas", "novels", "creators", "finance", "hero", "sync"];
+      const tabs = ["overview", "dramas", "novels", "creators", "finance", "hero"];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-${t}`);
@@ -1786,7 +1633,7 @@
     function downloadCandidateFile() {
       const candidate = CREATORS.find(c => c.id === activeReviewCandidateId);
       if (!candidate) return;
-      showToast(`📥 Téléchargement de "${candidate.file}" lancé avec succès !`, "💾");
+      showToast(`Téléchargement de "${candidate.file}" lancé avec succès !`);
     }
 
     function setCreatorStatus(appId, newStatus) {
@@ -1840,7 +1687,7 @@
               <span class="text-base">${tx.type === 'VIP_PASS' ? '👑' : '🪙'}</span>
               <div>
                 <p class="font-bold text-white">${tx.item} <span class="text-slate-400 font-normal">(${tx.user})</span></p>
-                <p class="text-[10px] text-emerald-400">🔓 Auto-déblocage : ${tx.unlocked}</p>
+                <p class="text-[10px] text-emerald-400">Auto-déblocage : ${tx.unlocked}</p>
               </div>
             </div>
             <div class="text-right">
@@ -1887,22 +1734,7 @@
       TRANSACTIONS.unshift(newTx);
       saveTransactions();
       renderAll();
-      showToast(`⚡ Simulation : Paiement reçu de ${randomUser} • Épisodes débloqués automatiquement !`, "🔓");
-    }
-
-    // ================= MOBILE INSTALLATION HELPER =================
-    function openMobileInstallModal() {
-      const modal = document.getElementById('modal-install-mobile');
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeMobileInstallModal() {
-      const modal = document.getElementById('modal-install-mobile');
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      showToast(`⚡ Simulation : Paiement reçu de ${randomUser} • Épisodes débloqués automatiquement !`, "⚡");
     }
 
     // ================= ADMIN WITHDRAWALS SYSTEM =================
@@ -2248,7 +2080,7 @@
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      showToast("💾 Sauvegarde JSON téléchargée avec succès !");
+      showToast("Sauvegarde JSON téléchargée avec succès !");
     }
 
     function copyDatabaseJSON() {
@@ -2272,7 +2104,7 @@
         if (typeof parsed.adminBalance === 'number') { ADMIN_BALANCE = parsed.adminBalance; saveAdminBalance(); }
         if (Array.isArray(parsed.adminWithdrawals)) { ADMIN_WITHDRAWALS = parsed.adminWithdrawals; saveAdminWithdrawals(); }
         renderAll();
-        showToast("✅ Base de données importée et synchronisée !");
+        showToast("✅ Base de données importée avec succès !");
       } catch (err) {
         alert("Format JSON invalide : " + err.message);
       }
