@@ -139,22 +139,30 @@
       
       <!-- Live Stats Financial & Operational -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-br from-emerald-950/50 via-[#12121E] to-[#151525] p-5 rounded-2xl border border-emerald-500/35 space-y-2 relative overflow-hidden shadow-xl">
+          <div class="flex justify-between items-start">
+            <p class="text-[11px] text-emerald-300 font-bold uppercase tracking-wider">Solde Compte Admin</p>
+            <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2 py-0.5 rounded-full border border-emerald-500/40">DISPONIBLE</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black text-emerald-400" id="stat-admin-balance">77 980,49 $</h3>
+          <div class="flex items-center justify-between pt-1">
+            <p class="text-[10px] text-emerald-400/90 font-medium">✓ 100% Retirable</p>
+            <button onclick="openWithdrawModal()" class="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-3 py-1 rounded-lg shadow-lg shadow-emerald-600/30 transition flex items-center gap-1">
+              <span>💸</span> Retirer
+            </button>
+          </div>
+        </div>
+
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
           <p class="text-[11px] text-slate-400 font-semibold">Revenu Brut Global</p>
-          <h3 class="text-2xl font-black text-emerald-400" id="stat-revenue-total">24 850,00 $</h3>
-          <p class="text-[10px] text-emerald-400">↑ +32% ce mois</p>
+          <h3 class="text-2xl font-black text-white" id="stat-revenue-total">124 850,00 $</h3>
+          <p class="text-[10px] text-emerald-400">↑ +48% ce mois</p>
         </div>
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
           <p class="text-[11px] text-slate-400 font-semibold">Royalties Créateurs (70%)</p>
-          <h3 class="text-2xl font-black text-purple-400" id="stat-royalties-total">17 395,00 $</h3>
+          <h3 class="text-2xl font-black text-purple-400" id="stat-royalties-total">32 670,00 $</h3>
           <p class="text-[10px] text-purple-300">À reverser aux auteurs & studios</p>
-        </div>
-
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Marge DRAMA XOXO (30%)</p>
-          <h3 class="text-2xl font-black text-rose-500" id="stat-margin-total">7 455,00 $</h3>
-          <p class="text-[10px] text-rose-300">Revenus nets plateforme</p>
         </div>
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
@@ -193,12 +201,17 @@
 
         <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>💰</span> Finances & Déblocages
+            <span>💰</span> Finances & Retraits Admin
           </h3>
-          <p class="text-xs text-slate-400">Gérez les virements Stripe / Banque et le moteur de déblocage automatique des chapitres/épisodes.</p>
-          <button onclick="switchTab('finance')" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
-            Gérer les Finances ›
-          </button>
+          <p class="text-xs text-slate-400">Solde disponible : <strong class="text-emerald-400 font-bold" id="shortcut-admin-bal">77 980,49 $</strong>. Retraits PayPal, Payoneer, Virement & Crypto.</p>
+          <div class="flex gap-2">
+            <button onclick="openWithdrawModal()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-1">
+              <span>💸</span> Retirer
+            </button>
+            <button onclick="switchTab('finance')" class="flex-1 py-2 rounded-xl bg-[#202032] hover:bg-[#2c2c42] text-slate-300 font-bold text-xs transition">
+              Ledger ›
+            </button>
+          </div>
         </div>
       </div>
 
@@ -352,33 +365,75 @@
 
     <!-- ==================== TAB 5: FINANCE & AUTO-UNLOCK ENGINE ==================== -->
     <section id="view-finance" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-emerald-950/40 via-[#12121E] to-[#161626] p-6 rounded-2xl border border-emerald-500/30 space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <div class="bg-gradient-to-r from-emerald-950/50 via-[#12121E] to-[#161626] p-6 rounded-2xl border border-emerald-500/35 space-y-5 shadow-2xl">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-black px-2.5 py-1 rounded-full border border-emerald-500/30">
-              LEDGER FINANCIER EN TEMPS RÉEL
-            </span>
-            <h3 class="text-xl font-black text-white mt-1.5">Gestion des Royalties & Paiements Sécurisés</h3>
-            <p class="text-xs text-slate-400">Répartition contractuelle : 70% pour les auteurs/studios • 30% marge DRAMA XOXO.</p>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-black px-2.5 py-1 rounded-full border border-emerald-500/30">
+                LEDGER FINANCIER & COMPTE ADMIN
+              </span>
+              <span class="text-[10px] bg-purple-500/20 text-purple-300 font-bold px-2 py-0.5 rounded-full border border-purple-500/30">
+                Marie Stanley Imbry
+              </span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-black text-white mt-1.5">Gestion de la Trésorerie, Balance & Retraits</h3>
+            <p class="text-xs text-slate-400">Solde disponible retirable instantanément par PayPal, Payoneer, Virement bancaire ou Crypto.</p>
           </div>
-          <button onclick="triggerAutoUnlockSimulation()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-2">
-            <span>⚡</span> Simuler Achat & Déblocage Auto
-          </button>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="openWithdrawModal()" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs px-5 py-3 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-2">
+              <span class="text-base">💸</span>
+              <span>Effectuer un Retrait</span>
+            </button>
+            <button onclick="triggerAutoUnlockSimulation()" class="bg-[#1C1C2A] hover:bg-[#252538] text-slate-300 font-bold text-xs px-3.5 py-3 rounded-xl border border-white/10 transition flex items-center gap-1.5">
+              <span>⚡</span> Simuler Achat
+            </button>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5">
-            <p class="text-[11px] text-slate-400">Total Ventes Pièces & VIP</p>
-            <p class="text-lg font-black text-emerald-400" id="finance-total-sales">24 850,00 $</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
+          <div class="bg-[#10101C] p-4 rounded-xl border border-emerald-500/40 shadow-xl relative overflow-hidden">
+            <div class="flex justify-between items-center mb-1">
+              <p class="text-[11px] text-emerald-300 font-bold flex items-center gap-1.5">
+                <span>💎</span> Solde Disponible (Admin)
+              </p>
+              <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2 py-0.5 rounded">RETIRABLE</span>
+            </div>
+            <p class="text-2xl sm:text-3xl font-black text-emerald-400" id="finance-admin-balance">77 980,49 $</p>
+            <p class="text-[10px] text-emerald-400/80 mt-1">PayPal • Payoneer • Bank • Crypto</p>
           </div>
-          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5">
-            <p class="text-[11px] text-slate-400">Royalties Payées aux Auteurs</p>
-            <p class="text-lg font-black text-purple-400" id="finance-paid-royalties">14 200,00 $</p>
+
+          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400">Total Ventes Globales</p>
+            <p class="text-xl font-black text-white" id="finance-total-sales">124 850,00 $</p>
+            <p class="text-[10px] text-emerald-400">Pièces + Pass VIP Streaming</p>
           </div>
-          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5">
-            <p class="text-[11px] text-slate-400">Solde Royalties en Attente</p>
-            <p class="text-lg font-black text-amber-400" id="finance-pending-royalties">3 195,00 $</p>
+
+          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400">Retraits Admin Déjà Versés</p>
+            <p class="text-xl font-black text-teal-400" id="finance-paid-admin">22 500,00 $</p>
+            <p class="text-[10px] text-teal-300">Historique clôturé avec succès</p>
           </div>
+
+          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5 space-y-1">
+            <p class="text-[11px] text-slate-400">Royalties Créateurs (70%)</p>
+            <p class="text-xl font-black text-purple-400" id="finance-paid-royalties">32 670,00 $</p>
+            <p class="text-[10px] text-purple-300">Attribuées aux auteurs & studios</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Withdrawals History Section -->
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <h4 class="font-bold text-sm text-white flex items-center gap-2">
+            <span>🏛️</span> Historique des Retraits du Compte Administrateur (Marie Stanley)
+          </h4>
+          <button onclick="openWithdrawModal()" class="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1.5 transition">
+            <span>+</span> Demander un Nouveau Virement
+          </button>
+        </div>
+        <div id="admin-withdrawals-list" class="space-y-3">
+          <!-- Injected dynamically by JS -->
         </div>
       </div>
 
@@ -495,6 +550,194 @@
     </section>
 
   </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: RETRAIT DE FONDS ADMINISTRATEUR (Marie Stanley) -->
+  <!-- ========================================================================= -->
+  <div id="modal-admin-withdraw" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-[#141422] border border-emerald-500/40 rounded-3xl max-w-xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button onclick="closeWithdrawModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#202032] hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition">
+        ✕
+      </button>
+
+      <!-- Header Info -->
+      <div class="flex items-center gap-3 pr-8">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-2xl border border-emerald-500/30 flex-shrink-0">
+          💸
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg font-black text-white">Retrait de Fonds — Compte Admin</h3>
+            <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              OFFICIEL
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Trésorerie Centrale DRAMA XOXO • Marie Stanley Imbry</p>
+        </div>
+      </div>
+
+      <!-- Balance Card In Modal -->
+      <div class="p-4 bg-gradient-to-r from-emerald-950/40 to-[#12121E] rounded-2xl border border-emerald-500/35 flex items-center justify-between">
+        <div>
+          <p class="text-[10px] text-emerald-300 font-bold uppercase tracking-wider">Solde Disponible au Retrait</p>
+          <h4 class="text-2xl font-black text-emerald-400" id="withdraw-modal-available-balance">77 980,49 $</h4>
+        </div>
+        <span class="text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full font-black border border-emerald-500/40">
+          ✓ 100% Retirable
+        </span>
+      </div>
+
+      <!-- Amount Section -->
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between items-center">
+          <label class="font-bold text-slate-200">Montant à Retirer ($ USD) *</label>
+          <span class="text-slate-400 text-[11px]">Min: $50.00 • Max: <span id="withdraw-max-text" class="text-emerald-400 font-bold">77 980,49 $</span></span>
+        </div>
+        <div class="relative">
+          <input
+            id="withdraw-amount-input"
+            type="number"
+            step="0.01"
+            placeholder="Ex: 10000.00"
+            oninput="updateWithdrawSummary()"
+            class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-4 py-3 text-white text-lg font-black outline-none focus:border-emerald-500 transition"
+          />
+          <span class="absolute right-4 top-3.5 text-slate-400 font-bold text-sm">$ USD</span>
+        </div>
+
+        <!-- Quick percentage buttons -->
+        <div class="grid grid-cols-4 gap-2 pt-1">
+          <button type="button" onclick="setWithdrawPercentage(0.25)" class="py-1.5 rounded-lg bg-[#202032] hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 text-xs font-bold transition">25%</button>
+          <button type="button" onclick="setWithdrawPercentage(0.50)" class="py-1.5 rounded-lg bg-[#202032] hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 text-xs font-bold transition">50%</button>
+          <button type="button" onclick="setWithdrawPercentage(0.75)" class="py-1.5 rounded-lg bg-[#202032] hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 text-xs font-bold transition">75%</button>
+          <button type="button" onclick="setWithdrawPercentage(1.00)" class="py-1.5 rounded-lg bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600 hover:text-white text-xs font-black border border-emerald-500/40 transition">MAX (100%)</button>
+        </div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div class="space-y-3 text-xs">
+        <label class="font-bold text-slate-200 block">Choisissez la Méthode de Versement *</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <button type="button" onclick="selectWithdrawMethod('paypal')" id="btn-method-paypal" class="p-3 rounded-xl border border-emerald-500 bg-emerald-950/40 text-white font-bold flex flex-col items-center gap-1.5 transition">
+            <span class="text-xl">🅿️</span>
+            <span class="text-xs">PayPal</span>
+          </button>
+          <button type="button" onclick="selectWithdrawMethod('payoneer')" id="btn-method-payoneer" class="p-3 rounded-xl border border-white/10 bg-[#1A1A28] text-slate-300 font-bold flex flex-col items-center gap-1.5 transition">
+            <span class="text-xl">🅿️</span>
+            <span class="text-xs">Payoneer</span>
+          </button>
+          <button type="button" onclick="selectWithdrawMethod('bank')" id="btn-method-bank" class="p-3 rounded-xl border border-white/10 bg-[#1A1A28] text-slate-300 font-bold flex flex-col items-center gap-1.5 transition">
+            <span class="text-xl">🏦</span>
+            <span class="text-xs">Virement</span>
+          </button>
+          <button type="button" onclick="selectWithdrawMethod('crypto')" id="btn-method-crypto" class="p-3 rounded-xl border border-white/10 bg-[#1A1A28] text-slate-300 font-bold flex flex-col items-center gap-1.5 transition">
+            <span class="text-xl">🪙</span>
+            <span class="text-xs">Crypto</span>
+          </button>
+        </div>
+
+        <!-- 1. PayPal Fields -->
+        <div id="method-fields-paypal" class="space-y-3 bg-[#10101C] p-4 rounded-xl border border-white/5">
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">Adresse E-mail du Compte PayPal *</label>
+            <input id="input-paypal-email" type="email" placeholder="marie.stanley@dramaxoxo.com" value="marie.stanley@dramaxoxo.com" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+          </div>
+          <div class="flex items-center gap-2 text-[11px] text-emerald-400">
+            <span>⚡</span> Transfert express ou sous 30 minutes vers votre solde PayPal.
+          </div>
+        </div>
+
+        <!-- 2. Payoneer Fields -->
+        <div id="method-fields-payoneer" class="hidden space-y-3 bg-[#10101C] p-4 rounded-xl border border-white/5">
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">E-mail ou ID Payoneer *</label>
+            <input id="input-payoneer-id" type="text" placeholder="marie.stanley.payoneer@gmail.com" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">Nom du Titulaire Payoneer</label>
+            <input id="input-payoneer-name" type="text" value="Marie Stanley Imbry" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+          </div>
+          <div class="flex items-center gap-2 text-[11px] text-slate-400">
+            <span>⚡</span> Transfert direct vers votre solde Payoneer USD sous 1 à 2 heures.
+          </div>
+        </div>
+
+        <!-- 3. Bank Wire Fields -->
+        <div id="method-fields-bank" class="hidden space-y-3 bg-[#10101C] p-4 rounded-xl border border-white/5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-300 font-bold mb-1">Nom de la Banque *</label>
+              <input id="input-bank-name" type="text" placeholder="Ex: Chase, Unibank, Bank of America, BNP" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+            </div>
+            <div>
+              <label class="block text-slate-300 font-bold mb-1">Titulaire du Compte *</label>
+              <input id="input-bank-holder" type="text" value="Marie Stanley Imbry" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">IBAN / Numéro de Compte Bancaire *</label>
+            <input id="input-bank-iban" type="text" placeholder="Ex: FR76 ... ou Account Number US" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500 font-mono text-xs" />
+          </div>
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">Code BIC / SWIFT / Routing Transit *</label>
+            <input id="input-bank-swift" type="text" placeholder="Ex: BOFAUS3N / BNPAFRPP" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500 font-mono text-xs" />
+          </div>
+          <div class="flex items-center gap-2 text-[11px] text-slate-400">
+            <span>🏦</span> Virement bancaire SWIFT/SEPA/ACH officiel traité sous 24 à 48 heures.
+          </div>
+        </div>
+
+        <!-- 4. Crypto Fields -->
+        <div id="method-fields-crypto" class="hidden space-y-3 bg-[#10101C] p-4 rounded-xl border border-white/5">
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">Sélectionnez la Devise / Réseau Blockchain *</label>
+            <select id="input-crypto-asset" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500">
+              <option value="USDT (TRC-20 - Tron) - Frais $0">USDT (TRC-20 - Tron) — Recommandé (Transfert Rapide & Gratuit)</option>
+              <option value="USDT (ERC-20 - Ethereum)">USDT (ERC-20 - Ethereum)</option>
+              <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+              <option value="Ethereum (ETH)">Ethereum (ETH)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">Adresse Publique de votre Portefeuille (Wallet) *</label>
+            <input id="input-crypto-wallet" type="text" placeholder="Ex: TQ8x4K... ou 0x71C... ou bc1q..." class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-emerald-500 font-mono text-xs" />
+          </div>
+          <div class="flex items-center gap-2 text-[11px] text-emerald-400 font-medium">
+            <span>⚡</span> Virement Blockchain instantané après validation réseau (3 à 10 min).
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Calculation Summary -->
+      <div class="p-4 bg-[#10101C] rounded-2xl border border-white/5 space-y-2 text-xs">
+        <div class="flex justify-between text-slate-400">
+          <span>Montant brut débité du solde :</span>
+          <span class="font-bold text-white" id="summary-gross-amount">0,00 $</span>
+        </div>
+        <div class="flex justify-between text-slate-400">
+          <span>Frais de traitement & passerelle :</span>
+          <span class="font-bold text-emerald-400">0,00 $ (Pris en charge à 100%)</span>
+        </div>
+        <div class="border-t border-white/10 pt-2 flex justify-between text-sm font-black text-white">
+          <span>Montant Net Versé au Bénéficiaire :</span>
+          <span class="text-emerald-400 text-base" id="summary-net-amount">0,00 $</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-3">
+        <button onclick="closeWithdrawModal()" type="button" class="flex-1 py-3 rounded-xl bg-[#202032] hover:bg-[#2c2c42] text-slate-300 font-bold text-xs transition">
+          Annuler
+        </button>
+        <button onclick="executeAdminWithdrawal()" type="button" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+          <span>✓</span> Valider le Retrait Immédiat
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- MODAL: CREATOR APPLICATION REVIEW & THRILLER / MANUSCRIPT INSPECTOR -->
@@ -719,6 +962,47 @@
       btn: "▶ Regarder Épisode 1"
     };
 
+    // ================= ADMIN BALANCE & WITHDRAWALS STATE =================
+    const INITIAL_ADMIN_BALANCE = 77980.49;
+    const INITIAL_ADMIN_WITHDRAWALS = [
+      { id: "wtd-01", date: "Hier à 17:40", method: "Virement Bancaire (SWIFT)", recipient: "Chase Bank •••• 4821", amount: 15000.00, status: "COMPLETED", txRef: "SWIFT-US-993821" },
+      { id: "wtd-02", date: "22 Sep 2026", method: "Crypto (USDT TRC-20)", recipient: "TQ8x...K4nP", amount: 5000.00, status: "COMPLETED", txRef: "0x7b4c9e...88a10f" },
+      { id: "wtd-03", date: "18 Sep 2026", method: "PayPal Business", recipient: "marie.stanley***@dramaxoxo.com", amount: 2500.00, status: "COMPLETED", txRef: "PP-TX-849201" }
+    ];
+
+    let ADMIN_BALANCE = loadAdminBalance();
+    let ADMIN_WITHDRAWALS = loadAdminWithdrawals();
+    let selectedWithdrawMethod = 'paypal';
+
+    function loadAdminBalance() {
+      try {
+        const s = localStorage.getItem('dramaxoxo_admin_balance');
+        if (s !== null) {
+          const val = parseFloat(s);
+          if (!isNaN(val)) return val;
+        }
+      } catch (e) {}
+      return INITIAL_ADMIN_BALANCE;
+    }
+    function saveAdminBalance() {
+      try { localStorage.setItem('dramaxoxo_admin_balance', ADMIN_BALANCE.toString()); } catch (e) {}
+    }
+
+    function loadAdminWithdrawals() {
+      try {
+        const s = localStorage.getItem('dramaxoxo_admin_withdrawals');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return [...INITIAL_ADMIN_WITHDRAWALS];
+    }
+    function saveAdminWithdrawals() {
+      try { localStorage.setItem('dramaxoxo_admin_withdrawals', JSON.stringify(ADMIN_WITHDRAWALS)); } catch (e) {}
+    }
+
+    function formatCurrency(val) {
+      return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val) + " $";
+    }
+
     let DRAMAS = loadDramas();
     let NOVELS = loadNovels();
     let HERO = loadHero();
@@ -826,6 +1110,19 @@
 
     // ================= RENDER FUNCTIONS =================
     function renderAll() {
+      // Admin Balance updates
+      const formattedBal = formatCurrency(ADMIN_BALANCE);
+      const statBal = document.getElementById('stat-admin-balance');
+      if (statBal) statBal.innerText = formattedBal;
+      const finBal = document.getElementById('finance-admin-balance');
+      if (finBal) finBal.innerText = formattedBal;
+      const scBal = document.getElementById('shortcut-admin-bal');
+      if (scBal) scBal.innerText = formattedBal;
+      const modalBal = document.getElementById('withdraw-modal-available-balance');
+      if (modalBal) modalBal.innerText = formattedBal;
+      const modalMax = document.getElementById('withdraw-max-text');
+      if (modalMax) modalMax.innerText = formattedBal;
+
       // Badges
       const pendingCount = CREATORS.filter(c => c.status === 'PENDING').length;
       document.getElementById('dramas-count-badge').innerText = DRAMAS.length;
@@ -836,6 +1133,9 @@
       document.getElementById('stat-pending-creators').innerText = pendingCount;
       document.getElementById('dramas-list-count').innerText = DRAMAS.length;
       document.getElementById('novels-list-count').innerText = NOVELS.length;
+
+      // Render Admin Withdrawals
+      renderAdminWithdrawals();
 
       // Marquee
       const marqueeTrack = document.getElementById('overview-marquee-track');
@@ -918,7 +1218,16 @@
       // JSON Area
       const jsonArea = document.getElementById('database-json-area');
       if (jsonArea) {
-        jsonArea.value = JSON.stringify({ dramas: DRAMAS, novels: NOVELS, hero: HERO, creators: CREATORS, payouts: PAYOUTS, transactions: TRANSACTIONS }, null, 2);
+        jsonArea.value = JSON.stringify({
+          dramas: DRAMAS,
+          novels: NOVELS,
+          hero: HERO,
+          creators: CREATORS,
+          payouts: PAYOUTS,
+          transactions: TRANSACTIONS,
+          adminBalance: ADMIN_BALANCE,
+          adminWithdrawals: ADMIN_WITHDRAWALS
+        }, null, 2);
       }
     }
 
@@ -1168,6 +1477,190 @@
       showToast(`⚡ Simulation : Paiement reçu de ${randomUser} • Épisodes débloqués automatiquement !`, "🔓");
     }
 
+    // ================= ADMIN WITHDRAWALS SYSTEM =================
+    function openWithdrawModal() {
+      const modal = document.getElementById('modal-admin-withdraw');
+      if (!modal) return;
+      document.getElementById('withdraw-amount-input').value = "";
+      updateWithdrawSummary();
+      selectWithdrawMethod('paypal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeWithdrawModal() {
+      const modal = document.getElementById('modal-admin-withdraw');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function selectWithdrawMethod(method) {
+      selectedWithdrawMethod = method;
+      const methods = ['paypal', 'payoneer', 'bank', 'crypto'];
+      methods.forEach(m => {
+        const btn = document.getElementById(`btn-method-${m}`);
+        const fields = document.getElementById(`method-fields-${m}`);
+        if (m === method) {
+          if (btn) btn.className = "p-3 rounded-xl border border-emerald-500 bg-emerald-950/40 text-white font-bold flex flex-col items-center gap-1.5 transition shadow-lg shadow-emerald-500/10";
+          if (fields) fields.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = "p-3 rounded-xl border border-white/10 bg-[#1A1A28] text-slate-300 font-bold flex flex-col items-center gap-1.5 transition";
+          if (fields) fields.classList.add('hidden');
+        }
+      });
+      updateWithdrawSummary();
+    }
+
+    function setWithdrawPercentage(pct) {
+      const input = document.getElementById('withdraw-amount-input');
+      const amt = Math.max(0, Math.round(ADMIN_BALANCE * pct * 100) / 100);
+      input.value = amt.toFixed(2);
+      updateWithdrawSummary();
+    }
+
+    function updateWithdrawSummary() {
+      const input = document.getElementById('withdraw-amount-input');
+      const val = parseFloat(input.value) || 0;
+      const grossEl = document.getElementById('summary-gross-amount');
+      const netEl = document.getElementById('summary-net-amount');
+      if (grossEl) grossEl.innerText = formatCurrency(val);
+      if (netEl) netEl.innerText = formatCurrency(val);
+    }
+
+    function executeAdminWithdrawal() {
+      const input = document.getElementById('withdraw-amount-input');
+      const amount = parseFloat(input.value);
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Veuillez saisir un montant de retrait valide.");
+        return;
+      }
+      if (amount < 50) {
+        alert("Le montant minimum de retrait est de 50.00 $.");
+        return;
+      }
+      if (amount > ADMIN_BALANCE) {
+        alert(`Solde insuffisant ! Votre solde disponible est de ${formatCurrency(ADMIN_BALANCE)}.`);
+        return;
+      }
+
+      let methodLabel = "";
+      let recipient = "";
+      let txRef = "";
+
+      if (selectedWithdrawMethod === 'paypal') {
+        const email = document.getElementById('input-paypal-email').value.trim();
+        if (!email) { alert("Veuillez renseigner votre e-mail PayPal."); return; }
+        methodLabel = "PayPal";
+        recipient = email;
+        txRef = "PP-" + Math.floor(100000 + Math.random() * 900000);
+      } else if (selectedWithdrawMethod === 'payoneer') {
+        const pId = document.getElementById('input-payoneer-id').value.trim();
+        if (!pId) { alert("Veuillez renseigner votre ID ou e-mail Payoneer."); return; }
+        methodLabel = "Payoneer";
+        recipient = pId;
+        txRef = "PAYO-" + Math.floor(100000 + Math.random() * 900000);
+      } else if (selectedWithdrawMethod === 'bank') {
+        const bank = document.getElementById('input-bank-name').value.trim();
+        const iban = document.getElementById('input-bank-iban').value.trim();
+        if (!bank || !iban) { alert("Veuillez renseigner le nom de la banque et l'IBAN/Numéro de compte."); return; }
+        methodLabel = "Virement Bancaire";
+        recipient = `${bank} (${iban.slice(0, 4)}••••${iban.slice(-4)})`;
+        txRef = "SWIFT-" + Math.floor(100000 + Math.random() * 900000);
+      } else if (selectedWithdrawMethod === 'crypto') {
+        const asset = document.getElementById('input-crypto-asset').value;
+        const wallet = document.getElementById('input-crypto-wallet').value.trim();
+        if (!wallet) { alert("Veuillez renseigner votre adresse de portefeuille crypto."); return; }
+        const assetShort = asset.split(' ')[0];
+        methodLabel = `Crypto (${assetShort})`;
+        recipient = wallet.length > 10 ? (wallet.slice(0, 6) + "..." + wallet.slice(-4)) : wallet;
+        txRef = "0x" + Array.from({length: 16}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      }
+
+      // Deduct balance
+      ADMIN_BALANCE = Math.round((ADMIN_BALANCE - amount) * 100) / 100;
+      saveAdminBalance();
+
+      // Add to withdrawals history
+      const now = new Date();
+      const dateStr = "Aujourd'hui à " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newWithdrawal = {
+        id: "wtd-" + Date.now(),
+        date: dateStr,
+        method: methodLabel,
+        recipient: recipient,
+        amount: amount,
+        status: "PROCESSING",
+        txRef: txRef
+      };
+      ADMIN_WITHDRAWALS.unshift(newWithdrawal);
+      saveAdminWithdrawals();
+
+      // Update UI
+      renderAll();
+      closeWithdrawModal();
+
+      showToast(`💸 Retrait de ${formatCurrency(amount)} vers ${methodLabel} initié avec succès !`, "✅");
+    }
+
+    function renderAdminWithdrawals() {
+      const container = document.getElementById('admin-withdrawals-list');
+      if (!container) return;
+
+      if (ADMIN_WITHDRAWALS.length === 0) {
+        container.innerHTML = `
+          <div class="bg-[#12121E] p-6 rounded-xl border border-white/5 text-center text-slate-400 text-xs">
+            Aucun retrait effectué pour le moment.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = ADMIN_WITHDRAWALS.map(w => {
+        let icon = "💸";
+        let badgeColor = "bg-purple-500/20 text-purple-300 border-purple-500/30";
+        if (w.method.includes('PayPal')) { icon = "🅿️"; badgeColor = "bg-blue-500/20 text-blue-300 border-blue-500/30"; }
+        else if (w.method.includes('Payoneer')) { icon = "🅿️"; badgeColor = "bg-amber-500/20 text-amber-300 border-amber-500/30"; }
+        else if (w.method.includes('Virement')) { icon = "🏦"; badgeColor = "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"; }
+        else if (w.method.includes('Crypto')) { icon = "🪙"; badgeColor = "bg-rose-500/20 text-rose-300 border-rose-500/30"; }
+
+        const isCompleted = w.status === 'COMPLETED';
+
+        return `
+          <div class="bg-[#161624] p-4 rounded-xl border border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#202030] text-xl flex items-center justify-center flex-shrink-0 border border-white/10">
+                ${icon}
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h5 class="font-bold text-xs text-white">${w.method}</h5>
+                  <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}">
+                    ${w.recipient}
+                  </span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">Réf: <span class="font-mono text-slate-300">${w.txRef}</span> • Date: ${w.date}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-black text-emerald-400">-${formatCurrency(w.amount)}</span>
+              ${isCompleted ? `
+                <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
+                  <span>✓</span> Transféré
+                </span>
+              ` : `
+                <span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-500/30 flex items-center gap-1 animate-pulse">
+                  <span>⚡</span> En cours de versement
+                </span>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     // ================= CRUD DRAMAS & NOVELS =================
     function createDrama() {
       const title = document.getElementById('form-drama-title').value.trim();
@@ -1310,6 +1803,26 @@
       showToast("🔥 Bannière Héro enregistrée !");
     }
 
+    function exportDatabaseJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        dramas: DRAMAS,
+        novels: NOVELS,
+        hero: HERO,
+        creators: CREATORS,
+        payouts: PAYOUTS,
+        transactions: TRANSACTIONS,
+        adminBalance: ADMIN_BALANCE,
+        adminWithdrawals: ADMIN_WITHDRAWALS
+      }, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `dramaxoxo_admin_backup_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("💾 Sauvegarde JSON téléchargée avec succès !");
+    }
+
     function copyDatabaseJSON() {
       const area = document.getElementById('database-json-area');
       area.select();
@@ -1328,6 +1841,8 @@
         if (Array.isArray(parsed.payouts)) { PAYOUTS = parsed.payouts; savePayouts(); }
         if (Array.isArray(parsed.transactions)) { TRANSACTIONS = parsed.transactions; saveTransactions(); }
         if (parsed.hero) { HERO = parsed.hero; saveHeroStorage(); }
+        if (typeof parsed.adminBalance === 'number') { ADMIN_BALANCE = parsed.adminBalance; saveAdminBalance(); }
+        if (Array.isArray(parsed.adminWithdrawals)) { ADMIN_WITHDRAWALS = parsed.adminWithdrawals; saveAdminWithdrawals(); }
         renderAll();
         showToast("✅ Base de données importée et synchronisée !");
       } catch (err) {
@@ -1343,12 +1858,18 @@
       localStorage.removeItem('dramaxoxo_creator_applications');
       localStorage.removeItem('dramaxoxo_payouts');
       localStorage.removeItem('dramaxoxo_transactions');
+      localStorage.removeItem('dramaxoxo_admin_balance');
+      localStorage.removeItem('dramaxoxo_admin_withdrawals');
       DRAMAS = [...INITIAL_DRAMAS];
       NOVELS = [...INITIAL_NOVELS];
       HERO = { ...DEFAULT_HERO };
       CREATORS = [...INITIAL_CREATORS_APPLICATIONS];
       PAYOUTS = [...INITIAL_PAYOUTS];
       TRANSACTIONS = [...INITIAL_TRANSACTIONS];
+      ADMIN_BALANCE = INITIAL_ADMIN_BALANCE;
+      ADMIN_WITHDRAWALS = [...INITIAL_ADMIN_WITHDRAWALS];
+      saveAdminBalance();
+      saveAdminWithdrawals();
       renderAll();
       showToast("🔄 Données d'origine restaurées.");
     }
