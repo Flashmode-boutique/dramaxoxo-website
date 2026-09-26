@@ -91,9 +91,52 @@
       <div class="absolute -top-12 -left-12 w-32 h-32 bg-rose-600/20 rounded-full blur-2xl pointer-events-none"></div>
       <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-600/20 rounded-full blur-2xl pointer-events-none"></div>
 
-      <!-- Icon -->
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-600 to-pink-500 text-white flex items-center justify-center text-3xl mx-auto shadow-xl shadow-rose-600/30 border border-white/10">
-        🛡️
+      <!-- Stylish DRAMAXOXO 'D' Logo -->
+      <div class="w-20 h-20 mx-auto shadow-2xl shadow-rose-600/30 rounded-3xl p-1 bg-gradient-to-tr from-rose-600/30 to-purple-600/30 border border-white/10 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full h-full">
+          <defs>
+            <radialGradient id="gateDxBg" cx="30%" cy="20%" r="95%">
+              <stop offset="0%" stop-color="#24101E" />
+              <stop offset="60%" stop-color="#120A16" />
+              <stop offset="100%" stop-color="#07040A" />
+            </radialGradient>
+            <linearGradient id="gateDxBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF2E63" stop-opacity="0.9" />
+              <stop offset="50%" stop-color="#D946EF" stop-opacity="0.5" />
+              <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.3" />
+            </linearGradient>
+            <linearGradient id="gateDxStem" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FDA4AF" />
+              <stop offset="25%" stop-color="#FF2E63" />
+              <stop offset="85%" stop-color="#E11D48" />
+              <stop offset="100%" stop-color="#9F1239" />
+            </linearGradient>
+            <linearGradient id="gateDxArch" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF3366" />
+              <stop offset="35%" stop-color="#E11D48" />
+              <stop offset="70%" stop-color="#C026D3" />
+              <stop offset="100%" stop-color="#7C3AED" />
+            </linearGradient>
+            <linearGradient id="gateDxPlay" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFFFFF" />
+              <stop offset="100%" stop-color="#FDA4AF" />
+            </linearGradient>
+            <filter id="gateDxGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="192" height="192" rx="46" fill="url(#gateDxBg)" stroke="url(#gateDxBorder)" stroke-width="2.5" />
+          <g filter="url(#gateDxGlow)">
+            <rect x="48" y="42" width="22" height="116" rx="11" fill="url(#gateDxStem)" />
+            <path d="M 60 42 H 110 C 146 42, 166 66, 166 100 C 166 134, 146 158, 110 158 H 60" fill="none" stroke="url(#gateDxArch)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+            <polygon points="96,82 128,100 96,118" fill="url(#gateDxPlay)" />
+            <circle cx="60" cy="52" r="4.5" fill="#FFFFFF" opacity="0.9" />
+          </g>
+        </svg>
       </div>
 
       <!-- Title -->
@@ -105,10 +148,10 @@
 
       <!-- Form -->
       <form id="admin-login-form" onsubmit="handleAdminAuth(event)" class="space-y-4 text-left">
-        <!-- Default Prefilled Email (Real Admin Account) -->
+        <!-- Default Prefilled Email -->
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1.5">
-            E-mail Administrateur (Titulaire Officiel)
+            E-mail Administrateur
           </label>
           <div class="relative">
             <input
@@ -118,18 +161,14 @@
               readonly
               class="w-full bg-[#181826] border border-white/10 text-rose-300 px-4 py-3 rounded-xl text-xs font-mono font-bold outline-none cursor-default select-all"
             />
-            <span class="absolute right-3 top-2.5 text-[10px] bg-emerald-500/20 text-emerald-400 font-black px-2.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
-              <span>✓</span> Titulaire Réel
-            </span>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">Connexion authentifiée pour le compte <strong>mariestanleyimbry@yahoo.fr</strong></p>
         </div>
 
-        <!-- Password / Access Key Input -->
+        <!-- Password / Access Key Input with Hide/Unhide Eye Option -->
         <div>
           <div class="flex justify-between items-center mb-1.5">
             <label class="block text-xs font-bold text-slate-300">
-              Clé d'Accès / Mot de Passe *
+              Mot de Passe / Clé d'Accès *
             </label>
             <span class="text-[10px] text-slate-500 font-medium">Sensible à la casse</span>
           </div>
@@ -140,15 +179,21 @@
               placeholder="Entrez votre mot de passe..."
               required
               autofocus
-              class="w-full bg-[#1A1A2A] border border-white/15 text-white px-4 py-3.5 rounded-xl text-sm font-mono outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition pr-10"
+              class="w-full bg-[#1A1A2A] border border-white/15 text-white px-4 py-3.5 rounded-xl text-sm font-mono outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition pr-12"
             />
             <button
               type="button"
+              id="btn-toggle-admin-pwd"
               onclick="toggleAdminPasswordVis()"
-              class="absolute right-3.5 top-3.5 text-slate-400 hover:text-white transition text-sm"
-              title="Afficher/Masquer le mot de passe"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-white rounded-lg transition"
+              title="Afficher ou masquer le mot de passe"
+              aria-label="Afficher ou masquer le mot de passe"
             >
-              👁️
+              <span id="pwd-toggle-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 hover:text-rose-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                </svg>
+              </span>
             </button>
           </div>
           <p id="auth-error-msg" class="text-[11px] text-rose-400 font-bold mt-1.5 hidden flex items-center gap-1">
@@ -185,8 +230,52 @@
   <!-- ==================== HEADER ==================== -->
   <header class="bg-[#10101A] border-b border-[#202030] px-4 sm:px-8 py-3.5 sticky top-0 z-40 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-gradient-to-tr from-rose-600 to-pink-500 rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-rose-600/30">
-        D
+      <!-- Stylish DRAMAXOXO 'D' Logo in Header -->
+      <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-rose-600/30 flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full h-full">
+          <defs>
+            <radialGradient id="hdrDxBg" cx="30%" cy="20%" r="95%">
+              <stop offset="0%" stop-color="#24101E" />
+              <stop offset="60%" stop-color="#120A16" />
+              <stop offset="100%" stop-color="#07040A" />
+            </radialGradient>
+            <linearGradient id="hdrDxBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF2E63" stop-opacity="0.9" />
+              <stop offset="50%" stop-color="#D946EF" stop-opacity="0.5" />
+              <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.3" />
+            </linearGradient>
+            <linearGradient id="hdrDxStem" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FDA4AF" />
+              <stop offset="25%" stop-color="#FF2E63" />
+              <stop offset="85%" stop-color="#E11D48" />
+              <stop offset="100%" stop-color="#9F1239" />
+            </linearGradient>
+            <linearGradient id="hdrDxArch" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF3366" />
+              <stop offset="35%" stop-color="#E11D48" />
+              <stop offset="70%" stop-color="#C026D3" />
+              <stop offset="100%" stop-color="#7C3AED" />
+            </linearGradient>
+            <linearGradient id="hdrDxPlay" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFFFFF" />
+              <stop offset="100%" stop-color="#FDA4AF" />
+            </linearGradient>
+            <filter id="hdrDxGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <rect x="4" y="4" width="192" height="192" rx="46" fill="url(#hdrDxBg)" stroke="url(#hdrDxBorder)" stroke-width="2.5" />
+          <g filter="url(#hdrDxGlow)">
+            <rect x="48" y="42" width="22" height="116" rx="11" fill="url(#hdrDxStem)" />
+            <path d="M 60 42 H 110 C 146 42, 166 66, 166 100 C 166 134, 146 158, 110 158 H 60" fill="none" stroke="url(#hdrDxArch)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+            <polygon points="96,82 128,100 96,118" fill="url(#hdrDxPlay)" />
+            <circle cx="60" cy="52" r="4.5" fill="#FFFFFF" opacity="0.9" />
+          </g>
+        </svg>
       </div>
       <div>
         <div class="flex items-center gap-2">
@@ -1242,7 +1331,18 @@
       sessionStorage.removeItem('dramaxoxo_admin_email');
       sessionStorage.removeItem('dramaxoxo_admin_role');
       const pwdInput = document.getElementById('admin-auth-password');
-      if (pwdInput) pwdInput.value = '';
+      if (pwdInput) {
+        pwdInput.value = '';
+        pwdInput.type = 'password';
+      }
+      const iconWrap = document.getElementById('pwd-toggle-icon');
+      if (iconWrap) {
+        iconWrap.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 hover:text-rose-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+          </svg>
+        `;
+      }
       const err = document.getElementById('auth-error-msg');
       if (err) err.classList.add('hidden');
       checkAdminAuth();
@@ -1251,8 +1351,28 @@
 
     function toggleAdminPasswordVis() {
       const input = document.getElementById('admin-auth-password');
+      const iconWrap = document.getElementById('pwd-toggle-icon');
       if (!input) return;
-      input.type = input.type === 'password' ? 'text' : 'password';
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (iconWrap) {
+          iconWrap.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          `;
+        }
+      } else {
+        input.type = 'password';
+        if (iconWrap) {
+          iconWrap.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 hover:text-rose-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+            </svg>
+          `;
+        }
+      }
     }
 
     // ================= ADMIN BALANCE & WITHDRAWALS STATE =================
