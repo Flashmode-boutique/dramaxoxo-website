@@ -21,6 +21,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -1100,6 +1101,11 @@
       btn: "▶ Regarder Épisode 1"
     };
 
+    // ================= SUPABASE CLIENT & REALTIME CONFIG =================
+    const SUPABASE_URL = "https://xylhadcuxgufqprjfjzt.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bGhhZGN1eGd1ZnFwcmpmanp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjM2OTIsImV4cCI6MjEwNjE5OTY5Mn0.-U1whzkGmjm-21_nvx5ij3z8zCDll8vhAFAMjL643q0";
+    const supabase = (typeof window !== 'undefined' && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
     // ================= ADMIN AUTHENTICATION STATE & SECURITY GATE =================
     const ADMIN_OFFICIAL_EMAIL = "mariestanleyimbry@yahoo.fr";
     const DEFAULT_ADMIN_PASSWORDS = [
@@ -1116,6 +1122,8 @@
       if (isAuth) {
         gate.classList.add('hidden');
         gate.classList.remove('flex');
+        loadRemoteSupabaseData();
+        setupAdminRealtimeListeners();
       } else {
         gate.classList.remove('hidden');
         gate.classList.add('flex');
@@ -1126,7 +1134,7 @@
       }
     }
 
-    function handleAdminAuth(e) {
+    async function handleAdminAuth(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('admin-auth-password');
       const pwd = input ? input.value.trim() : '';
@@ -1154,12 +1162,29 @@
         sessionStorage.setItem('dramaxoxo_admin_name', 'Marie Stanley Imbry');
         localStorage.setItem('dramaxoxo_admin_email', email);
 
+        // Connexion sécurisée au backend Supabase Auth
+        if (supabase) {
+          try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+              email: email,
+              password: pwd
+            });
+            if (!error && data && data.session) {
+              console.log("Session Admin Supabase active :", data.user.email);
+            }
+          } catch(err) {
+            console.warn("Supabase auth login notice:", err);
+          }
+        }
+
         const gate = document.getElementById('admin-auth-gate');
         if (gate) {
           gate.classList.add('hidden');
           gate.classList.remove('flex');
         }
         showToast("Accès déverrouillé");
+        loadRemoteSupabaseData();
+        setupAdminRealtimeListeners();
       } else {
         const err = document.getElementById('auth-error-msg');
         if (err) {
@@ -1171,6 +1196,127 @@
           input.focus();
         }
       }
+    }
+
+    async function loadRemoteSupabaseData() {
+      if (!supabase) return;
+      try {
+        // 1. Grand Livre Admin (Solde)
+        const { data: ledger } = await supabase.from('admin_ledger').select('*').eq('id', 'primary_ledger').single();
+        if (ledger && typeof ledger.balance_usd === 'number') {
+          ADMIN_BALANCE = ledger.balance_usd;
+          saveAdminBalance();
+        }
+
+        // 2. Séries
+        const { data: seriesList } = await supabase.from('series').select('*').order('created_at', { ascending: false });
+        if (seriesList && seriesList.length > 0) {
+          DRAMAS = seriesList.map(s => ({
+            id: s.id,
+            title: s.title,
+            genre: s.genre,
+            ep: s.ep_count_text,
+            badge: s.badge || 'HD',
+            cover: s.cover_url
+          }));
+          saveDramas();
+        }
+
+        // 3. Romans
+        const { data: novelsList } = await supabase.from('novels').select('*').order('created_at', { ascending: false });
+        if (novelsList && novelsList.length > 0) {
+          NOVELS = novelsList.map(n => ({
+            id: n.id,
+            title: n.title,
+            author: n.author,
+            genre: n.genre,
+            status: n.status || 'En cours',
+            rating: n.rating ? n.rating.toString() : '4.9',
+            views: n.views || '150K',
+            chaptersCount: n.chapters_count || 30,
+            cover: n.cover_url,
+            synopsis: n.synopsis,
+            chapters: n.chapters_json || []
+          }));
+          saveNovels();
+        }
+
+        // 4. Transactions financières
+        const { data: txList } = await supabase.from('coin_transactions').select('*').order('created_at', { ascending: false }).limit(50);
+        if (txList && txList.length > 0) {
+          TRANSACTIONS = txList.map(t => ({
+            id: t.id,
+            type: t.tx_type,
+            user: t.user_name,
+            amount: t.amount_display || `+${t.amount_usd} $`,
+            item: t.item_name,
+            unlocked: t.tx_type === 'VIP' ? 'Tous les épisodes & romans débloqués' : `${t.coins_credited} Pièces créditées`,
+            date: new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }));
+          saveTransactions();
+        }
+
+        // 5. Retraits
+        const { data: wtdList } = await supabase.from('admin_withdrawals').select('*').order('created_at', { ascending: false });
+        if (wtdList && wtdList.length > 0) {
+          ADMIN_WITHDRAWALS = wtdList.map(w => ({
+            id: w.id,
+            date: w.date_display,
+            method: w.method,
+            recipient: w.recipient,
+            amount: w.amount_usd,
+            status: w.status,
+            txRef: w.tx_ref
+          }));
+          saveAdminWithdrawals();
+        }
+
+        renderAll();
+      } catch (err) {
+        console.warn("Supabase loadRemoteData error:", err);
+      }
+    }
+
+    let adminRealtimeSubscription = null;
+    function setupAdminRealtimeListeners() {
+      if (!supabase) return;
+      if (adminRealtimeSubscription) {
+        supabase.removeChannel(adminRealtimeSubscription);
+      }
+
+      adminRealtimeSubscription = supabase.channel('admin:live_updates')
+        // Écoute des nouveaux achats de coins/VIP en direct
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'coin_transactions' }, payload => {
+          const newTx = payload.new;
+          console.log('⚡ [Admin Realtime] Nouvel achat visiteur :', newTx);
+          showToast(`💰 Achat en direct : ${newTx.item_name} (${newTx.amount_display}) par ${newTx.user_name}`, "💸");
+          
+          TRANSACTIONS.unshift({
+            id: newTx.id,
+            type: newTx.tx_type,
+            user: newTx.user_name,
+            amount: newTx.amount_display || `+${newTx.amount_usd} $`,
+            item: newTx.item_name,
+            unlocked: newTx.tx_type === 'VIP' ? 'Tous les épisodes & romans débloqués' : `${newTx.coins_credited} Pièces créditées`,
+            date: 'À l\'instant'
+          });
+          saveTransactions();
+          renderAll();
+        })
+        // Écoute de la mise à jour atomique du solde admin
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'admin_ledger' }, payload => {
+          const updated = payload.new;
+          if (updated && typeof updated.balance_usd === 'number') {
+            console.log('⚡ [Admin Realtime] Solde mis à jour :', updated.balance_usd);
+            ADMIN_BALANCE = updated.balance_usd;
+            saveAdminBalance();
+            renderAll();
+            showToast(`⚡ Solde mis à jour : ${formatCurrency(ADMIN_BALANCE)}`, "💵");
+          }
+        })
+        .subscribe((status) => {
+          console.log("Supabase Realtime Status (Admin Dashboard):", status);
+        });
     }
 
     function adminLogout() {
@@ -1857,6 +2003,27 @@
       ADMIN_WITHDRAWALS.unshift(newWithdrawal);
       saveAdminWithdrawals();
 
+      // Supabase Remote Sync (si connecté en admin)
+      if (supabase) {
+        supabase.from('admin_withdrawals').insert({
+          id: newWithdrawal.id,
+          method: newWithdrawal.method,
+          recipient: newWithdrawal.recipient,
+          amount_usd: newWithdrawal.amount,
+          status: newWithdrawal.status,
+          tx_ref: newWithdrawal.txRef,
+          date_display: newWithdrawal.date
+        }).then(({ error }) => {
+          if (error) console.error("Supabase insert admin_withdrawals error:", error);
+        });
+
+        supabase.from('admin_ledger').update({
+          balance_usd: ADMIN_BALANCE
+        }).eq('id', 'primary_ledger').then(({ error }) => {
+          if (error) console.error("Supabase update admin_ledger error:", error);
+        });
+      }
+
       // Update UI
       renderAll();
       closeWithdrawModal();
@@ -1948,6 +2115,20 @@
       renderAll();
       showToast(`🎬 Série "${title}" ajoutée avec succès !`);
       document.getElementById('form-drama-title').value = '';
+
+      if (supabase) {
+        supabase.from('series').insert({
+          id: newDrama.id,
+          title: newDrama.title,
+          genre: newDrama.genre,
+          ep_count_text: newDrama.ep,
+          badge: newDrama.badge,
+          cover_url: newDrama.cover
+        }).then(({ error }) => {
+          if (error) console.error("Supabase insert series error:", error);
+          else console.log("Supabase insert series success:", newDrama.id);
+        });
+      }
     }
 
     function editDrama(id) {
@@ -1967,6 +2148,16 @@
       saveDramas();
       renderAll();
       showToast(`✨ Série "${drama.title}" mise à jour !`);
+
+      if (supabase) {
+        supabase.from('series').update({
+          title: drama.title,
+          cover_url: drama.cover,
+          ep_count_text: drama.ep
+        }).eq('id', drama.id).then(({ error }) => {
+          if (error) console.error("Supabase update series error:", error);
+        });
+      }
     }
 
     function deleteDrama(id) {
@@ -1979,6 +2170,12 @@
       saveDramas();
       renderAll();
       showToast(`🗑️ Série "${title}" supprimée.`);
+
+      if (supabase) {
+        supabase.from('series').delete().eq('id', id).then(({ error }) => {
+          if (error) console.error("Supabase delete series error:", error);
+        });
+      }
     }
 
     function createNovel() {
@@ -2017,6 +2214,25 @@
       renderAll();
       showToast(`📖 Roman "${title}" publié !`);
       document.getElementById('form-novel-title').value = '';
+
+      if (supabase) {
+        supabase.from('novels').insert({
+          id: newNovel.id,
+          title: newNovel.title,
+          author: newNovel.author,
+          genre: newNovel.genre,
+          status: newNovel.status,
+          rating: 4.9,
+          views: "10.2K",
+          chapters_count: newNovel.chaptersCount,
+          cover_url: newNovel.cover,
+          synopsis: newNovel.synopsis,
+          chapters_json: newNovel.chapters
+        }).then(({ error }) => {
+          if (error) console.error("Supabase insert novel error:", error);
+          else console.log("Supabase insert novel success:", newNovel.id);
+        });
+      }
     }
 
     function editNovel(id) {
@@ -2036,6 +2252,16 @@
       saveNovels();
       renderAll();
       showToast(`✨ Roman "${novel.title}" mis à jour !`);
+
+      if (supabase) {
+        supabase.from('novels').update({
+          title: novel.title,
+          author: novel.author,
+          cover_url: novel.cover
+        }).eq('id', novel.id).then(({ error }) => {
+          if (error) console.error("Supabase update novel error:", error);
+        });
+      }
     }
 
     function deleteNovel(id) {
@@ -2048,6 +2274,12 @@
       saveNovels();
       renderAll();
       showToast(`🗑️ Roman "${title}" supprimé.`);
+
+      if (supabase) {
+        supabase.from('novels').delete().eq('id', id).then(({ error }) => {
+          if (error) console.error("Supabase delete novel error:", error);
+        });
+      }
     }
 
     function saveHero() {

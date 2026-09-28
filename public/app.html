@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -2227,6 +2228,73 @@
       btn: "▶ Regarder Épisode 1"
     };
 
+    // ================= SUPABASE CLIENT & REALTIME CONFIG =================
+    const SUPABASE_URL = "https://xylhadcuxgufqprjfjzt.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bGhhZGN1eGd1ZnFwcmpmanp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjM2OTIsImV4cCI6MjEwNjE5OTY5Mn0.-U1whzkGmjm-21_nvx5ij3z8zCDll8vhAFAMjL643q0";
+    const supabase = (typeof window !== 'undefined' && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    async function syncRemoteCatalog() {
+      if (!supabase) return;
+      try {
+        const { data: remoteSeries } = await supabase.from('series').select('*').order('created_at', { ascending: false });
+        if (remoteSeries && remoteSeries.length > 0) {
+          DRAMAS = remoteSeries.map(s => ({
+            id: s.id,
+            title: s.title,
+            genre: s.genre,
+            ep: s.ep_count_text,
+            badge: s.badge || 'HD',
+            cover: s.cover_url
+          }));
+          saveDramasToStorage();
+        }
+
+        const { data: remoteNovels } = await supabase.from('novels').select('*').order('created_at', { ascending: false });
+        if (remoteNovels && remoteNovels.length > 0) {
+          NOVELS = remoteNovels.map(n => ({
+            id: n.id,
+            title: n.title,
+            author: n.author,
+            genre: n.genre,
+            status: n.status || 'En cours',
+            rating: n.rating ? n.rating.toString() : '4.9',
+            views: n.views || '150K',
+            chaptersCount: n.chapters_count || 30,
+            cover: n.cover_url,
+            synopsis: n.synopsis,
+            chapters: n.chapters_json || []
+          }));
+          saveNovelsToStorage();
+        }
+
+        if (typeof refreshCurrentScreen === 'function') {
+          refreshCurrentScreen();
+        }
+      } catch(e) {
+        console.warn("Supabase remote catalog sync:", e);
+      }
+    }
+
+    let clientRealtimeSubscription = null;
+    function setupClientRealtime() {
+      if (!supabase) return;
+      if (clientRealtimeSubscription) {
+        supabase.removeChannel(clientRealtimeSubscription);
+      }
+      clientRealtimeSubscription = supabase.channel('public:realtime_catalog')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'series' }, () => {
+          console.log('⚡ [Realtime] Séries catalogue mise à jour détectée');
+          syncRemoteCatalog();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'novels' }, () => {
+          console.log('⚡ [Realtime] Romans catalogue mise à jour détectée');
+          syncRemoteCatalog();
+        })
+        .subscribe((status) => {
+          console.log("Supabase Realtime Status (Dramaxoxo):", status);
+        });
+    }
+
     function loadStoredDramas() {
       try {
         const s = localStorage.getItem('dramaxoxo_dramas');
@@ -4299,14 +4367,25 @@
           userCoins += coinsToAdd;
         }
 
-        // Record financial transaction for Admin Studio Ledger
+        // Record financial transaction for Admin Studio Ledger & Supabase Server RPC
         try {
           let txs = JSON.parse(localStorage.getItem('dramaxoxo_transactions') || '[]');
           const methodObj = cfg.methods.find(m => m.id === activePaymentMethod) || { name: 'Paiement Sécurisé', icon: '💳' };
-          txs.unshift({
-            id: 'TX-' + Math.floor(100000 + Math.random() * 900000),
+          const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
+
+          let priceUSD = 0.99;
+          if (activeCheckoutItem.type === 'vip') {
+            const plan = cfg.vipPlans[activeCheckoutItem.planKey] || cfg.vipPlans.monthly;
+            priceUSD = (currentCurrency === 'HTG' ? (activeCheckoutItem.planKey === 'weekly' ? 9.99 : (activeCheckoutItem.planKey === 'annual' ? 99.99 : 29.99)) : plan.price);
+          } else {
+            const pack = cfg.coinPacks[activeCheckoutItem.packIndex] || cfg.coinPacks[0];
+            priceUSD = (currentCurrency === 'HTG' ? [0.99, 4.99, 9.99, 24.99][activeCheckoutItem.packIndex] || 0.99 : pack.price);
+          }
+
+          const newTx = {
+            id: txId,
             type: activeCheckoutItem.type === 'vip' ? 'VIP' : 'COINS',
-            user: currentUser.name || 'Spectateur Invité',
+            user: (typeof currentUser !== 'undefined' && currentUser && currentUser.name) ? currentUser.name : 'Spectateur Invité',
             amount: amountFormatted,
             currency: cfg.code,
             method: `${methodObj.icon} ${methodObj.name}`,
@@ -4314,8 +4393,29 @@
             item: itemName,
             unlocked: '🔓 Épisodes et chapitres payants débloqués automatiquement sans frais',
             date: 'À l\'instant'
-          });
+          };
+          txs.unshift(newTx);
           localStorage.setItem('dramaxoxo_transactions', JSON.stringify(txs));
+
+          // Supabase Server-Side Atomic RPC Execution
+          if (supabase) {
+            supabase.rpc('process_coin_purchase', {
+              p_tx_id: txId,
+              p_user_id: null,
+              p_user_name: newTx.user,
+              p_tx_type: newTx.type,
+              p_amount_usd: priceUSD,
+              p_amount_display: amountFormatted,
+              p_currency: cfg.code,
+              p_coins_credited: activeCheckoutItem.type === 'vip' ? 0 : coinsToAdd,
+              p_payment_method: newTx.method,
+              p_country: newTx.country,
+              p_item_name: itemName
+            }).then(({ data, error }) => {
+              if (error) console.error("Supabase process_coin_purchase error:", error);
+              else console.log("Supabase process_coin_purchase success:", data);
+            });
+          }
         } catch(e) {}
 
         // Replace modal content with celebratory success animation
@@ -4947,6 +5047,8 @@
     // ================= INITIALIZATION =================
     refreshCurrentScreen();
     checkVisitorOnboarding();
+    syncRemoteCatalog();
+    setupClientRealtime();
   </script>
 </body>
 </html>
