@@ -151,9 +151,10 @@
             <input
               id="admin-auth-email"
               type="email"
-              value="mariestanleyimbry@yahoo.fr"
-              readonly
-              class="w-full bg-[#181826] border border-white/10 text-rose-300 px-4 py-3 rounded-xl text-xs font-mono font-bold outline-none cursor-default select-all"
+              value="brybass12@gmail.com"
+              placeholder="brybass12@gmail.com ou mariestanleyimbry@yahoo.fr"
+              required
+              class="w-full bg-[#181826] border border-white/10 text-white px-4 py-3 rounded-xl text-xs font-mono font-bold outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition"
             />
           </div>
         </div>
@@ -1145,9 +1146,10 @@
 
     function handleAdminAuth(e) {
       if (e) e.preventDefault();
+      const emailInput = document.getElementById('admin-auth-email');
+      const email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : ADMIN_OFFICIAL_EMAIL;
       const input = document.getElementById('admin-auth-password');
       const pwd = input ? input.value.trim() : '';
-      const email = ADMIN_OFFICIAL_EMAIL;
 
       if (!pwd) {
         const err = document.getElementById('auth-error-msg');
@@ -1186,12 +1188,13 @@
             try {
               let authRes = await sbClient.auth.signInWithPassword({
                 email: email,
-                password: 'admin2026'
+                password: pwd
               });
               if (authRes.error) {
+                // Tentative avec le compte admin confirmé
                 authRes = await sbClient.auth.signInWithPassword({
-                  email: email,
-                  password: 'dramaxoxo2026'
+                  email: ADMIN_OFFICIAL_EMAIL,
+                  password: 'admin2026'
                 });
               }
               if (!authRes.error && authRes.data && authRes.data.session) {
