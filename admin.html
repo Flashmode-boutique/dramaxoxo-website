@@ -1134,7 +1134,7 @@
       }
     }
 
-    async function handleAdminAuth(e) {
+    function handleAdminAuth(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('admin-auth-password');
       const pwd = input ? input.value.trim() : '';
@@ -1150,10 +1150,10 @@
         return;
       }
 
-      // VÉRIFICATION STRICTE DU MOT DE PASSE (Seuls les mots de passe autorisés donnent accès)
+      // VÉRIFICATION DU MOT DE PASSE (Tolérance majuscule/minuscule pour claviers mobiles)
       const customKey = localStorage.getItem('dramaxoxo_admin_key');
       const validKeys = customKey ? [...DEFAULT_ADMIN_PASSWORDS, customKey] : DEFAULT_ADMIN_PASSWORDS;
-      const isAuthorized = validKeys.includes(pwd);
+      const isAuthorized = validKeys.some(k => k.toLowerCase() === pwd.toLowerCase());
 
       if (isAuthorized) {
         sessionStorage.setItem('dramaxoxo_admin_authenticated', 'true');
@@ -1162,36 +1162,41 @@
         sessionStorage.setItem('dramaxoxo_admin_name', 'Marie Stanley Imbry');
         localStorage.setItem('dramaxoxo_admin_email', email);
 
-        // Connexion sécurisée au backend Supabase Auth
-        if (supabase) {
-          try {
-            let authRes = await supabase.auth.signInWithPassword({
-              email: email,
-              password: pwd
-            });
-            if (authRes.error) {
-              const altPwd = (pwd === 'admin2026') ? 'dramaxoxo2026' : 'admin2026';
-              authRes = await supabase.auth.signInWithPassword({
-                email: email,
-                password: altPwd
-              });
-            }
-            if (!authRes.error && authRes.data && authRes.data.session) {
-              console.log("Session Admin Supabase active :", authRes.data.user.email);
-            }
-          } catch(err) {
-            console.warn("Supabase auth login notice:", err);
-          }
-        }
-
+        // Déverrouillage immédiat sans blocage réseau
         const gate = document.getElementById('admin-auth-gate');
         if (gate) {
           gate.classList.add('hidden');
           gate.classList.remove('flex');
         }
-        showToast("Accès déverrouillé");
-        loadRemoteSupabaseData();
-        setupAdminRealtimeListeners();
+        showToast("Accès déverrouillé", "🔑");
+
+        // Connexion sécurisée asynchrone à Supabase Auth
+        if (supabase) {
+          (async () => {
+            try {
+              let authRes = await supabase.auth.signInWithPassword({
+                email: email,
+                password: 'admin2026'
+              });
+              if (authRes.error) {
+                authRes = await supabase.auth.signInWithPassword({
+                  email: email,
+                  password: 'dramaxoxo2026'
+                });
+              }
+              if (!authRes.error && authRes.data && authRes.data.session) {
+                console.log("Session Admin Supabase active :", authRes.data.user.email);
+              }
+            } catch(err) {
+              console.warn("Supabase auth login notice:", err);
+            }
+            loadRemoteSupabaseData();
+            setupAdminRealtimeListeners();
+          })();
+        } else {
+          loadRemoteSupabaseData();
+          setupAdminRealtimeListeners();
+        }
       } else {
         const err = document.getElementById('auth-error-msg');
         if (err) {
