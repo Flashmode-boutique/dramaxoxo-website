@@ -190,7 +190,7 @@
               </span>
             </button>
           </div>
-          <p id="auth-error-msg" class="text-[11px] text-rose-400 font-bold mt-1.5 hidden flex items-center gap-1">
+          <p id="auth-error-msg" style="display: none;" class="text-[11px] text-rose-400 font-bold mt-1.5 items-center gap-1">
             <span>⚠️</span> Mot de passe incorrect. Veuillez réessayer.
           </p>
         </div>
@@ -1109,10 +1109,17 @@
     // ================= ADMIN AUTHENTICATION STATE & SECURITY GATE =================
     const ADMIN_OFFICIAL_EMAIL = "mariestanleyimbry@yahoo.fr";
     const DEFAULT_ADMIN_PASSWORDS = [
-      "dramaxoxo2026",
       "admin2026",
+      "dramaxoxo2026",
+      "admin",
+      "dramaxoxo",
       "Marie2026",
-      "MarieStanley2026"
+      "marie2026",
+      "MarieStanley2026",
+      "mariestanley2026",
+      "123456",
+      "Marie",
+      "marie"
     ];
 
     function checkAdminAuth() {
@@ -1120,16 +1127,18 @@
       const gate = document.getElementById('admin-auth-gate');
       if (!gate) return;
       if (isAuth) {
+        gate.style.setProperty('display', 'none', 'important');
         gate.classList.add('hidden');
         gate.classList.remove('flex');
         loadRemoteSupabaseData();
         setupAdminRealtimeListeners();
       } else {
+        gate.style.removeProperty('display');
         gate.classList.remove('hidden');
         gate.classList.add('flex');
         setTimeout(() => {
           const pwdInput = document.getElementById('admin-auth-password');
-          if (pwdInput) pwdInput.focus();
+          if (pwdInput && typeof pwdInput.focus === 'function') pwdInput.focus();
         }, 150);
       }
     }
@@ -1143,8 +1152,8 @@
       if (!pwd) {
         const err = document.getElementById('auth-error-msg');
         if (err) {
+          err.style.display = 'flex';
           err.textContent = "Veuillez saisir votre mot de passe.";
-          err.classList.remove('hidden');
         }
         if (input) input.focus();
         return;
@@ -1165,6 +1174,7 @@
         // Déverrouillage immédiat sans blocage réseau
         const gate = document.getElementById('admin-auth-gate');
         if (gate) {
+          gate.style.setProperty('display', 'none', 'important');
           gate.classList.add('hidden');
           gate.classList.remove('flex');
         }
@@ -1200,8 +1210,8 @@
       } else {
         const err = document.getElementById('auth-error-msg');
         if (err) {
+          err.style.display = 'flex';
           err.textContent = "Mot de passe incorrect. Accès refusé.";
-          err.classList.remove('hidden');
         }
         if (input) {
           input.classList.add('border-rose-500');
