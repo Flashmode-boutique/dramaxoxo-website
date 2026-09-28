@@ -435,9 +435,85 @@
             </select>
           </div>
 
-          <div class="sm:col-span-2">
-            <label class="block text-slate-300 font-bold mb-1">URL de l'Affiche (Format 9:16 / Vertical) *</label>
-            <input id="form-drama-cover" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-rose-500" placeholder="https://images.unsplash.com/..." value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60" />
+          <!-- Zone d'Affiche Série : Upload direct ou URL -->
+          <div class="sm:col-span-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-slate-300 font-bold text-xs">
+                Affiche de la Série (Format 9:16 / Vertical) *
+              </label>
+              <button
+                type="button"
+                onclick="toggleManualUrl('drama')"
+                class="text-[11px] text-rose-400 hover:text-rose-300 underline font-semibold flex items-center gap-1 transition"
+              >
+                <span>🔗</span> <span id="toggle-lbl-drama">Utiliser une URL externe</span>
+              </button>
+            </div>
+
+            <!-- Upload Drag & Drop Box -->
+            <div
+              id="drama-drop-zone"
+              onclick="document.getElementById('drama-file-input').click()"
+              ondragover="handleDragOver(event, 'drama')"
+              ondragleave="handleDragLeave(event, 'drama')"
+              ondrop="handleDrop(event, 'drama')"
+              class="border-2 border-dashed border-rose-500/30 hover:border-rose-500 bg-[#161626] hover:bg-[#1a1a2e] rounded-2xl p-4 sm:p-5 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2 group relative overflow-hidden"
+            >
+              <input
+                type="file"
+                id="drama-file-input"
+                accept="image/jpeg,image/png,image/webp,image/jpg"
+                onchange="handleFileInputChange(event, 'drama')"
+                class="hidden"
+              />
+
+              <!-- Default Placeholder View -->
+              <div id="drama-upload-prompt" class="flex flex-col items-center gap-1.5 py-2">
+                <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                  📤
+                </div>
+                <p class="text-xs font-bold text-white">
+                  Cliquez ou glissez une image ici
+                </p>
+                <p class="text-[10px] text-slate-400">
+                  Formats JPG, PNG, WebP • Max 5 Mo • Ratio vertical recommandé
+                </p>
+              </div>
+
+              <!-- Uploading Spinner View -->
+              <div id="drama-upload-progress" class="hidden flex-col items-center gap-2 py-4">
+                <div class="w-8 h-8 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-xs font-bold text-rose-300 animate-pulse">Téléversement vers Supabase Storage...</p>
+              </div>
+
+              <!-- Uploaded Preview View -->
+              <div id="drama-preview-container" class="hidden items-center gap-4 w-full bg-[#10101C] p-3 rounded-xl border border-rose-500/30">
+                <img id="drama-preview-img" src="" alt="Aperçu Affiche" class="w-16 h-24 object-cover rounded-lg border border-white/10 shadow" />
+                <div class="flex-1 text-left min-w-0">
+                  <p class="text-xs font-black text-emerald-400 flex items-center gap-1">
+                    <span>✓</span> Image prête & hébergée
+                  </p>
+                  <p id="drama-preview-name" class="text-[11px] text-slate-300 truncate mt-0.5 font-mono"></p>
+                  <button
+                    type="button"
+                    onclick="event.stopPropagation(); resetCoverUpload('drama');"
+                    class="text-[10px] text-rose-400 hover:text-rose-300 font-bold underline mt-1.5"
+                  >
+                    Remplacer par un autre fichier
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual URL Fallback Input (Foldable) -->
+            <div id="drama-manual-url-wrap" class="hidden pt-1">
+              <input
+                id="form-drama-cover"
+                class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-rose-500 font-mono"
+                placeholder="https://images.unsplash.com/..."
+                value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60"
+              />
+            </div>
           </div>
         </div>
 
@@ -483,9 +559,85 @@
             </select>
           </div>
 
-          <div class="sm:col-span-2">
-            <label class="block text-slate-300 font-bold mb-1">URL de Couverture *</label>
-            <input id="form-novel-cover" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500" placeholder="https://..." value="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60" />
+          <!-- Zone de Couverture Roman : Upload direct ou URL -->
+          <div class="sm:col-span-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-slate-300 font-bold text-xs">
+                Couverture du Roman *
+              </label>
+              <button
+                type="button"
+                onclick="toggleManualUrl('novel')"
+                class="text-[11px] text-purple-400 hover:text-purple-300 underline font-semibold flex items-center gap-1 transition"
+              >
+                <span>🔗</span> <span id="toggle-lbl-novel">Utiliser une URL externe</span>
+              </button>
+            </div>
+
+            <!-- Upload Drag & Drop Box -->
+            <div
+              id="novel-drop-zone"
+              onclick="document.getElementById('novel-file-input').click()"
+              ondragover="handleDragOver(event, 'novel')"
+              ondragleave="handleDragLeave(event, 'novel')"
+              ondrop="handleDrop(event, 'novel')"
+              class="border-2 border-dashed border-purple-500/30 hover:border-purple-500 bg-[#161626] hover:bg-[#1a1a2e] rounded-2xl p-4 sm:p-5 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2 group relative overflow-hidden"
+            >
+              <input
+                type="file"
+                id="novel-file-input"
+                accept="image/jpeg,image/png,image/webp,image/jpg"
+                onchange="handleFileInputChange(event, 'novel')"
+                class="hidden"
+              />
+
+              <!-- Default Placeholder View -->
+              <div id="novel-upload-prompt" class="flex flex-col items-center gap-1.5 py-2">
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                  📖
+                </div>
+                <p class="text-xs font-bold text-white">
+                  Cliquez ou glissez la couverture du roman ici
+                </p>
+                <p class="text-[10px] text-slate-400">
+                  Formats JPG, PNG, WebP • Max 5 Mo
+                </p>
+              </div>
+
+              <!-- Uploading Spinner View -->
+              <div id="novel-upload-progress" class="hidden flex-col items-center gap-2 py-4">
+                <div class="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-xs font-bold text-purple-300 animate-pulse">Téléversement vers Supabase Storage...</p>
+              </div>
+
+              <!-- Uploaded Preview View -->
+              <div id="novel-preview-container" class="hidden items-center gap-4 w-full bg-[#10101C] p-3 rounded-xl border border-purple-500/30">
+                <img id="novel-preview-img" src="" alt="Aperçu Couverture" class="w-16 h-24 object-cover rounded-lg border border-white/10 shadow" />
+                <div class="flex-1 text-left min-w-0">
+                  <p class="text-xs font-black text-emerald-400 flex items-center gap-1">
+                    <span>✓</span> Image prête & hébergée
+                  </p>
+                  <p id="novel-preview-name" class="text-[11px] text-slate-300 truncate mt-0.5 font-mono"></p>
+                  <button
+                    type="button"
+                    onclick="event.stopPropagation(); resetCoverUpload('novel');"
+                    class="text-[10px] text-purple-400 hover:text-purple-300 font-bold underline mt-1.5"
+                  >
+                    Remplacer par un autre fichier
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual URL Fallback Input (Foldable) -->
+            <div id="novel-manual-url-wrap" class="hidden pt-1">
+              <input
+                id="form-novel-cover"
+                class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-purple-500 font-mono"
+                placeholder="https://..."
+                value="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60"
+              />
+            </div>
           </div>
 
           <div class="sm:col-span-2">
@@ -2113,6 +2265,142 @@
       }).join('');
     }
 
+    // ================= SUPABASE STORAGE COVER UPLOADS =================
+    function toggleManualUrl(type) {
+      const wrap = document.getElementById(`${type}-manual-url-wrap`);
+      const lbl = document.getElementById(`toggle-lbl-${type}`);
+      if (!wrap || !lbl) return;
+      if (wrap.classList.contains('hidden')) {
+        wrap.classList.remove('hidden');
+        lbl.textContent = "Masquer l'URL externe";
+      } else {
+        wrap.classList.add('hidden');
+        lbl.textContent = "Utiliser une URL externe";
+      }
+    }
+
+    function handleDragOver(e, type) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dropZone = document.getElementById(`${type}-drop-zone`);
+      if (dropZone) dropZone.classList.add(type === 'drama' ? 'border-rose-400' : 'border-purple-400', 'bg-white/5');
+    }
+
+    function handleDragLeave(e, type) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dropZone = document.getElementById(`${type}-drop-zone`);
+      if (dropZone) dropZone.classList.remove(type === 'drama' ? 'border-rose-400' : 'border-purple-400', 'bg-white/5');
+    }
+
+    function handleDrop(e, type) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleDragLeave(e, type);
+      const files = e.dataTransfer ? e.dataTransfer.files : null;
+      if (files && files.length > 0) {
+        processCoverFileUpload(files[0], type);
+      }
+    }
+
+    function handleFileInputChange(e, type) {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        processCoverFileUpload(files[0], type);
+      }
+    }
+
+    async function processCoverFileUpload(file, type) {
+      if (!file) return;
+
+      const validMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+      if (!validMimes.includes(file.type)) {
+        alert("Format non supporté ! Veuillez sélectionner une image au format JPG, PNG ou WebP.");
+        return;
+      }
+
+      // Limite stricte à 5 Mo
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Fichier trop volumineux ! La taille maximale autorisée est de 5 Mo.");
+        return;
+      }
+
+      const promptEl = document.getElementById(`${type}-upload-prompt`);
+      const progressEl = document.getElementById(`${type}-upload-progress`);
+      const previewEl = document.getElementById(`${type}-preview-container`);
+      const previewImg = document.getElementById(`${type}-preview-img`);
+      const previewName = document.getElementById(`${type}-preview-name`);
+      const coverInput = document.getElementById(type === 'drama' ? 'form-drama-cover' : 'form-novel-cover');
+
+      if (promptEl) promptEl.classList.add('hidden');
+      if (previewEl) { previewEl.classList.add('hidden'); previewEl.classList.remove('flex'); }
+      if (progressEl) { progressEl.classList.remove('hidden'); progressEl.classList.add('flex'); }
+
+      const localBlobUrl = URL.createObjectURL(file);
+
+      try {
+        if (!sbClient) throw new Error("Client Supabase non initialisé");
+
+        const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const fileName = `${type}-${Date.now()}-${cleanName}`;
+
+        const { data, error } = await sbClient.storage
+          .from('covers')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (error) throw error;
+
+        const { data: publicData } = sbClient.storage
+          .from('covers')
+          .getPublicUrl(fileName);
+
+        const uploadedUrl = publicData.publicUrl;
+
+        // Met à jour la valeur du champ qui sera enregistré
+        if (coverInput) coverInput.value = uploadedUrl;
+
+        if (progressEl) { progressEl.classList.add('hidden'); progressEl.classList.remove('flex'); }
+        if (previewEl) {
+          previewEl.classList.remove('hidden');
+          previewEl.classList.add('flex');
+        }
+        if (previewImg) previewImg.src = uploadedUrl || localBlobUrl;
+        if (previewName) previewName.textContent = file.name;
+
+        showToast("✅ Couverture téléversée avec succès !", "🖼️");
+      } catch (err) {
+        console.error("Erreur upload couverture :", err);
+        if (progressEl) { progressEl.classList.add('hidden'); progressEl.classList.remove('flex'); }
+        if (promptEl) promptEl.classList.remove('hidden');
+        alert("Erreur lors de l'upload vers Supabase : " + (err.message || err));
+      }
+    }
+
+    function resetCoverUpload(type) {
+      const fileInput = document.getElementById(`${type}-file-input`);
+      if (fileInput) fileInput.value = '';
+      const promptEl = document.getElementById(`${type}-upload-prompt`);
+      const progressEl = document.getElementById(`${type}-upload-progress`);
+      const previewEl = document.getElementById(`${type}-preview-container`);
+      const previewImg = document.getElementById(`${type}-preview-img`);
+      const coverInput = document.getElementById(type === 'drama' ? 'form-drama-cover' : 'form-novel-cover');
+
+      if (promptEl) promptEl.classList.remove('hidden');
+      if (progressEl) { progressEl.classList.add('hidden'); progressEl.classList.remove('flex'); }
+      if (previewEl) { previewEl.classList.add('hidden'); previewEl.classList.remove('flex'); }
+      if (previewImg) previewImg.src = '';
+
+      if (coverInput) {
+        coverInput.value = type === 'drama' 
+          ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60"
+          : "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60";
+      }
+    }
+
     // ================= CRUD DRAMAS & NOVELS =================
     function createDrama() {
       const title = document.getElementById('form-drama-title').value.trim();
@@ -2140,6 +2428,7 @@
       renderAll();
       showToast(`🎬 Série "${title}" ajoutée avec succès !`);
       document.getElementById('form-drama-title').value = '';
+      resetCoverUpload('drama');
 
       if (sbClient) {
         sbClient.from('series').insert({
@@ -2239,6 +2528,7 @@
       renderAll();
       showToast(`📖 Roman "${title}" publié !`);
       document.getElementById('form-novel-title').value = '';
+      resetCoverUpload('novel');
 
       if (sbClient) {
         sbClient.from('novels').insert({
