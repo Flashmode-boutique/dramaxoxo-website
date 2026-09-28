@@ -2231,12 +2231,12 @@
     // ================= SUPABASE CLIENT & REALTIME CONFIG =================
     const SUPABASE_URL = "https://xylhadcuxgufqprjfjzt.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bGhhZGN1eGd1ZnFwcmpmanp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjM2OTIsImV4cCI6MjEwNjE5OTY5Mn0.-U1whzkGmjm-21_nvx5ij3z8zCDll8vhAFAMjL643q0";
-    const supabase = (typeof window !== 'undefined' && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    const sbClient = (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
     async function syncRemoteCatalog() {
-      if (!supabase) return;
+      if (!sbClient) return;
       try {
-        const { data: remoteSeries } = await supabase.from('series').select('*').order('created_at', { ascending: false });
+        const { data: remoteSeries } = await sbClient.from('series').select('*').order('created_at', { ascending: false });
         if (remoteSeries && remoteSeries.length > 0) {
           DRAMAS = remoteSeries.map(s => ({
             id: s.id,
@@ -2249,7 +2249,7 @@
           saveDramasToStorage();
         }
 
-        const { data: remoteNovels } = await supabase.from('novels').select('*').order('created_at', { ascending: false });
+        const { data: remoteNovels } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
         if (remoteNovels && remoteNovels.length > 0) {
           NOVELS = remoteNovels.map(n => ({
             id: n.id,
@@ -2277,11 +2277,11 @@
 
     let clientRealtimeSubscription = null;
     function setupClientRealtime() {
-      if (!supabase) return;
+      if (!sbClient) return;
       if (clientRealtimeSubscription) {
-        supabase.removeChannel(clientRealtimeSubscription);
+        sbClient.removeChannel(clientRealtimeSubscription);
       }
-      clientRealtimeSubscription = supabase.channel('public:realtime_catalog')
+      clientRealtimeSubscription = sbClient.channel('public:realtime_catalog')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'series' }, () => {
           console.log('⚡ [Realtime] Séries catalogue mise à jour détectée');
           syncRemoteCatalog();
@@ -4398,8 +4398,8 @@
           localStorage.setItem('dramaxoxo_transactions', JSON.stringify(txs));
 
           // Supabase Server-Side Atomic RPC Execution
-          if (supabase) {
-            supabase.rpc('process_coin_purchase', {
+          if (sbClient) {
+            sbClient.rpc('process_coin_purchase', {
               p_tx_id: txId,
               p_user_id: null,
               p_user_name: newTx.user,

@@ -1104,7 +1104,7 @@
     // ================= SUPABASE CLIENT & REALTIME CONFIG =================
     const SUPABASE_URL = "https://xylhadcuxgufqprjfjzt.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bGhhZGN1eGd1ZnFwcmpmanp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjM2OTIsImV4cCI6MjEwNjE5OTY5Mn0.-U1whzkGmjm-21_nvx5ij3z8zCDll8vhAFAMjL643q0";
-    const supabase = (typeof window !== 'undefined' && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    const sbClient = (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
     // ================= ADMIN AUTHENTICATION STATE & SECURITY GATE =================
     const ADMIN_OFFICIAL_EMAIL = "mariestanleyimbry@yahoo.fr";
@@ -1181,15 +1181,15 @@
         showToast("Accès déverrouillé", "🔑");
 
         // Connexion sécurisée asynchrone à Supabase Auth
-        if (supabase) {
+        if (sbClient) {
           (async () => {
             try {
-              let authRes = await supabase.auth.signInWithPassword({
+              let authRes = await sbClient.auth.signInWithPassword({
                 email: email,
                 password: 'admin2026'
               });
               if (authRes.error) {
-                authRes = await supabase.auth.signInWithPassword({
+                authRes = await sbClient.auth.signInWithPassword({
                   email: email,
                   password: 'dramaxoxo2026'
                 });
@@ -1221,17 +1221,17 @@
     }
 
     async function loadRemoteSupabaseData() {
-      if (!supabase) return;
+      if (!sbClient) return;
       try {
         // 1. Grand Livre Admin (Solde)
-        const { data: ledger } = await supabase.from('admin_ledger').select('*').eq('id', 'primary_ledger').single();
+        const { data: ledger } = await sbClient.from('admin_ledger').select('*').eq('id', 'primary_ledger').single();
         if (ledger && typeof ledger.balance_usd === 'number') {
           ADMIN_BALANCE = ledger.balance_usd;
           saveAdminBalance();
         }
 
         // 2. Séries
-        const { data: seriesList } = await supabase.from('series').select('*').order('created_at', { ascending: false });
+        const { data: seriesList } = await sbClient.from('series').select('*').order('created_at', { ascending: false });
         if (seriesList && seriesList.length > 0) {
           DRAMAS = seriesList.map(s => ({
             id: s.id,
@@ -1245,7 +1245,7 @@
         }
 
         // 3. Romans
-        const { data: novelsList } = await supabase.from('novels').select('*').order('created_at', { ascending: false });
+        const { data: novelsList } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
         if (novelsList && novelsList.length > 0) {
           NOVELS = novelsList.map(n => ({
             id: n.id,
@@ -1264,7 +1264,7 @@
         }
 
         // 4. Transactions financières
-        const { data: txList } = await supabase.from('coin_transactions').select('*').order('created_at', { ascending: false }).limit(50);
+        const { data: txList } = await sbClient.from('coin_transactions').select('*').order('created_at', { ascending: false }).limit(50);
         if (txList && txList.length > 0) {
           TRANSACTIONS = txList.map(t => ({
             id: t.id,
@@ -1279,7 +1279,7 @@
         }
 
         // 5. Retraits
-        const { data: wtdList } = await supabase.from('admin_withdrawals').select('*').order('created_at', { ascending: false });
+        const { data: wtdList } = await sbClient.from('admin_withdrawals').select('*').order('created_at', { ascending: false });
         if (wtdList && wtdList.length > 0) {
           ADMIN_WITHDRAWALS = wtdList.map(w => ({
             id: w.id,
@@ -1301,12 +1301,12 @@
 
     let adminRealtimeSubscription = null;
     function setupAdminRealtimeListeners() {
-      if (!supabase) return;
+      if (!sbClient) return;
       if (adminRealtimeSubscription) {
-        supabase.removeChannel(adminRealtimeSubscription);
+        sbClient.removeChannel(adminRealtimeSubscription);
       }
 
-      adminRealtimeSubscription = supabase.channel('admin:live_updates')
+      adminRealtimeSubscription = sbClient.channel('admin:live_updates')
         // Écoute des nouveaux achats de coins/VIP en direct
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'coin_transactions' }, payload => {
           const newTx = payload.new;
@@ -2026,8 +2026,8 @@
       saveAdminWithdrawals();
 
       // Supabase Remote Sync (si connecté en admin)
-      if (supabase) {
-        supabase.from('admin_withdrawals').insert({
+      if (sbClient) {
+        sbClient.from('admin_withdrawals').insert({
           id: newWithdrawal.id,
           method: newWithdrawal.method,
           recipient: newWithdrawal.recipient,
@@ -2039,7 +2039,7 @@
           if (error) console.error("Supabase insert admin_withdrawals error:", error);
         });
 
-        supabase.from('admin_ledger').update({
+        sbClient.from('admin_ledger').update({
           balance_usd: ADMIN_BALANCE
         }).eq('id', 'primary_ledger').then(({ error }) => {
           if (error) console.error("Supabase update admin_ledger error:", error);
@@ -2138,8 +2138,8 @@
       showToast(`🎬 Série "${title}" ajoutée avec succès !`);
       document.getElementById('form-drama-title').value = '';
 
-      if (supabase) {
-        supabase.from('series').insert({
+      if (sbClient) {
+        sbClient.from('series').insert({
           id: newDrama.id,
           title: newDrama.title,
           genre: newDrama.genre,
@@ -2171,8 +2171,8 @@
       renderAll();
       showToast(`✨ Série "${drama.title}" mise à jour !`);
 
-      if (supabase) {
-        supabase.from('series').update({
+      if (sbClient) {
+        sbClient.from('series').update({
           title: drama.title,
           cover_url: drama.cover,
           ep_count_text: drama.ep
@@ -2193,8 +2193,8 @@
       renderAll();
       showToast(`🗑️ Série "${title}" supprimée.`);
 
-      if (supabase) {
-        supabase.from('series').delete().eq('id', id).then(({ error }) => {
+      if (sbClient) {
+        sbClient.from('series').delete().eq('id', id).then(({ error }) => {
           if (error) console.error("Supabase delete series error:", error);
         });
       }
@@ -2237,8 +2237,8 @@
       showToast(`📖 Roman "${title}" publié !`);
       document.getElementById('form-novel-title').value = '';
 
-      if (supabase) {
-        supabase.from('novels').insert({
+      if (sbClient) {
+        sbClient.from('novels').insert({
           id: newNovel.id,
           title: newNovel.title,
           author: newNovel.author,
@@ -2275,8 +2275,8 @@
       renderAll();
       showToast(`✨ Roman "${novel.title}" mis à jour !`);
 
-      if (supabase) {
-        supabase.from('novels').update({
+      if (sbClient) {
+        sbClient.from('novels').update({
           title: novel.title,
           author: novel.author,
           cover_url: novel.cover
@@ -2297,8 +2297,8 @@
       renderAll();
       showToast(`🗑️ Roman "${title}" supprimé.`);
 
-      if (supabase) {
-        supabase.from('novels').delete().eq('id', id).then(({ error }) => {
+      if (sbClient) {
+        sbClient.from('novels').delete().eq('id', id).then(({ error }) => {
           if (error) console.error("Supabase delete novel error:", error);
         });
       }
