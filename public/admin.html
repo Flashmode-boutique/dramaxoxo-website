@@ -1275,7 +1275,30 @@
       "marie"
     ];
 
-    function checkAdminAuth() {
+    async function ensureAdminSession() {
+      if (!sbClient) return false;
+      try {
+        const { data } = await sbClient.auth.getSession();
+        if (data && data.session && data.session.user) {
+          return true;
+        }
+        const authRes = await sbClient.auth.signInWithPassword({
+          email: ADMIN_OFFICIAL_EMAIL,
+          password: 'admin2026'
+        });
+        if (authRes.error) {
+          console.warn("Échec connexion Supabase Admin:", authRes.error.message);
+          return false;
+        }
+        console.log("Session Admin Supabase active :", authRes.data.user.email);
+        return true;
+      } catch (err) {
+        console.warn("ensureAdminSession error:", err);
+        return false;
+      }
+    }
+
+    async function checkAdminAuth() {
       const isAuth = sessionStorage.getItem('dramaxoxo_admin_authenticated') === 'true';
       const gate = document.getElementById('admin-auth-gate');
       if (!gate) return;
@@ -1283,6 +1306,7 @@
         gate.style.setProperty('display', 'none', 'important');
         gate.classList.add('hidden');
         gate.classList.remove('flex');
+        await ensureAdminSession();
         loadRemoteSupabaseData();
         setupAdminRealtimeListeners();
       } else {
@@ -1337,24 +1361,7 @@
         // Connexion sécurisée asynchrone à Supabase Auth
         if (sbClient) {
           (async () => {
-            try {
-              let authRes = await sbClient.auth.signInWithPassword({
-                email: email,
-                password: pwd
-              });
-              if (authRes.error) {
-                // Tentative avec le compte admin confirmé
-                authRes = await sbClient.auth.signInWithPassword({
-                  email: ADMIN_OFFICIAL_EMAIL,
-                  password: 'admin2026'
-                });
-              }
-              if (!authRes.error && authRes.data && authRes.data.session) {
-                console.log("Session Admin Supabase active :", authRes.data.user.email);
-              }
-            } catch(err) {
-              console.warn("Supabase auth login notice:", err);
-            }
+            await ensureAdminSession();
             loadRemoteSupabaseData();
             setupAdminRealtimeListeners();
           })();
@@ -2340,6 +2347,7 @@
 
       try {
         if (!sbClient) throw new Error("Client Supabase non initialisé");
+        await ensureAdminSession();
 
         const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
         const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
@@ -2402,7 +2410,7 @@
     }
 
     // ================= CRUD DRAMAS & NOVELS =================
-    function createDrama() {
+    async function createDrama() {
       const title = document.getElementById('form-drama-title').value.trim();
       const genre = document.getElementById('form-drama-genre').value.trim();
       const ep = document.getElementById('form-drama-ep').value.trim();
@@ -2426,26 +2434,37 @@
       DRAMAS.unshift(newDrama);
       saveDramas();
       renderAll();
-      showToast(`🎬 Série "${title}" ajoutée avec succès !`);
       document.getElementById('form-drama-title').value = '';
       resetCoverUpload('drama');
 
       if (sbClient) {
-        sbClient.from('series').insert({
-          id: newDrama.id,
-          title: newDrama.title,
-          genre: newDrama.genre,
-          ep_count_text: newDrama.ep,
-          badge: newDrama.badge,
-          cover_url: newDrama.cover
-        }).then(({ error }) => {
-          if (error) console.error("Supabase insert series error:", error);
-          else console.log("Supabase insert series success:", newDrama.id);
-        });
+        try {
+          await ensureAdminSession();
+          const { error } = await sbClient.from('series').insert({
+            id: newDrama.id,
+            title: newDrama.title,
+            genre: newDrama.genre,
+            ep_count_text: newDrama.ep,
+            badge: newDrama.badge,
+            cover_url: newDrama.cover
+          });
+          if (error) {
+            console.error("Supabase insert series error:", error);
+            showToast(`⚠️ Erreur d'enregistrement Supabase : ${error.message}`, "❌");
+          } else {
+            console.log("Supabase insert series success:", newDrama.id);
+            showToast(`🎬 Série "${title}" publiée en direct sur le site et l'app !`, "✨");
+          }
+        } catch (err) {
+          console.error("Supabase series insert exception:", err);
+          showToast(`⚠️ Erreur réseau : ${err.message}`, "❌");
+        }
+      } else {
+        showToast(`🎬 Série "${title}" ajoutée localement`);
       }
     }
 
-    function editDrama(id) {
+    async function editDrama(id) {
       const drama = DRAMAS.find(d => d.id === id);
       if (!drama) return;
 
@@ -2461,20 +2480,30 @@
 
       saveDramas();
       renderAll();
-      showToast(`✨ Série "${drama.title}" mise à jour !`);
 
       if (sbClient) {
-        sbClient.from('series').update({
-          title: drama.title,
-          cover_url: drama.cover,
-          ep_count_text: drama.ep
-        }).eq('id', drama.id).then(({ error }) => {
-          if (error) console.error("Supabase update series error:", error);
-        });
+        try {
+          await ensureAdminSession();
+          const { error } = await sbClient.from('series').update({
+            title: drama.title,
+            cover_url: drama.cover,
+            ep_count_text: drama.ep
+          }).eq('id', id);
+          if (error) {
+            console.error("Supabase update series error:", error);
+            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
+          } else {
+            showToast(`✨ Série "${drama.title}" mise à jour en direct !`);
+          }
+        } catch (err) {
+          console.error("Supabase update series exception:", err);
+        }
+      } else {
+        showToast(`✨ Série "${drama.title}" mise à jour !`);
       }
     }
 
-    function deleteDrama(id) {
+    async function deleteDrama(id) {
       const idx = DRAMAS.findIndex(d => d.id === id);
       if (idx === -1) return;
       const title = DRAMAS[idx].title;
@@ -2483,16 +2512,26 @@
       DRAMAS.splice(idx, 1);
       saveDramas();
       renderAll();
-      showToast(`🗑️ Série "${title}" supprimée.`);
 
       if (sbClient) {
-        sbClient.from('series').delete().eq('id', id).then(({ error }) => {
-          if (error) console.error("Supabase delete series error:", error);
-        });
+        try {
+          await ensureAdminSession();
+          const { error } = await sbClient.from('series').delete().eq('id', id);
+          if (error) {
+            console.error("Supabase delete series error:", error);
+            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
+          } else {
+            showToast(`🗑️ Série "${title}" supprimée de la base.`);
+          }
+        } catch (err) {
+          console.error("Supabase delete series exception:", err);
+        }
+      } else {
+        showToast(`🗑️ Série "${title}" supprimée.`);
       }
     }
 
-    function createNovel() {
+    async function createNovel() {
       const title = document.getElementById('form-novel-title').value.trim();
       const author = document.getElementById('form-novel-author').value.trim();
       const genre = document.getElementById('form-novel-genre').value.trim();
@@ -2526,31 +2565,42 @@
       NOVELS.unshift(newNovel);
       saveNovels();
       renderAll();
-      showToast(`📖 Roman "${title}" publié !`);
       document.getElementById('form-novel-title').value = '';
       resetCoverUpload('novel');
 
       if (sbClient) {
-        sbClient.from('novels').insert({
-          id: newNovel.id,
-          title: newNovel.title,
-          author: newNovel.author,
-          genre: newNovel.genre,
-          status: newNovel.status,
-          rating: 4.9,
-          views: "10.2K",
-          chapters_count: newNovel.chaptersCount,
-          cover_url: newNovel.cover,
-          synopsis: newNovel.synopsis,
-          chapters_json: newNovel.chapters
-        }).then(({ error }) => {
-          if (error) console.error("Supabase insert novel error:", error);
-          else console.log("Supabase insert novel success:", newNovel.id);
-        });
+        try {
+          await ensureAdminSession();
+          const { error } = await sbClient.from('novels').insert({
+            id: newNovel.id,
+            title: newNovel.title,
+            author: newNovel.author,
+            genre: newNovel.genre,
+            status: newNovel.status,
+            rating: 4.9,
+            views: "10.2K",
+            chapters_count: newNovel.chaptersCount,
+            cover_url: newNovel.cover,
+            synopsis: newNovel.synopsis,
+            chapters_json: newNovel.chapters
+          });
+          if (error) {
+            console.error("Supabase insert novel error:", error);
+            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
+          } else {
+            console.log("Supabase insert novel success:", newNovel.id);
+            showToast(`📖 Roman "${title}" synchronisé en direct sur le site et l'app !`, "✨");
+          }
+        } catch (err) {
+          console.error("Supabase novel insert exception:", err);
+          showToast(`⚠️ Erreur réseau : ${err.message}`, "❌");
+        }
+      } else {
+        showToast(`📖 Roman "${title}" publié !`);
       }
     }
 
-    function editNovel(id) {
+    async function editNovel(id) {
       const novel = NOVELS.find(n => n.id === id);
       if (!novel) return;
 
@@ -2566,20 +2616,30 @@
 
       saveNovels();
       renderAll();
-      showToast(`✨ Roman "${novel.title}" mis à jour !`);
 
       if (sbClient) {
-        sbClient.from('novels').update({
-          title: novel.title,
-          author: novel.author,
-          cover_url: novel.cover
-        }).eq('id', novel.id).then(({ error }) => {
-          if (error) console.error("Supabase update novel error:", error);
-        });
+        try {
+          await ensureAdminSession();
+          const { error } = await sbClient.from('novels').update({
+            title: novel.title,
+            author: novel.author,
+            cover_url: novel.cover
+          }).eq('id', novel.id);
+          if (error) {
+            console.error("Supabase update novel error:", error);
+            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
+          } else {
+            showToast(`✨ Roman "${novel.title}" mis à jour en direct !`);
+          }
+        } catch (err) {
+          console.error("Supabase novel update exception:", err);
+        }
+      } else {
+        showToast(`✨ Roman "${novel.title}" mis à jour !`);
       }
     }
 
-    function deleteNovel(id) {
+    async function deleteNovel(id) {
       const idx = NOVELS.findIndex(n => n.id === id);
       if (idx === -1) return;
       const title = NOVELS[idx].title;
@@ -2588,12 +2648,22 @@
       NOVELS.splice(idx, 1);
       saveNovels();
       renderAll();
-      showToast(`🗑️ Roman "${title}" supprimé.`);
 
       if (sbClient) {
-        sbClient.from('novels').delete().eq('id', id).then(({ error }) => {
-          if (error) console.error("Supabase delete novel error:", error);
-        });
+        try {
+          await ensureAdminSession();
+          const { error } = await sbClient.from('novels').delete().eq('id', id);
+          if (error) {
+            console.error("Supabase delete novel error:", error);
+            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
+          } else {
+            showToast(`🗑️ Roman "${title}" supprimé de la base.`);
+          }
+        } catch (err) {
+          console.error("Supabase delete novel exception:", err);
+        }
+      } else {
+        showToast(`🗑️ Roman "${title}" supprimé.`);
       }
     }
 

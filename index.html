@@ -2538,7 +2538,7 @@
           <h4 style="font-size:13px; font-weight:800; color:#fff; margin-bottom:8px;">🎬 Séries Vidéo (${filteredDramas.length})</h4>
           <div class="drama-grid" style="margin-bottom:16px;">
             ${filteredDramas.map(d => `
-              <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+              <div class="drama-card" onclick="openDramaById('${d.id}')">
                 <div class="drama-thumb-wrapper">
                   <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                   <span class="drama-badge">${d.badge}</span>
@@ -2644,7 +2644,7 @@
           </div>
           <div class="drama-grid" style="margin-bottom:16px;">
             ${DRAMAS.map(d => `
-              <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+              <div class="drama-card" onclick="openDramaById('${d.id}')">
                 <div class="drama-thumb-wrapper">
                   <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                   <span class="drama-badge" style="background:#2563eb;">✨ NOUVEAU</span>
@@ -2697,7 +2697,7 @@
           </div>
           <div class="drama-grid" style="margin-bottom:16px;">
             ${DRAMAS.map((d, idx) => `
-              <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+              <div class="drama-card" onclick="openDramaById('${d.id}')">
                 <div class="drama-thumb-wrapper">
                   <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                   <span class="drama-badge" style="background:${idx === 0 ? '#fbbf24; color:#000;' : (idx === 1 ? '#94a3b8; color:#000;' : '#b45309; color:#fff;')} font-weight:900;">
@@ -2754,7 +2754,7 @@
             <div class="streaming-marquee-wrap">
               <div class="marquee-bg-track">
                 ${marqueeDramas.map(d => `
-                  <div class="marquee-poster" onclick="openVideoPlayer('${d.title}')" title="${d.title}">
+                  <div class="marquee-poster" onclick="openDramaById('${d.id}')" title="${d.title}">
                     <img src="${d.cover}" alt="${d.title}">
                     <div class="marquee-poster-overlay">
                       <span style="font-size:9px; font-weight:800; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,0.8);">${d.title}</span>
@@ -2783,7 +2783,7 @@
           </div>
           <div class="drama-grid">
             ${DRAMAS.map(d => `
-              <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+              <div class="drama-card" onclick="openDramaById('${d.id}')">
                 <div class="drama-thumb-wrapper">
                   <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                   <span class="drama-badge">${d.badge}</span>
@@ -2987,7 +2987,7 @@
           </div>
 
           <!-- Featured Drama Card (Top Recommendation) -->
-          <div style="position:relative; border-radius:16px; overflow:hidden; margin-bottom:12px; cursor:pointer; box-shadow:0 8px 25px rgba(0,0,0,0.6);" onclick="openVideoPlayer('${DRAMAS[0].title}')">
+          <div style="position:relative; border-radius:16px; overflow:hidden; margin-bottom:12px; cursor:pointer; box-shadow:0 8px 25px rgba(0,0,0,0.6);" onclick="openDramaById('${DRAMAS[0].id}')">
             <img src="${DRAMAS[0].cover}" style="width:100%; height:190px; object-fit:cover; display:block; filter:brightness(0.75);" alt="${DRAMAS[0].title}">
             <div style="position:absolute; top:10px; left:10px; background:#ff2a55; color:#fff; font-size:10px; font-weight:900; padding:3px 8px; border-radius:6px;">
               🔥 #1 RECOMMANDÉ
@@ -3008,7 +3008,7 @@
           <!-- Series Grid -->
           <div class="drama-grid">
             ${DRAMAS.slice(1).map(d => `
-              <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+              <div class="drama-card" onclick="openDramaById('${d.id}')">
                 <div class="drama-thumb-wrapper">
                   <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                   <span class="drama-badge">${d.badge}</span>
@@ -3296,7 +3296,7 @@
             
             <div class="drama-grid">
               ${MEMBERS_DRAMAS.map(d => `
-                <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+                <div class="drama-card" onclick="openDramaById('${d.id}')">
                   <div class="drama-thumb-wrapper">
                     <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                     <span class="drama-badge" style="background:#ff2a55;">👑 VIP</span>
@@ -3370,7 +3370,7 @@
         <div style="display:flex; flex-direction:column; gap:10px; padding-bottom:20px;">
           ${myListActiveTab === 'series' ? (
             DRAMAS.map(d => `
-              <div style="background:#151522; border-radius:14px; padding:10px; display:flex; gap:12px; align-items:center; border:1px solid #232336; cursor:pointer;" onclick="openVideoPlayer('${d.title}')">
+              <div style="background:#151522; border-radius:14px; padding:10px; display:flex; gap:12px; align-items:center; border:1px solid #232336; cursor:pointer;" onclick="openDramaById('${d.id}')">
                 <img src="${d.cover}" style="width:60px; height:84px; border-radius:8px; object-fit:cover;">
                 <div style="flex:1;">
                   <span style="background:#262638; color:#fbbf24; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px;">${d.badge}</span>
@@ -4973,6 +4973,12 @@
       switchBottomNav('vip');
     }
 
+    function openDramaById(id) {
+      const d = (typeof DRAMAS !== 'undefined' ? DRAMAS : []).find(item => item.id === id);
+      const title = d ? d.title : id;
+      openVideoPlayer(title);
+    }
+
     function openVideoPlayer(title) {
       showToast(`🎬 Lecture de "${title}" (Lecteur vidéo vertical actif)`);
     }
@@ -5029,7 +5035,7 @@
           <h5 style="font-size:12px; font-weight:700; color:#ff2a55; margin:10px 0 6px 0;">🎬 ${t('trendingDramas')} (${filteredDramas.length})</h5>
           <div class="drama-grid">
             ${filteredDramas.map(d => `
-              <div class="drama-card" onclick="openVideoPlayer('${d.title}')">
+              <div class="drama-card" onclick="openDramaById('${d.id}')">
                 <div class="drama-thumb-wrapper">
                   <img src="${d.cover}" class="drama-thumb" alt="${d.title}">
                   <span class="drama-badge">${d.badge}</span>
