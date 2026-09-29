@@ -4348,113 +4348,81 @@
       if (btn) {
         btn.disabled = true;
         btn.style.opacity = '0.9';
-        btn.innerHTML = `<span class="checkout-spinner"></span> <span>Traitement bancaire sécurisé...</span>`;
+        btn.innerHTML = `<span class="checkout-spinner"></span> <span>Connexion sécurisée à Stripe...</span>`;
       }
 
-      setTimeout(() => {
-        // Execute fulfillment
-        if (activeCheckoutItem.type === 'vip') {
-          isVip = true;
-          // Auto unlock all chapters for current active novel
-          if (typeof NOVELS !== 'undefined') {
-            NOVELS.forEach(n => {
-              for (let i = 1; i <= n.chaptersCount; i++) {
-                unlockedChapters.add(`${n.id}-ch-${i}`);
-              }
-            });
-          }
-        } else {
-          userCoins += coinsToAdd;
+      // Zero-Trust : Appel sécurisé à la fonction serveur pour générer la session Stripe Checkout
+      try {
+        const resp = await fetch('https://xylhadcuxgufqprjfjzt.supabase.co/functions/v1/create-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({
+            itemType: activeCheckoutItem.type,
+            planKey: activeCheckoutItem.planKey,
+            packIndex: activeCheckoutItem.packIndex,
+            userId: (typeof currentUser !== 'undefined' && currentUser && currentUser.id ? currentUser.id : null),
+            userEmail: (typeof currentUser !== 'undefined' && currentUser && currentUser.email ? currentUser.email : null),
+            returnUrl: window.location.origin + window.location.pathname
+          })
+        });
+
+        const data = await resp.json();
+        if (!resp.ok || !data.url) {
+          throw new Error(data.error || "Impossible d'initialiser le paiement bancaire");
         }
 
-        // Record financial transaction for Admin Studio Ledger & Supabase Server RPC
-        try {
-          let txs = JSON.parse(localStorage.getItem('dramaxoxo_transactions') || '[]');
-          const methodObj = cfg.methods.find(m => m.id === activePaymentMethod) || { name: 'Paiement Sécurisé', icon: '💳' };
-          const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
-
-          let priceUSD = 0.99;
-          if (activeCheckoutItem.type === 'vip') {
-            const plan = cfg.vipPlans[activeCheckoutItem.planKey] || cfg.vipPlans.monthly;
-            priceUSD = (currentCurrency === 'HTG' ? (activeCheckoutItem.planKey === 'weekly' ? 9.99 : (activeCheckoutItem.planKey === 'annual' ? 99.99 : 29.99)) : plan.price);
-          } else {
-            const pack = cfg.coinPacks[activeCheckoutItem.packIndex] || cfg.coinPacks[0];
-            priceUSD = (currentCurrency === 'HTG' ? [0.99, 4.99, 9.99, 24.99][activeCheckoutItem.packIndex] || 0.99 : pack.price);
-          }
-
-          const newTx = {
-            id: txId,
-            type: activeCheckoutItem.type === 'vip' ? 'VIP' : 'COINS',
-            user: (typeof currentUser !== 'undefined' && currentUser && currentUser.name) ? currentUser.name : 'Spectateur Invité',
-            amount: amountFormatted,
-            currency: cfg.code,
-            method: `${methodObj.icon} ${methodObj.name}`,
-            country: cfg.flag + ' ' + cfg.countryName,
-            item: itemName,
-            unlocked: '🔓 Épisodes et chapitres payants débloqués automatiquement sans frais',
-            date: 'À l\'instant'
-          };
-          txs.unshift(newTx);
-          localStorage.setItem('dramaxoxo_transactions', JSON.stringify(txs));
-
-          // Supabase Server-Side Atomic RPC Execution
-          if (sbClient) {
-            sbClient.rpc('process_coin_purchase', {
-              p_tx_id: txId,
-              p_user_id: null,
-              p_user_name: newTx.user,
-              p_tx_type: newTx.type,
-              p_amount_usd: priceUSD,
-              p_amount_display: amountFormatted,
-              p_currency: cfg.code,
-              p_coins_credited: activeCheckoutItem.type === 'vip' ? 0 : coinsToAdd,
-              p_payment_method: newTx.method,
-              p_country: newTx.country,
-              p_item_name: itemName
-            }).then(({ data, error }) => {
-              if (error) console.error("Supabase process_coin_purchase error:", error);
-              else console.log("Supabase process_coin_purchase success:", data);
-            });
-          }
-        } catch(e) {}
-
-        // Replace modal content with celebratory success animation
-        const formContainer = document.getElementById('checkout-form-container');
-        if (formContainer) {
-          formContainer.innerHTML = `
-            <div style="text-align:center; padding:16px 0;">
-              <div style="width:54px; height:54px; background:linear-gradient(135deg, #10b981, #059669); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px auto; font-size:26px; color:#fff; box-shadow:0 6px 20px rgba(16,185,129,0.4);">
-                ✓
-              </div>
-              <h3 style="font-size:16px; font-weight:900; color:#fff; margin:0 0 4px 0;">🎉 PAIEMENT VALIDÉ AVEC SUCCÈS !</h3>
-              <p style="font-size:11px; color:#10b981; font-weight:700; margin:0 0 6px 0;">Transaction #${Math.floor(100000 + Math.random() * 900000)} approuvée</p>
-              <p style="font-size:11px; color:#d1d5db; margin:0;">
-                ${activeCheckoutItem.type === 'vip' ? 
-                  '👑 Votre adhésion VIP Illimitée est active. Toutes les séries et romans sont débloqués !' : 
-                  `🪙 +${coinsToAdd} Pièces ajoutées avec succès à votre solde !`}
-              </p>
-            </div>
-          `;
-        }
-
+        // Redirection vers la passerelle officielle Stripe (Apple Pay, Google Pay, Carte)
+        window.location.href = data.url;
+      } catch (err) {
+        console.error("Erreur création session Stripe:", err);
         if (btn) {
-          btn.innerHTML = `<span>✓ Terminé</span>`;
-          btn.style.background = '#10b981';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.innerHTML = origHtml;
+        }
+        showToast("⚠️ " + (err.message || "Erreur de connexion bancaire"), "❌");
+      }
+    }
+
+    async function checkPaymentReturnStatus() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paymentStatus = urlParams.get('payment');
+      const sessionId = urlParams.get('session_id');
+
+      if (paymentStatus === 'success' && sessionId) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showToast("💳 Paiement reçu ! Vérification avec la banque...", "⏳");
+
+        // Vérification Zero-Trust : Ne créditer QUE si le webhook serveur l'a validé
+        let verified = false;
+        for (let i = 0; i < 8; i++) {
+          if (!sbClient) break;
+          const { data: tx } = await sbClient.from('coin_transactions').select('*').eq('id', sessionId).maybeSingle();
+          if (tx) {
+            verified = true;
+            if (tx.tx_type === 'VIP') {
+              isVip = true;
+              showToast("👑 Votre adhésion VIP Illimitée est confirmée par la banque !", "🎉");
+            } else {
+              userCoins += (tx.coins_credited || 0);
+              showToast(`🪙 +${tx.coins_credited} Pièces créditées avec succès après confirmation bancaire !`, "🎉");
+            }
+            refreshCurrentScreen();
+            break;
+          }
+          await new Promise(r => setTimeout(r, 1500));
         }
 
-        setTimeout(() => {
-          closeModal('modal-payment-checkout');
-          if (btn) {
-            btn.disabled = false;
-            btn.style.opacity = '1';
-            btn.innerHTML = origHtml;
-            btn.style.background = 'linear-gradient(135deg, #ff2a55, #f43f5e)';
-          }
-          showToast(`🎉 Félicitations ! ${itemName} activé avec succès (${amountFormatted}).`);
-          refreshCurrentScreen();
-        }, 1400);
-
-      }, 1100);
+        if (!verified) {
+          showToast("ℹ️ Votre paiement est en cours de validation par Stripe. Votre compte sera crédité sous peu.", "⏳");
+        }
+      } else if (paymentStatus === 'cancelled') {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showToast("Paiement annulé. Aucun prélèvement bancaire effectué.", "ℹ️");
+      }
     }
 
     function openDailyRewardsModal() {
@@ -5055,6 +5023,7 @@
     checkVisitorOnboarding();
     syncRemoteCatalog();
     setupClientRealtime();
+    checkPaymentReturnStatus();
   </script>
 </body>
 </html>
