@@ -1279,21 +1279,32 @@
       if (!sbClient) return false;
       try {
         const { data } = await sbClient.auth.getSession();
-        if (data && data.session && data.session.user) {
-          return true;
+        const userEmail = data && data.session && data.session.user ? data.session.user.email : null;
+        
+        if (userEmail === ADMIN_OFFICIAL_EMAIL) {
+          const now = Math.floor(Date.now() / 1000);
+          if (data.session.expires_at && data.session.expires_at > (now + 60)) {
+            return true;
+          }
         }
+
+        if (userEmail && userEmail !== ADMIN_OFFICIAL_EMAIL) {
+          console.log("Remplacement de session non-admin (" + userEmail + ") par l'admin officiel");
+          await sbClient.auth.signOut();
+        }
+
         const authRes = await sbClient.auth.signInWithPassword({
           email: ADMIN_OFFICIAL_EMAIL,
           password: 'admin2026'
         });
         if (authRes.error) {
-          console.warn("Échec connexion Supabase Admin:", authRes.error.message);
+          console.error("Échec connexion Supabase Admin:", authRes.error.message);
           return false;
         }
         console.log("Session Admin Supabase active :", authRes.data.user.email);
         return true;
       } catch (err) {
-        console.warn("ensureAdminSession error:", err);
+        console.error("ensureAdminSession error:", err);
         return false;
       }
     }
@@ -1392,37 +1403,74 @@
           saveAdminBalance();
         }
 
-        // 2. Séries
+        // 2. Séries : Chargement & Auto-sync des séries locales en attente
         const { data: seriesList } = await sbClient.from('series').select('*').order('created_at', { ascending: false });
-        if (seriesList && seriesList.length > 0) {
-          DRAMAS = seriesList.map(s => ({
-            id: s.id,
-            title: s.title,
-            genre: s.genre,
-            ep: s.ep_count_text,
-            badge: s.badge || 'HD',
-            cover: s.cover_url
-          }));
-          saveDramas();
+        if (seriesList) {
+          const remoteIds = new Set(seriesList.map(s => s.id));
+          const pendingSync = DRAMAS.filter(d => !remoteIds.has(d.id) && !d.id.startsWith('d-'));
+          for (const pending of pendingSync) {
+            console.log("Auto-synchronisation vers Supabase de la série locale :", pending.title);
+            await sbClient.from('series').insert({
+              id: pending.id,
+              title: pending.title,
+              genre: pending.genre,
+              ep_count_text: pending.ep,
+              badge: pending.badge || 'NEW',
+              cover_url: pending.cover
+            });
+          }
+          const { data: updatedSeries } = await sbClient.from('series').select('*').order('created_at', { ascending: false });
+          if (updatedSeries && updatedSeries.length > 0) {
+            DRAMAS = updatedSeries.map(s => ({
+              id: s.id,
+              title: s.title,
+              genre: s.genre,
+              ep: s.ep_count_text,
+              badge: s.badge || 'HD',
+              cover: s.cover_url
+            }));
+            saveDramas();
+          }
         }
 
-        // 3. Romans
+        // 3. Romans : Chargement & Auto-sync des romans locaux en attente
         const { data: novelsList } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
-        if (novelsList && novelsList.length > 0) {
-          NOVELS = novelsList.map(n => ({
-            id: n.id,
-            title: n.title,
-            author: n.author,
-            genre: n.genre,
-            status: n.status || 'En cours',
-            rating: n.rating ? n.rating.toString() : '4.9',
-            views: n.views || '150K',
-            chaptersCount: n.chapters_count || 30,
-            cover: n.cover_url,
-            synopsis: n.synopsis,
-            chapters: n.chapters_json || []
-          }));
-          saveNovels();
+        if (novelsList) {
+          const remoteNovelIds = new Set(novelsList.map(n => n.id));
+          const pendingNovels = NOVELS.filter(n => !remoteNovelIds.has(n.id) && !n.id.startsWith('nov-1') && !n.id.startsWith('nov-2') && !n.id.startsWith('nov-3') && !n.id.startsWith('nov-4'));
+          for (const pending of pendingNovels) {
+            console.log("Auto-synchronisation vers Supabase du roman local :", pending.title);
+            await sbClient.from('novels').insert({
+              id: pending.id,
+              title: pending.title,
+              author: pending.author,
+              genre: pending.genre,
+              status: pending.status,
+              rating: 4.9,
+              views: "10.2K",
+              chapters_count: pending.chaptersCount,
+              cover_url: pending.cover,
+              synopsis: pending.synopsis,
+              chapters_json: pending.chapters
+            });
+          }
+          const { data: updatedNovels } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
+          if (updatedNovels && updatedNovels.length > 0) {
+            NOVELS = updatedNovels.map(n => ({
+              id: n.id,
+              title: n.title,
+              author: n.author,
+              genre: n.genre,
+              status: n.status || 'En cours',
+              rating: n.rating ? n.rating.toString() : '4.9',
+              views: n.views || '150K',
+              chaptersCount: n.chapters_count || 30,
+              cover: n.cover_url,
+              synopsis: n.synopsis,
+              chapters: n.chapters_json || []
+            }));
+            saveNovels();
+          }
         }
 
         // 4. Transactions financières
@@ -2431,12 +2479,6 @@
         cover: cover || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60"
       };
 
-      DRAMAS.unshift(newDrama);
-      saveDramas();
-      renderAll();
-      document.getElementById('form-drama-title').value = '';
-      resetCoverUpload('drama');
-
       if (sbClient) {
         try {
           await ensureAdminSession();
@@ -2450,18 +2492,22 @@
           });
           if (error) {
             console.error("Supabase insert series error:", error);
-            showToast(`⚠️ Erreur d'enregistrement Supabase : ${error.message}`, "❌");
-          } else {
-            console.log("Supabase insert series success:", newDrama.id);
-            showToast(`🎬 Série "${title}" publiée en direct sur le site et l'app !`, "✨");
+            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
+            return;
           }
         } catch (err) {
           console.error("Supabase series insert exception:", err);
           showToast(`⚠️ Erreur réseau : ${err.message}`, "❌");
+          return;
         }
-      } else {
-        showToast(`🎬 Série "${title}" ajoutée localement`);
       }
+
+      DRAMAS.unshift(newDrama);
+      saveDramas();
+      renderAll();
+      document.getElementById('form-drama-title').value = '';
+      resetCoverUpload('drama');
+      showToast(`🎬 Série "${title}" publiée en direct sur le site et l'app !`, "✨");
     }
 
     async function editDrama(id) {
@@ -2562,12 +2608,6 @@
         ]
       };
 
-      NOVELS.unshift(newNovel);
-      saveNovels();
-      renderAll();
-      document.getElementById('form-novel-title').value = '';
-      resetCoverUpload('novel');
-
       if (sbClient) {
         try {
           await ensureAdminSession();
@@ -2587,17 +2627,21 @@
           if (error) {
             console.error("Supabase insert novel error:", error);
             showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
-          } else {
-            console.log("Supabase insert novel success:", newNovel.id);
-            showToast(`📖 Roman "${title}" synchronisé en direct sur le site et l'app !`, "✨");
+            return;
           }
         } catch (err) {
           console.error("Supabase novel insert exception:", err);
           showToast(`⚠️ Erreur réseau : ${err.message}`, "❌");
+          return;
         }
-      } else {
-        showToast(`📖 Roman "${title}" publié !`);
       }
+
+      NOVELS.unshift(newNovel);
+      saveNovels();
+      renderAll();
+      document.getElementById('form-novel-title').value = '';
+      resetCoverUpload('novel');
+      showToast(`📖 Roman "${title}" synchronisé en direct sur le site et l'app !`, "✨");
     }
 
     async function editNovel(id) {
