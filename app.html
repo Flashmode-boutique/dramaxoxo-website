@@ -4353,11 +4353,12 @@
 
       // Zero-Trust : Appel sécurisé à la fonction serveur pour générer la session Stripe Checkout
       try {
-        const resp = await fetch('https://xylhadcuxgufqprjfjzt.supabase.co/functions/v1/create-checkout', {
+        const resp = await fetch('https://xylhadcuxgufqprjfjzt.supabase.co/functions/v1/smooth-processor', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': SUPABASE_ANON_KEY
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
           },
           body: JSON.stringify({
             itemType: activeCheckoutItem.type,
