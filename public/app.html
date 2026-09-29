@@ -4313,7 +4313,7 @@
       return { valid: true };
     }
 
-    function processPaymentCheckout() {
+    async function processPaymentCheckout() {
       // 1. Run autonomous validation check
       var validation = validatePaymentDetails(activePaymentMethod);
       if (!validation.valid) {
