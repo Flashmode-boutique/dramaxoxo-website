@@ -322,20 +322,29 @@
           </div>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Revenu Brut Global</p>
+        <div onclick="switchTab('finance')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-emerald-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+          <div class="flex justify-between items-center">
+            <p class="text-[11px] text-slate-400 group-hover:text-emerald-300 font-semibold transition">Revenu Brut Global</p>
+            <span class="text-[10px] text-slate-500 group-hover:text-emerald-400 font-bold transition">Voir ›</span>
+          </div>
           <h3 class="text-2xl font-black text-white" id="stat-revenue-total">124 850,00 $</h3>
           <p class="text-[10px] text-emerald-400">↑ +48% ce mois</p>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Royalties Créateurs (70%)</p>
+        <div onclick="switchTab('creators')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-purple-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+          <div class="flex justify-between items-center">
+            <p class="text-[11px] text-slate-400 group-hover:text-purple-300 font-semibold transition">Royalties Créateurs (70%)</p>
+            <span class="text-[10px] text-slate-500 group-hover:text-purple-400 font-bold transition">Gérer ›</span>
+          </div>
           <h3 class="text-2xl font-black text-purple-400" id="stat-royalties-total">32 670,00 $</h3>
           <p class="text-[10px] text-purple-300">À reverser aux auteurs & studios</p>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Candidatures en Attente</p>
+        <div onclick="switchTab('creators')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-amber-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+          <div class="flex justify-between items-center">
+            <p class="text-[11px] text-slate-400 group-hover:text-amber-300 font-semibold transition">Candidatures en Attente</p>
+            <span class="text-[10px] text-slate-500 group-hover:text-amber-400 font-bold transition">Modérer ›</span>
+          </div>
           <h3 class="text-2xl font-black text-amber-400" id="stat-pending-creators">0</h3>
           <p class="text-[10px] text-amber-300">À modérer aujourd'hui</p>
         </div>
@@ -343,12 +352,13 @@
 
       <!-- Quick Shortcuts -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
-          <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>🎬</span> Catalogue Séries & Romans
+        <div onclick="switchTab('dramas')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-rose-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>🎬</span> Catalogue Séries & Romans</span>
+            <span class="text-[10px] text-rose-400 font-bold">Ouvrir ›</span>
           </h3>
           <p class="text-xs text-slate-400"><span id="stat-dramas-count">0</span> Séries actives • <span id="stat-novels-count">0</span> Romans en ligne.</p>
-          <div class="flex gap-2">
+          <div class="flex gap-2" onclick="event.stopPropagation()">
             <button onclick="switchTab('dramas')" class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition">
               Séries ›
             </button>
@@ -358,9 +368,10 @@
           </div>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
-          <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>📝</span> Modération & Thrillers
+        <div onclick="switchTab('creators')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-amber-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>📝</span> Modération & Thrillers</span>
+            <span class="text-[10px] text-amber-400 font-bold">Ouvrir ›</span>
           </h3>
           <p class="text-xs text-slate-400">Visualisez les trailers vidéo et lisez les manuscrits soumis avant d'approuver.</p>
           <button onclick="switchTab('creators')" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">
@@ -368,12 +379,13 @@
           </button>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
-          <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>💰</span> Finances & Retraits Admin
+        <div onclick="switchTab('finance')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-emerald-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>💰</span> Finances & Retraits Admin</span>
+            <span class="text-[10px] text-emerald-400 font-bold">Détails ›</span>
           </h3>
           <p class="text-xs text-slate-400">Solde disponible : <strong class="text-emerald-400 font-bold" id="shortcut-admin-bal">$77,980.49</strong>. Retraits PayPal, Payoneer, Virement & Crypto.</p>
-          <div class="flex gap-2">
+          <div class="flex gap-2" onclick="event.stopPropagation()">
             <button onclick="openWithdrawModal()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-1">
               <span>💸</span> Retirer
             </button>
@@ -1780,7 +1792,7 @@
       if (marqueeTrack) {
         const list = DRAMAS.concat(DRAMAS);
         marqueeTrack.innerHTML = list.map(d => `
-          <div class="admin-poster-card" title="${d.title}">
+          <div class="admin-poster-card cursor-pointer" onclick="switchTab('dramas')" title="${d.title} (Cliquer pour gérer)">
             <img src="${d.cover}" alt="${d.title}">
             <div class="poster-overlay">
               <span class="text-[9px] font-bold text-white truncate">${d.title}</span>
