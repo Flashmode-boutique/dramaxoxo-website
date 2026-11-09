@@ -918,6 +918,105 @@
   </div>
 
   <!-- ========================================================================= -->
+  <!-- MODAL: GESTION & ÉDITION COMPLÈTE DU ROMAN + CHAPITRES -->
+  <!-- ========================================================================= -->
+  <div id="modal-novel-edit" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-[#141422] border border-purple-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+      <button onclick="closeNovelEditModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#202032] hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition">
+        ✕
+      </button>
+
+      <div class="flex items-center gap-3 pr-8">
+        <div class="w-12 h-12 rounded-2xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-2xl border border-purple-500/30 flex-shrink-0">
+          📖
+        </div>
+        <div>
+          <span class="text-[9px] bg-purple-500/20 text-purple-300 font-black px-2 py-0.5 rounded-full border border-purple-500/30">ÉDITEUR OFFICIEL DE ROMAN</span>
+          <h3 id="novel-edit-header-title" class="text-base sm:text-lg font-black text-white mt-1">Modifier le Roman</h3>
+        </div>
+      </div>
+
+      <input type="hidden" id="novel-edit-id" />
+
+      <!-- Formulaire principal -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Titre du Roman *</label>
+          <input id="novel-edit-title" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Auteur *</label>
+          <input id="novel-edit-author" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Genre *</label>
+          <input id="novel-edit-genre" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Statut de Publication *</label>
+          <select id="novel-edit-status" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white font-bold outline-none focus:border-purple-500">
+            <option value="En cours">⏳ En cours</option>
+            <option value="Terminé">✅ Terminé</option>
+          </select>
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-slate-300 font-bold mb-1">URL de Couverture</label>
+          <input id="novel-edit-cover" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500 font-mono text-[11px]" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-slate-300 font-bold mb-1">Synopsis / Résumé</label>
+          <textarea id="novel-edit-synopsis" rows="2" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500"></textarea>
+        </div>
+      </div>
+
+      <!-- Section Chapitres Existants -->
+      <div class="border-t border-white/10 pt-4 space-y-3">
+        <div class="flex justify-between items-center">
+          <h4 class="font-bold text-xs text-white flex items-center gap-1.5">
+            <span>📑</span> Chapitres du Roman (<span id="novel-edit-chapters-count">0</span>)
+          </h4>
+          <span class="text-[10px] text-slate-400">Les lecteurs y accèdent directement</span>
+        </div>
+        <div id="novel-edit-chapters-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- Section Ajouter un Nouveau Chapitre -->
+      <div class="bg-[#10101C] p-4 rounded-2xl border border-purple-500/20 space-y-3">
+        <h5 class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+          <span>➕</span> Ajouter un Nouveau Chapitre
+        </h5>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+          <div class="sm:col-span-2">
+            <input id="novel-new-ch-title" placeholder="Titre (ex: Chapitre 2 : La Rencontre)" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2 text-white outline-none focus:border-purple-500" />
+          </div>
+          <div>
+            <select id="novel-new-ch-free" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-purple-500 text-xs">
+              <option value="true">Gratuit</option>
+              <option value="false">Verrouillé (15 Pièces / VIP)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-3">
+            <textarea id="novel-new-ch-content" rows="3" placeholder="Contenu intégral du chapitre..." class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2 text-white outline-none focus:border-purple-500 text-xs"></textarea>
+          </div>
+        </div>
+        <button type="button" onclick="addChapterToCurrentNovel()" class="py-2 px-4 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs transition flex items-center gap-1.5">
+          <span>+</span> Insérer ce Chapitre dans le Roman
+        </button>
+      </div>
+
+      <!-- Boutons d'Action -->
+      <div class="flex gap-2 pt-2">
+        <button onclick="closeNovelEditModal()" class="flex-1 py-3 rounded-xl bg-[#202032] hover:bg-[#2a2a42] text-slate-300 hover:text-white font-bold text-xs transition">
+          Annuler
+        </button>
+        <button onclick="saveNovelEditModal()" class="flex-1 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition shadow-lg shadow-purple-600/30">
+          Enregistrer les Modifications
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- MODAL: RETRAIT DE FONDS ADMINISTRATEUR (Marie Stanley) -->
   <!-- ========================================================================= -->
   <div id="modal-admin-withdraw" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -1891,27 +1990,35 @@
       // Novels Grid
       const novelsGrid = document.getElementById('novels-grid');
       if (novelsGrid) {
-        novelsGrid.innerHTML = NOVELS.map(n => `
-          <div class="bg-[#161624] p-4 rounded-2xl border border-white/5 flex gap-3.5 items-start">
-            <img src="${n.cover}" class="w-16 h-22 rounded-xl object-cover flex-shrink-0 border border-white/10" alt="${n.title}">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-1">
-                <h4 class="font-bold text-xs text-white truncate">${n.title}</h4>
-                <span class="text-[9px] font-bold text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded">${n.status}</span>
-              </div>
-              <p class="text-[10px] text-slate-400 mt-0.5 truncate">✍️ ${n.author} • ⭐ ${n.rating} • ${n.chaptersCount} chapitres</p>
-              <p class="text-[10px] text-slate-400 mt-1 line-clamp-2">${n.synopsis || ''}</p>
-              <div class="flex gap-2 mt-2.5">
-                <button onclick="editNovel('${n.id}')" class="text-[10px] font-bold bg-[#252538] hover:bg-[#32324b] text-slate-200 px-2.5 py-1 rounded-lg transition">
-                  ✏️ Modifier
-                </button>
-                <button onclick="deleteNovel('${n.id}')" class="text-[10px] font-bold bg-rose-900/30 hover:bg-rose-600 text-rose-300 hover:text-white px-2.5 py-1 rounded-lg transition">
-                  🗑️ Supprimer
-                </button>
+        novelsGrid.innerHTML = NOVELS.map(n => {
+          const chCount = (n.chapters && Array.isArray(n.chapters)) ? n.chapters.length : (n.chaptersCount || 0);
+          const isCompleted = n.status === "Terminé";
+          const statusBadge = isCompleted 
+            ? "text-emerald-300 bg-emerald-500/20 border-emerald-500/30" 
+            : "text-amber-300 bg-amber-500/20 border-amber-500/30";
+
+          return `
+            <div class="bg-[#161624] p-4 rounded-2xl border border-white/5 hover:border-purple-500/30 transition flex gap-3.5 items-start">
+              <img src="${n.cover}" class="w-16 h-22 rounded-xl object-cover flex-shrink-0 border border-white/10 shadow" alt="${n.title}">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1">
+                  <h4 class="font-bold text-xs text-white truncate">${n.title}</h4>
+                  <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusBadge}">${n.status}</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5 truncate">✍️ ${n.author} • ⭐ ${n.rating} • ${chCount} chapitres</p>
+                <p class="text-[10px] text-slate-400 mt-1 line-clamp-2">${n.synopsis || ''}</p>
+                <div class="flex flex-wrap gap-2 mt-2.5">
+                  <button onclick="openNovelEditModal('${n.id}')" class="text-[10px] font-bold bg-purple-600/30 hover:bg-purple-600 text-purple-200 hover:text-white px-2.5 py-1 rounded-lg border border-purple-500/30 transition flex items-center gap-1">
+                    <span>✏️</span> Modifier & Chapitres
+                  </button>
+                  <button onclick="deleteNovel('${n.id}')" class="text-[10px] font-bold bg-rose-900/30 hover:bg-rose-600 text-rose-300 hover:text-white px-2.5 py-1 rounded-lg transition">
+                    🗑️ Supprimer
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
 
       // Creators Applications
@@ -2771,43 +2878,182 @@
       showToast(`📖 Roman "${title}" publié et disponible avec succès !`, "✨");
     }
 
-    async function editNovel(id) {
+    // ================= ÉDITEUR MODAL COMPLET DE ROMAN & CHAPITRES =================
+    let currentEditingNovel = null;
+
+    function openNovelEditModal(id) {
       const novel = NOVELS.find(n => n.id === id);
       if (!novel) return;
 
-      const newTitle = prompt("Modifier le titre du roman :", novel.title);
-      if (newTitle === null) return;
-      const newAuthor = prompt("Modifier l'auteur :", novel.author);
-      if (newAuthor === null) return;
-      const newCover = prompt("Modifier l'URL de couverture :", novel.cover);
+      currentEditingNovel = JSON.parse(JSON.stringify(novel)); // Clone pour modifications
+      if (!currentEditingNovel.chapters) currentEditingNovel.chapters = [];
 
-      novel.title = newTitle.trim() || novel.title;
-      novel.author = newAuthor.trim() || novel.author;
-      if (newCover) novel.cover = newCover.trim();
+      document.getElementById('novel-edit-id').value = novel.id;
+      document.getElementById('novel-edit-header-title').innerText = `Modifier : ${novel.title}`;
+      document.getElementById('novel-edit-title').value = novel.title || '';
+      document.getElementById('novel-edit-author').value = novel.author || '';
+      document.getElementById('novel-edit-genre').value = novel.genre || '';
+      document.getElementById('novel-edit-status').value = novel.status || 'En cours';
+      document.getElementById('novel-edit-cover').value = novel.cover || '';
+      document.getElementById('novel-edit-synopsis').value = novel.synopsis || '';
+
+      // Reset new chapter fields
+      document.getElementById('novel-new-ch-title').value = '';
+      document.getElementById('novel-new-ch-content').value = '';
+      document.getElementById('novel-new-ch-free').value = 'true';
+
+      renderNovelEditChapters();
+
+      const modal = document.getElementById('modal-novel-edit');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeNovelEditModal() {
+      const modal = document.getElementById('modal-novel-edit');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      currentEditingNovel = null;
+    }
+
+    function renderNovelEditChapters() {
+      if (!currentEditingNovel) return;
+      const countEl = document.getElementById('novel-edit-chapters-count');
+      const listEl = document.getElementById('novel-edit-chapters-list');
+      if (!listEl) return;
+
+      const chapters = currentEditingNovel.chapters || [];
+      if (countEl) countEl.innerText = chapters.length;
+
+      if (chapters.length === 0) {
+        listEl.innerHTML = `
+          <div class="p-3 bg-[#161624] rounded-xl border border-white/5 text-center text-slate-400 text-xs">
+            Aucun chapitre pour le moment. Utilisez le formulaire ci-dessous pour ajouter le Chapitre 1 ou les suivants !
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = chapters.map((ch, idx) => `
+        <div class="bg-[#161624] p-3 rounded-xl border border-white/5 flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-6 h-6 rounded-lg bg-purple-600/30 text-purple-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">
+              ${ch.num || (idx + 1)}
+            </span>
+            <div class="truncate">
+              <p class="font-bold text-white truncate">${ch.title || `Chapitre ${ch.num || (idx + 1)}`}</p>
+              <p class="text-[10px] text-slate-400">
+                ${ch.isFree ? '<span class="text-emerald-400 font-semibold">✓ Gratuit</span>' : '<span class="text-amber-400 font-semibold">🔒 15 Pièces</span>'} 
+                • ${(ch.content || '').length} caractères
+              </p>
+            </div>
+          </div>
+          <button type="button" onclick="deleteChapterFromNovel(${idx})" class="text-[10px] text-rose-400 hover:text-rose-300 font-bold px-2 py-1 bg-rose-500/10 hover:bg-rose-500/20 rounded-lg transition">
+            Supprimer
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function addChapterToCurrentNovel() {
+      if (!currentEditingNovel) return;
+      const titleInput = document.getElementById('novel-new-ch-title');
+      const contentInput = document.getElementById('novel-new-ch-content');
+      const freeSelect = document.getElementById('novel-new-ch-free');
+
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+      const isFree = freeSelect.value === 'true';
+
+      if (!content) {
+        showToast("Veuillez saisir le texte ou contenu du chapitre", "⚠️");
+        return;
+      }
+
+      const nextNum = (currentEditingNovel.chapters.length || 0) + 1;
+      const newCh = {
+        id: `${currentEditingNovel.id}-ch-${Date.now()}`,
+        num: nextNum,
+        title: title || `Chapitre ${nextNum}`,
+        isFree: isFree,
+        content: content
+      };
+
+      currentEditingNovel.chapters.push(newCh);
+      renderNovelEditChapters();
+
+      titleInput.value = '';
+      contentInput.value = '';
+      showToast(`✅ ${newCh.title} ajouté au roman !`, "📑");
+    }
+
+    function deleteChapterFromNovel(index) {
+      if (!currentEditingNovel || !currentEditingNovel.chapters) return;
+      currentEditingNovel.chapters.splice(index, 1);
+      // Ré-indexer
+      currentEditingNovel.chapters.forEach((ch, i) => { ch.num = i + 1; });
+      renderNovelEditChapters();
+      showToast("Chapitre retiré", "🗑️");
+    }
+
+    async function saveNovelEditModal() {
+      if (!currentEditingNovel) return;
+      const id = currentEditingNovel.id;
+      const target = NOVELS.find(n => n.id === id);
+      if (!target) return;
+
+      const title = document.getElementById('novel-edit-title').value.trim();
+      const author = document.getElementById('novel-edit-author').value.trim();
+      const genre = document.getElementById('novel-edit-genre').value.trim();
+      const status = document.getElementById('novel-edit-status').value;
+      const cover = document.getElementById('novel-edit-cover').value.trim();
+      const synopsis = document.getElementById('novel-edit-synopsis').value.trim();
+
+      if (!title) {
+        showToast("Le titre ne peut pas être vide", "⚠️");
+        return;
+      }
+
+      target.title = title;
+      target.author = author || target.author;
+      target.genre = genre || target.genre;
+      target.status = status;
+      if (cover) target.cover = cover;
+      target.synopsis = synopsis || target.synopsis;
+      target.chapters = currentEditingNovel.chapters;
+      target.chaptersCount = target.chapters.length;
 
       saveNovels();
       renderAll();
+      closeNovelEditModal();
 
       if (sbClient) {
         try {
           await ensureAdminSession();
-          const { error } = await sbClient.from('novels').update({
-            title: novel.title,
-            author: novel.author,
-            cover_url: novel.cover
-          }).eq('id', novel.id);
-          if (error) {
-            console.error("Supabase update novel error:", error);
-            showToast(`⚠️ Erreur Supabase : ${error.message}`, "❌");
-          } else {
-            showToast(`✨ Roman "${novel.title}" mis à jour en direct !`);
-          }
+          await sbClient.from('novels').update({
+            title: target.title,
+            author: target.author,
+            genre: target.genre,
+            status: target.status,
+            cover_url: target.cover,
+            synopsis: target.synopsis,
+            chapters_count: target.chaptersCount,
+            chapters_json: target.chapters
+          }).eq('id', target.id);
         } catch (err) {
-          console.error("Supabase novel update exception:", err);
+          console.warn("Supabase update novel exception non-bloquante:", err);
         }
-      } else {
-        showToast(`✨ Roman "${novel.title}" mis à jour !`);
       }
+
+      showToast(`✨ Roman "${target.title}" mis à jour avec succès (${target.chaptersCount} chapitres, Statut: ${target.status}) !`, "🎉");
+    }
+
+    function editNovel(id) {
+      openNovelEditModal(id);
     }
 
     async function deleteNovel(id) {
