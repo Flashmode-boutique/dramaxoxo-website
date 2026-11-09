@@ -2341,6 +2341,39 @@
     let NOVELS = loadStoredNovels();
     let heroConfig = loadStoredHero();
 
+    // Synchronisation en direct entre onglets (Admin -> Visiteur)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'dramaxoxo_novels' && e.newValue) {
+        try {
+          NOVELS = JSON.parse(e.newValue);
+          console.log('⚡ [Live Sync] Mise à jour des romans détectée depuis le Studio');
+          if (typeof refreshCurrentScreen === 'function') refreshCurrentScreen();
+        } catch (err) {}
+      } else if (e.key === 'dramaxoxo_dramas' && e.newValue) {
+        try {
+          DRAMAS = JSON.parse(e.newValue);
+          console.log('⚡ [Live Sync] Mise à jour des séries détectée depuis le Studio');
+          if (typeof refreshCurrentScreen === 'function') refreshCurrentScreen();
+        } catch (err) {}
+      } else if (e.key === 'dramaxoxo_hero' && e.newValue) {
+        try {
+          heroConfig = JSON.parse(e.newValue);
+          if (typeof refreshCurrentScreen === 'function') refreshCurrentScreen();
+        } catch (err) {}
+      }
+    });
+
+    // Recharger systématiquement à la reprise du focus
+    window.addEventListener('focus', () => {
+      try {
+        const storedNovels = loadStoredNovels();
+        if (storedNovels && JSON.stringify(storedNovels) !== JSON.stringify(NOVELS)) {
+          NOVELS = storedNovels;
+          if (typeof refreshCurrentScreen === 'function') refreshCurrentScreen();
+        }
+      } catch (e) {}
+    });
+
     function t(key) {
       const dict = I18N[currentLang] || I18N.fr;
       return dict[key] || I18N.fr[key] || key;
@@ -2856,11 +2889,11 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <h4 style="font-size:14px; font-weight:800; color:#fff;">${t('chaptersList')}</h4>
-          <span style="font-size:11px; color:#8e8e9f;">${novel.chapters.length} ${t('chaptersCount')}</span>
+          <span style="font-size:11px; color:#8e8e9f;">${(novel.chapters || []).length} ${t('chaptersCount')}</span>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:20px;">
-          ${novel.chapters.map(ch => {
+          ${(novel.chapters || []).map(ch => {
             const isUnlocked = ch.isFree || unlockedChapters.has(ch.id) || isVip;
             return `
               <div style="background:#161624; border-radius:10px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #242436; cursor:pointer;" onclick="openChapterReader('${novel.id}', '${ch.id}')">
