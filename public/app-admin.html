@@ -322,20 +322,29 @@
           </div>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Revenu Brut Global</p>
+        <div onclick="switchTab('finance')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-emerald-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+          <div class="flex justify-between items-center">
+            <p class="text-[11px] text-slate-400 group-hover:text-emerald-300 font-semibold transition">Revenu Brut Global</p>
+            <span class="text-[10px] text-slate-500 group-hover:text-emerald-400 font-bold transition">Voir ›</span>
+          </div>
           <h3 class="text-2xl font-black text-white" id="stat-revenue-total">124 850,00 $</h3>
           <p class="text-[10px] text-emerald-400">↑ +48% ce mois</p>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Royalties Créateurs (70%)</p>
+        <div onclick="switchTab('creators')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-purple-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+          <div class="flex justify-between items-center">
+            <p class="text-[11px] text-slate-400 group-hover:text-purple-300 font-semibold transition">Royalties Créateurs (70%)</p>
+            <span class="text-[10px] text-slate-500 group-hover:text-purple-400 font-bold transition">Gérer ›</span>
+          </div>
           <h3 class="text-2xl font-black text-purple-400" id="stat-royalties-total">32 670,00 $</h3>
           <p class="text-[10px] text-purple-300">À reverser aux auteurs & studios</p>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-1">
-          <p class="text-[11px] text-slate-400 font-semibold">Candidatures en Attente</p>
+        <div onclick="switchTab('creators')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-amber-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+          <div class="flex justify-between items-center">
+            <p class="text-[11px] text-slate-400 group-hover:text-amber-300 font-semibold transition">Candidatures en Attente</p>
+            <span class="text-[10px] text-slate-500 group-hover:text-amber-400 font-bold transition">Modérer ›</span>
+          </div>
           <h3 class="text-2xl font-black text-amber-400" id="stat-pending-creators">0</h3>
           <p class="text-[10px] text-amber-300">À modérer aujourd'hui</p>
         </div>
@@ -343,12 +352,13 @@
 
       <!-- Quick Shortcuts -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
-          <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>🎬</span> Catalogue Séries & Romans
+        <div onclick="switchTab('dramas')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-rose-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>🎬</span> Catalogue Séries & Romans</span>
+            <span class="text-[10px] text-rose-400 font-bold">Ouvrir ›</span>
           </h3>
           <p class="text-xs text-slate-400"><span id="stat-dramas-count">0</span> Séries actives • <span id="stat-novels-count">0</span> Romans en ligne.</p>
-          <div class="flex gap-2">
+          <div class="flex gap-2" onclick="event.stopPropagation()">
             <button onclick="switchTab('dramas')" class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition">
               Séries ›
             </button>
@@ -358,9 +368,10 @@
           </div>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
-          <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>📝</span> Modération & Thrillers
+        <div onclick="switchTab('creators')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-amber-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>📝</span> Modération & Thrillers</span>
+            <span class="text-[10px] text-amber-400 font-bold">Ouvrir ›</span>
           </h3>
           <p class="text-xs text-slate-400">Visualisez les trailers vidéo et lisez les manuscrits soumis avant d'approuver.</p>
           <button onclick="switchTab('creators')" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">
@@ -368,12 +379,13 @@
           </button>
         </div>
 
-        <div class="bg-[#12121E] p-5 rounded-2xl border border-white/5 space-y-3">
-          <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>💰</span> Finances & Retraits Admin
+        <div onclick="switchTab('finance')" class="bg-[#12121E] p-5 rounded-2xl border border-white/5 hover:border-emerald-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-3">
+          <h3 class="font-bold text-white text-sm flex items-center justify-between">
+            <span class="flex items-center gap-2"><span>💰</span> Finances & Retraits Admin</span>
+            <span class="text-[10px] text-emerald-400 font-bold">Détails ›</span>
           </h3>
           <p class="text-xs text-slate-400">Solde disponible : <strong class="text-emerald-400 font-bold" id="shortcut-admin-bal">$77,980.49</strong>. Retraits PayPal, Payoneer, Virement & Crypto.</p>
-          <div class="flex gap-2">
+          <div class="flex gap-2" onclick="event.stopPropagation()">
             <button onclick="openWithdrawModal()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-1">
               <span>💸</span> Retirer
             </button>
@@ -712,31 +724,40 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
-          <div class="bg-[#10101C] p-4 rounded-xl border border-emerald-500/40 shadow-xl relative overflow-hidden">
+          <div onclick="openWithdrawModal()" class="bg-[#10101C] p-4 rounded-xl border border-emerald-500/40 hover:border-emerald-400 hover:bg-[#161628] cursor-pointer transition-all duration-200 shadow-xl relative overflow-hidden group">
             <div class="flex justify-between items-center mb-1">
               <p class="text-[11px] text-emerald-300 font-bold flex items-center gap-1.5">
                 <span>💎</span> Solde Disponible (Admin)
               </p>
-              <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2 py-0.5 rounded">RETIRABLE</span>
+              <span class="text-[9px] bg-emerald-500/20 text-emerald-300 group-hover:bg-emerald-500 group-hover:text-black font-black px-2 py-0.5 rounded transition">RETIRER ➔</span>
             </div>
             <p class="text-2xl sm:text-3xl font-black text-emerald-400" id="finance-admin-balance">$77,980.49</p>
             <p class="text-[10px] text-emerald-400/80 mt-1">PayPal • Payoneer • Bank • Crypto</p>
           </div>
 
-          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5 space-y-1">
-            <p class="text-[11px] text-slate-400">Total Ventes Globales</p>
+          <div onclick="document.getElementById('transactions-stream').scrollIntoView({behavior:'smooth'})" class="bg-[#10101C] p-4 rounded-xl border border-white/5 hover:border-emerald-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+            <div class="flex justify-between items-center">
+              <p class="text-[11px] text-slate-400 group-hover:text-emerald-300 font-semibold transition">Total Ventes Globales</p>
+              <span class="text-[10px] text-slate-500 group-hover:text-emerald-400 font-bold transition">Voir ›</span>
+            </div>
             <p class="text-xl font-black text-white" id="finance-total-sales">124 850,00 $</p>
             <p class="text-[10px] text-emerald-400">Pièces + Pass VIP Streaming</p>
           </div>
 
-          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5 space-y-1">
-            <p class="text-[11px] text-slate-400">Retraits Admin Déjà Versés</p>
+          <div onclick="document.getElementById('admin-withdrawals-list').scrollIntoView({behavior:'smooth'})" class="bg-[#10101C] p-4 rounded-xl border border-white/5 hover:border-teal-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+            <div class="flex justify-between items-center">
+              <p class="text-[11px] text-slate-400 group-hover:text-teal-300 font-semibold transition">Retraits Admin Déjà Versés</p>
+              <span class="text-[10px] text-slate-500 group-hover:text-teal-400 font-bold transition">Historique ›</span>
+            </div>
             <p class="text-xl font-black text-teal-400" id="finance-paid-admin">22 500,00 $</p>
             <p class="text-[10px] text-teal-300">Historique clôturé avec succès</p>
           </div>
 
-          <div class="bg-[#10101C] p-4 rounded-xl border border-white/5 space-y-1">
-            <p class="text-[11px] text-slate-400">Royalties Créateurs (70%)</p>
+          <div onclick="switchTab('creators')" class="bg-[#10101C] p-4 rounded-xl border border-white/5 hover:border-purple-500/40 hover:bg-[#161628] cursor-pointer transition-all duration-200 space-y-1 group">
+            <div class="flex justify-between items-center">
+              <p class="text-[11px] text-slate-400 group-hover:text-purple-300 font-semibold transition">Royalties Créateurs (70%)</p>
+              <span class="text-[10px] text-slate-500 group-hover:text-purple-400 font-bold transition">Gérer ›</span>
+            </div>
             <p class="text-xl font-black text-purple-400" id="finance-paid-royalties">32 670,00 $</p>
             <p class="text-[10px] text-purple-300">Attribuées aux auteurs & studios</p>
           </div>
@@ -844,6 +865,59 @@
 
 
   <!-- ========================================================================= -->
+  <!-- MODAL: DÉTAIL D'UN VIREMENT / REÇU COMPTABLE -->
+  <!-- ========================================================================= -->
+  <div id="modal-withdrawal-detail" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-[#141422] border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative my-auto max-h-[92vh] overflow-y-auto">
+      <button onclick="closeWithdrawalDetailModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#202032] hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition">
+        ✕
+      </button>
+
+      <div class="flex items-center gap-3 pr-8">
+        <div id="wtd-detail-icon" class="w-12 h-12 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-2xl border border-emerald-500/30 flex-shrink-0">
+          🏦
+        </div>
+        <div>
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-black px-2 py-0.5 rounded-full border border-emerald-500/30">REÇU DE VIREMENT OFFICIEL</span>
+          <h3 id="wtd-detail-method" class="text-base sm:text-lg font-black text-white mt-1">Virement Bancaire (SWIFT)</h3>
+        </div>
+      </div>
+
+      <div class="p-4 bg-[#10101C] rounded-2xl border border-white/5 space-y-3 text-xs">
+        <div class="flex justify-between items-center py-1 border-b border-white/5">
+          <span class="text-slate-400">Bénéficiaire :</span>
+          <span id="wtd-detail-recipient" class="font-bold text-white">Chase Bank •••• 4821</span>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-white/5">
+          <span class="text-slate-400">Montant transféré :</span>
+          <span id="wtd-detail-amount" class="font-black text-emerald-400 text-base">-$15,000.00</span>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-white/5">
+          <span class="text-slate-400">Date d'exécution :</span>
+          <span id="wtd-detail-date" class="font-medium text-slate-300">Hier à 17:40</span>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-white/5">
+          <span class="text-slate-400">Numéro de Référence :</span>
+          <span id="wtd-detail-ref" class="font-mono font-bold text-teal-300">SWIFT-US-993821</span>
+        </div>
+        <div class="flex justify-between items-center py-1">
+          <span class="text-slate-400">Statut de la transaction :</span>
+          <span id="wtd-detail-status" class="font-bold text-emerald-400 flex items-center gap-1"><span>✓</span> Transféré et clôturé</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="copyWithdrawalRef()" class="flex-1 py-3 rounded-xl bg-[#202032] hover:bg-[#2a2a42] text-white font-bold text-xs transition flex items-center justify-center gap-2">
+          <span>📋</span> Copier Référence
+        </button>
+        <button onclick="closeWithdrawalDetailModal()" class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- MODAL: GESTION & ÉDITION COMPLÈTE DU ROMAN + CHAPITRES -->
   <!-- ========================================================================= -->
   <div id="modal-novel-edit" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -886,8 +960,16 @@
           </select>
         </div>
         <div class="sm:col-span-2">
-          <label class="block text-slate-300 font-bold mb-1">URL de Couverture</label>
-          <input id="novel-edit-cover" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500 font-mono text-[11px]" />
+          <label class="block text-slate-300 font-bold mb-1">Couverture du Roman</label>
+          <div class="flex items-center gap-3">
+            <div class="w-14 h-20 rounded-xl overflow-hidden border border-purple-500/40 bg-black/50 flex-shrink-0 flex items-center justify-center">
+              <img id="novel-edit-cover-preview" src="" class="w-full h-full object-cover" alt="Aperçu" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60'" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <input id="novel-edit-cover" oninput="document.getElementById('novel-edit-cover-preview').src = this.value" class="w-full bg-[#1A1A28] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-purple-500 font-mono text-[11px]" placeholder="URL de la couverture ou Data Base64..." />
+              <p class="text-[10px] text-slate-400 mt-1">Format standard livre (2:3) • Rendu intégral sans recadrage</p>
+            </div>
+          </div>
         </div>
         <div class="sm:col-span-2">
           <label class="block text-slate-300 font-bold mb-1">Synopsis / Résumé</label>
@@ -1879,7 +1961,7 @@
       if (marqueeTrack) {
         const list = DRAMAS.concat(DRAMAS);
         marqueeTrack.innerHTML = list.map(d => `
-          <div class="admin-poster-card" title="${d.title}">
+          <div class="admin-poster-card cursor-pointer" onclick="switchTab('dramas')" title="${d.title} (Cliquer pour gérer)">
             <img src="${d.cover}" alt="${d.title}">
             <div class="poster-overlay">
               <span class="text-[9px] font-bold text-white truncate">${d.title}</span>
@@ -1925,7 +2007,9 @@
 
           return `
             <div class="bg-[#161624] p-4 rounded-2xl border border-white/5 hover:border-purple-500/30 transition flex gap-3.5 items-start">
-              <img src="${n.cover}" class="w-16 h-22 rounded-xl object-cover flex-shrink-0 border border-white/10 shadow" alt="${n.title}">
+              <div class="w-16 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-purple-500/30 shadow-md bg-black/50 flex items-center justify-center">
+                <img src="${n.cover}" class="w-full h-full object-cover" alt="${n.title}" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60'">
+              </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-1">
                   <h4 class="font-bold text-xs text-white truncate">${n.title}</h4>
@@ -2240,6 +2324,53 @@
       modal.classList.remove('flex');
     }
 
+    function openWithdrawalDetailModal(id) {
+      const w = ADMIN_WITHDRAWALS.find(item => item.id === id);
+      if (!w) return;
+      let icon = "💸";
+      if (w.method.includes('PayPal')) icon = "🅿️";
+      else if (w.method.includes('Payoneer')) icon = "🅿️";
+      else if (w.method.includes('Virement')) icon = "🏦";
+      else if (w.method.includes('Crypto')) icon = "🪙";
+
+      const iconEl = document.getElementById('wtd-detail-icon');
+      if (iconEl) iconEl.innerText = icon;
+      const methodEl = document.getElementById('wtd-detail-method');
+      if (methodEl) methodEl.innerText = w.method;
+      const recipientEl = document.getElementById('wtd-detail-recipient');
+      if (recipientEl) recipientEl.innerText = w.recipient;
+      const amountEl = document.getElementById('wtd-detail-amount');
+      if (amountEl) amountEl.innerText = `-${formatCurrency(w.amount)}`;
+      const dateEl = document.getElementById('wtd-detail-date');
+      if (dateEl) dateEl.innerText = w.date;
+      const refEl = document.getElementById('wtd-detail-ref');
+      if (refEl) refEl.innerText = w.txRef;
+
+      const modal = document.getElementById('modal-withdrawal-detail');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeWithdrawalDetailModal() {
+      const modal = document.getElementById('modal-withdrawal-detail');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function copyWithdrawalRef() {
+      const refEl = document.getElementById('wtd-detail-ref');
+      if (!refEl) return;
+      const ref = refEl.innerText;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(ref);
+      }
+      showToast(`Référence ${ref} copiée !`, "📋");
+    }
+
     function selectWithdrawMethod(method) {
       selectedWithdrawMethod = method;
       const methods = ['paypal', 'payoneer', 'bank', 'crypto'];
@@ -2394,14 +2525,14 @@
         const isCompleted = w.status === 'COMPLETED';
 
         return `
-          <div class="bg-[#161624] p-4 rounded-xl border border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div onclick="openWithdrawalDetailModal('${w.id}')" class="bg-[#161624] p-4 rounded-xl border border-white/5 hover:border-emerald-500/50 hover:bg-[#1c1c2e] cursor-pointer transition-all duration-150 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 group">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-[#202030] text-xl flex items-center justify-center flex-shrink-0 border border-white/10">
+              <div class="w-10 h-10 rounded-xl bg-[#202030] group-hover:bg-emerald-500/10 text-xl flex items-center justify-center flex-shrink-0 border border-white/10 group-hover:border-emerald-500/30 transition">
                 ${icon}
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <h5 class="font-bold text-xs text-white">${w.method}</h5>
+                  <h5 class="font-bold text-xs text-white group-hover:text-emerald-300 transition">${w.method}</h5>
                   <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}">
                     ${w.recipient}
                   </span>
@@ -2418,9 +2549,13 @@
                 </span>
               ` : `
                 <span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-500/30 flex items-center gap-1 animate-pulse">
-                  <span>⚡</span> En cours de versement
+                  <span>⚡</span> En cours
                 </span>
               `}
+              <span class="text-xs text-slate-400 group-hover:text-emerald-400 font-bold transition flex items-center gap-1 bg-[#202032] group-hover:bg-emerald-500/20 px-2 py-1 rounded-lg border border-white/5 group-hover:border-emerald-500/30">
+                <span>Voir Reçu</span>
+                <span>›</span>
+              </span>
             </div>
           </div>
         `;
@@ -2472,6 +2607,54 @@
       }
     }
 
+    function compressImageFile(file, maxWidth = 800, maxHeight = 1200, quality = 0.88) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            // Conserver scrupuleusement le ratio original sans recadrer
+            if (width > maxWidth || height > maxHeight) {
+              const ratio = Math.min(maxWidth / width, maxHeight / height);
+              width = Math.round(width * ratio);
+              height = Math.round(height * ratio);
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+            const dataUrl = canvas.toDataURL(mime, quality);
+
+            canvas.toBlob((blob) => {
+              resolve({
+                dataUrl: dataUrl,
+                blob: blob || file,
+                width: width,
+                height: height
+              });
+            }, mime, quality);
+          };
+          img.onerror = () => {
+            resolve({ dataUrl: e.target.result, blob: file });
+          };
+          img.src = e.target.result;
+        };
+        reader.onerror = () => {
+          resolve({ dataUrl: URL.createObjectURL(file), blob: file });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
     async function processCoverFileUpload(file, type) {
       if (!file) return;
 
@@ -2498,17 +2681,13 @@
       if (previewEl) { previewEl.classList.add('hidden'); previewEl.classList.remove('flex'); }
       if (progressEl) { progressEl.classList.remove('hidden'); progressEl.classList.add('flex'); }
 
-      const localBlobUrl = URL.createObjectURL(file);
-
-      // Fonction pour convertir l'image en Base64 Data URL (secours infaillible)
-      const readFileAsDataUrl = (blob) => new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => resolve(localBlobUrl);
-        reader.readAsDataURL(blob);
-      });
-
-      let finalImageUrl = await readFileAsDataUrl(file);
+      // Compression haute fidélité pour garantir un chargement complet instantané sans troncature de stockage
+      const isNovel = (type === 'novel');
+      const maxW = isNovel ? 800 : 960;
+      const maxH = isNovel ? 1200 : 720;
+      const compressed = await compressImageFile(file, maxW, maxH, 0.88);
+      let finalImageUrl = compressed.dataUrl;
+      const fileToUpload = compressed.blob || file;
 
       try {
         if (!sbClient) throw new Error("Client Supabase non initialisé");
@@ -2520,9 +2699,10 @@
 
         const { data, error } = await sbClient.storage
           .from('covers')
-          .upload(fileName, file, {
+          .upload(fileName, fileToUpload, {
             cacheControl: '3600',
-            upsert: false
+            upsert: false,
+            contentType: fileToUpload.type || file.type || 'image/jpeg'
           });
 
         if (error) throw error;
@@ -2538,7 +2718,7 @@
         showToast("✅ Couverture téléversée vers Supabase Storage !", "🖼️");
       } catch (err) {
         console.warn("Supabase Storage indisponible ou en pause, image intégrée localement :", err);
-        showToast("💾 Image enregistrée avec succès en local !", "🖼️");
+        showToast("💾 Couverture complète optimisée et enregistrée avec succès !", "🖼️");
       }
 
       // Toujours enregistrer et afficher l'image
@@ -2608,7 +2788,7 @@
             cover_url: newDrama.cover
           });
           if (error) {
-            console.warn("Supabase insert series non-bloquant:", error);
+            console.warn("Supabase insert series non bloquant:", error);
           }
         } catch (err) {
           console.warn("Supabase series insert exception:", err);
@@ -2770,6 +2950,8 @@
       document.getElementById('novel-edit-genre').value = novel.genre || '';
       document.getElementById('novel-edit-status').value = novel.status || 'En cours';
       document.getElementById('novel-edit-cover').value = novel.cover || '';
+      const previewImg = document.getElementById('novel-edit-cover-preview');
+      if (previewImg) previewImg.src = novel.cover || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60';
       document.getElementById('novel-edit-synopsis').value = novel.synopsis || '';
 
       // Reset new chapter fields
