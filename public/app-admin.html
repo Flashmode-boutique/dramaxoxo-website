@@ -1637,19 +1637,37 @@
           }
           const { data: updatedNovels } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
           if (updatedNovels && updatedNovels.length > 0) {
-            NOVELS = updatedNovels.map(n => ({
-              id: n.id,
-              title: n.title,
-              author: n.author,
-              genre: n.genre,
-              status: n.status || 'En cours',
-              rating: n.rating ? n.rating.toString() : '4.9',
-              views: n.views || '150K',
-              chaptersCount: n.chapters_count || 30,
-              cover: n.cover_url,
-              synopsis: n.synopsis,
-              chapters: n.chapters_json || []
-            }));
+            const currentLocalNovels = [...NOVELS];
+            NOVELS = updatedNovels.map(n => {
+              const local = currentLocalNovels.find(l => l.id === n.id);
+              const remoteChs = n.chapters_json || [];
+              const localChs = (local && local.chapters) ? local.chapters : [];
+              const chapters = (localChs.length >= remoteChs.length) ? localChs : remoteChs;
+              if (localChs.length > remoteChs.length && sbClient) {
+                sbClient.from('novels').update({
+                  chapters_count: localChs.length,
+                  chapters_json: localChs
+                }).eq('id', n.id).catch(e => console.warn(e));
+              }
+              return {
+                id: n.id,
+                title: n.title,
+                author: n.author,
+                genre: n.genre,
+                status: n.status || (local ? local.status : 'En cours'),
+                rating: n.rating ? n.rating.toString() : '4.9',
+                views: n.views || (local ? local.views : '150K'),
+                chaptersCount: Math.max(chapters.length, n.chapters_count || 0),
+                cover: n.cover_url || (local ? local.cover : ''),
+                synopsis: n.synopsis || (local ? local.synopsis : ''),
+                chapters: chapters
+              };
+            });
+            currentLocalNovels.forEach(loc => {
+              if (!NOVELS.some(n => n.id === loc.id)) {
+                NOVELS.push(loc);
+              }
+            });
             saveNovels();
           }
         }
@@ -1849,7 +1867,13 @@
       return [...INITIAL_NOVELS];
     }
     function saveNovels() {
-      try { localStorage.setItem('dramaxoxo_novels', JSON.stringify(NOVELS)); } catch (e) {}
+      try {
+        localStorage.setItem('dramaxoxo_novels', JSON.stringify(NOVELS));
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'dramaxoxo_novels',
+          newValue: JSON.stringify(NOVELS)
+        }));
+      } catch (e) {}
     }
 
     function loadHero() {
@@ -3043,9 +3067,28 @@
       currentEditingNovel.chapters.push(newCh);
       renderNovelEditChapters();
 
+      // AUTO-PERSISTANCE IMMÉDIATE DANS LE CATALOGUE ET LE LOCALSTORAGE
+      const target = NOVELS.find(n => n.id === currentEditingNovel.id);
+      if (target) {
+        target.chapters = [...currentEditingNovel.chapters];
+        target.chaptersCount = target.chapters.length;
+        saveNovels();
+        renderAll();
+      }
+
+      // Synchronisation Supabase immédiate (en arrière-plan non-bloquant)
+      if (sbClient && target) {
+        ensureAdminSession().then(() => {
+          sbClient.from('novels').update({
+            chapters_count: target.chaptersCount,
+            chapters_json: target.chapters
+          }).eq('id', target.id).catch(err => console.warn("Supabase auto-save chapter:", err));
+        }).catch(err => console.warn("Supabase session:", err));
+      }
+
       titleInput.value = '';
       contentInput.value = '';
-      showToast(`✅ ${newCh.title} ajouté au roman !`, "📑");
+      showToast(`✅ "${newCh.title}" inséré et sauvegardé avec succès !`, "📑");
     }
 
     function deleteChapterFromNovel(index) {
@@ -3054,7 +3097,26 @@
       // Ré-indexer
       currentEditingNovel.chapters.forEach((ch, i) => { ch.num = i + 1; });
       renderNovelEditChapters();
-      showToast("Chapitre retiré", "🗑️");
+
+      // AUTO-PERSISTANCE IMMÉDIATE
+      const target = NOVELS.find(n => n.id === currentEditingNovel.id);
+      if (target) {
+        target.chapters = [...currentEditingNovel.chapters];
+        target.chaptersCount = target.chapters.length;
+        saveNovels();
+        renderAll();
+      }
+
+      if (sbClient && target) {
+        ensureAdminSession().then(() => {
+          sbClient.from('novels').update({
+            chapters_count: target.chaptersCount,
+            chapters_json: target.chapters
+          }).eq('id', target.id).catch(err => console.warn("Supabase auto-delete chapter:", err));
+        }).catch(err => console.warn("Supabase session:", err));
+      }
+
+      showToast("Chapitre retiré et sauvegardé", "🗑️");
     }
 
     async function saveNovelEditModal() {

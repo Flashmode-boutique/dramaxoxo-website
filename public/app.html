@@ -2641,19 +2641,31 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
 
         const { data: remoteNovels } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
         if (remoteNovels && remoteNovels.length > 0) {
-          NOVELS = remoteNovels.map(n => ({
-            id: n.id,
-            title: n.title,
-            author: n.author,
-            genre: n.genre,
-            status: n.status || 'En cours',
-            rating: n.rating ? n.rating.toString() : '4.9',
-            views: n.views || '150K',
-            chaptersCount: n.chapters_count || 30,
-            cover: n.cover_url,
-            synopsis: n.synopsis,
-            chapters: n.chapters_json || []
-          }));
+          const currentLocalNovels = loadStoredNovels();
+          NOVELS = remoteNovels.map(n => {
+            const local = currentLocalNovels.find(l => l.id === n.id);
+            const remoteChs = n.chapters_json || [];
+            const localChs = (local && local.chapters) ? local.chapters : [];
+            const chapters = (localChs.length >= remoteChs.length) ? localChs : remoteChs;
+            return {
+              id: n.id,
+              title: n.title,
+              author: n.author,
+              genre: n.genre,
+              status: n.status || (local ? local.status : 'En cours'),
+              rating: n.rating ? n.rating.toString() : '4.9',
+              views: n.views || (local ? local.views : '150K'),
+              chaptersCount: Math.max(chapters.length, n.chapters_count || 0),
+              cover: n.cover_url || (local ? local.cover : ''),
+              synopsis: n.synopsis || (local ? local.synopsis : ''),
+              chapters: chapters
+            };
+          });
+          currentLocalNovels.forEach(loc => {
+            if (!NOVELS.some(n => n.id === loc.id)) {
+              NOVELS.push(loc);
+            }
+          });
           saveNovelsToStorage();
         }
 
@@ -2778,6 +2790,10 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
 
     // ================= CENTRAL RENDERER (RESPONDS TO ALL CLICKS & I18N) =================
     function refreshCurrentScreen() {
+      // Recharger le catalogue local pour garantir une synchronisation immédiate
+      NOVELS = loadStoredNovels();
+      DRAMAS = loadStoredDramas();
+
       // 1. Update static elements
       document.getElementById('main-search-input').placeholder = t('searchPlaceholder');
       document.getElementById('htab-popular').innerText = t('popular');
@@ -3274,6 +3290,7 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
     }
 
     function openBookTocModal(novelId) {
+      NOVELS = loadStoredNovels();
       const novel = NOVELS.find(n => n.id === novelId);
       if (!novel) return;
       const modal = document.getElementById('modal-book-toc');
@@ -3403,6 +3420,7 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
     }
 
     function renderNovelDetailView(novelId) {
+      NOVELS = loadStoredNovels();
       const novel = NOVELS.find(n => n.id === novelId) || NOVELS[0];
       const pane = document.getElementById('main-content-view');
 
@@ -3457,9 +3475,10 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
     }
 
     function openChapterReader(novelId, chapterId) {
+      NOVELS = loadStoredNovels();
       const novel = NOVELS.find(n => n.id === novelId);
       if (!novel) return;
-      const chapter = novel.chapters.find(c => c.id === chapterId);
+      const chapter = (novel.chapters || []).find(c => c.id === chapterId);
       if (!chapter) return;
 
       const isUnlocked = chapter.isFree || unlockedChapters.has(chapter.id) || isVip;
@@ -3486,6 +3505,7 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
     }
 
     function renderChapterReaderView(novelId, chapterId) {
+      NOVELS = loadStoredNovels();
       const novel = NOVELS.find(n => n.id === novelId) || NOVELS[0];
       const chapters = novel.chapters || [];
       const currentChIdx = chapters.findIndex(c => c.id === chapterId);
