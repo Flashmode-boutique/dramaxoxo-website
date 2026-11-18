@@ -270,6 +270,14 @@
 
     <div class="flex items-center gap-2">
       <button
+        id="btn-cloud-sync"
+        onclick="syncAllToSupabaseCloud()"
+        class="text-xs font-bold px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/40 transition shadow flex items-center gap-1.5"
+        title="Synchroniser immédiatement tout le catalogue vers les téléphones et visiteurs"
+      >
+        <span id="sync-icon">☁️</span> Synchroniser Téléphone
+      </button>
+      <button
         onclick="adminLogout()"
         class="text-xs font-bold px-4 py-2 rounded-xl bg-rose-950/40 text-rose-300 hover:bg-rose-600 hover:text-white border border-rose-500/30 transition shadow"
       >
@@ -1614,41 +1622,40 @@
           }
         }
 
-        // 3. Romans : Chargement & Auto-sync des romans locaux en attente
+        // 3. Romans : Chargement & Auto-sync des romans locaux vers Supabase
         const { data: novelsList } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
         if (novelsList) {
-          const remoteNovelIds = new Set(novelsList.map(n => n.id));
-          const pendingNovels = NOVELS.filter(n => !remoteNovelIds.has(n.id) && !n.id.startsWith('nov-1') && !n.id.startsWith('nov-2') && !n.id.startsWith('nov-3') && !n.id.startsWith('nov-4'));
-          for (const pending of pendingNovels) {
-            console.log("Auto-synchronisation vers Supabase du roman local :", pending.title);
-            await sbClient.from('novels').insert({
-              id: pending.id,
-              title: pending.title,
-              author: pending.author,
-              genre: pending.genre,
-              status: pending.status,
-              rating: 4.9,
-              views: "10.2K",
-              chapters_count: pending.chaptersCount,
-              cover_url: pending.cover,
-              synopsis: pending.synopsis,
-              chapters_json: pending.chapters
-            });
+          const currentLocalNovels = loadNovels();
+          // Pousser vers Supabase tous les romans ou chapitres locaux manquants ou modifiés
+          for (const local of currentLocalNovels) {
+            const remote = novelsList.find(n => n.id === local.id);
+            const remoteChs = remote && remote.chapters_json ? remote.chapters_json : [];
+            const localChs = local.chapters || [];
+            if (!remote || localChs.length > remoteChs.length) {
+              console.log("⚡ Auto-push vers Supabase du roman/chapitres :", local.title);
+              await sbClient.from('novels').upsert({
+                id: local.id,
+                title: local.title,
+                author: local.author,
+                genre: local.genre,
+                status: local.status || 'En cours',
+                rating: parseFloat(local.rating) || 4.9,
+                views: local.views || "10.2K",
+                chapters_count: localChs.length,
+                cover_url: local.cover,
+                synopsis: local.synopsis,
+                chapters_json: localChs
+              }, { onConflict: 'id' });
+            }
           }
+
           const { data: updatedNovels } = await sbClient.from('novels').select('*').order('created_at', { ascending: false });
           if (updatedNovels && updatedNovels.length > 0) {
-            const currentLocalNovels = [...NOVELS];
             NOVELS = updatedNovels.map(n => {
               const local = currentLocalNovels.find(l => l.id === n.id);
               const remoteChs = n.chapters_json || [];
               const localChs = (local && local.chapters) ? local.chapters : [];
               const chapters = (localChs.length >= remoteChs.length) ? localChs : remoteChs;
-              if (localChs.length > remoteChs.length && sbClient) {
-                sbClient.from('novels').update({
-                  chapters_count: localChs.length,
-                  chapters_json: localChs
-                }).eq('id', n.id).catch(e => console.warn(e));
-              }
               return {
                 id: n.id,
                 title: n.title,
@@ -3078,11 +3085,22 @@
 
       // Synchronisation Supabase immédiate (en arrière-plan non-bloquant)
       if (sbClient && target) {
-        ensureAdminSession().then(() => {
-          sbClient.from('novels').update({
+        ensureAdminSession().then(async () => {
+          const { error } = await sbClient.from('novels').upsert({
+            id: target.id,
+            title: target.title,
+            author: target.author,
+            genre: target.genre,
+            status: target.status || 'En cours',
+            rating: parseFloat(target.rating) || 4.9,
+            views: target.views || "10.2K",
             chapters_count: target.chaptersCount,
+            cover_url: target.cover,
+            synopsis: target.synopsis || '',
             chapters_json: target.chapters
-          }).eq('id', target.id).catch(err => console.warn("Supabase auto-save chapter:", err));
+          }, { onConflict: 'id' });
+          if (error) console.warn("Supabase auto-save chapter error:", error);
+          else console.log("✅ Synchronisé sur Supabase pour tous les appareils !");
         }).catch(err => console.warn("Supabase session:", err));
       }
 
@@ -3108,11 +3126,21 @@
       }
 
       if (sbClient && target) {
-        ensureAdminSession().then(() => {
-          sbClient.from('novels').update({
+        ensureAdminSession().then(async () => {
+          const { error } = await sbClient.from('novels').upsert({
+            id: target.id,
+            title: target.title,
+            author: target.author,
+            genre: target.genre,
+            status: target.status || 'En cours',
+            rating: parseFloat(target.rating) || 4.9,
+            views: target.views || "10.2K",
             chapters_count: target.chaptersCount,
+            cover_url: target.cover,
+            synopsis: target.synopsis || '',
             chapters_json: target.chapters
-          }).eq('id', target.id).catch(err => console.warn("Supabase auto-delete chapter:", err));
+          }, { onConflict: 'id' });
+          if (error) console.warn("Supabase auto-delete chapter error:", error);
         }).catch(err => console.warn("Supabase session:", err));
       }
 
@@ -3153,7 +3181,8 @@
       if (sbClient) {
         try {
           await ensureAdminSession();
-          await sbClient.from('novels').update({
+          const { error } = await sbClient.from('novels').upsert({
+            id: target.id,
             title: target.title,
             author: target.author,
             genre: target.genre,
@@ -3161,8 +3190,12 @@
             cover_url: target.cover,
             synopsis: target.synopsis,
             chapters_count: target.chaptersCount,
-            chapters_json: target.chapters
-          }).eq('id', target.id);
+            chapters_json: target.chapters,
+            rating: parseFloat(target.rating) || 4.9,
+            views: target.views || "10.2K"
+          }, { onConflict: 'id' });
+          if (error) console.warn("Supabase upsert novel error:", error);
+          else console.log("✅ Roman mis à jour et synchronisé dans le Cloud !");
         } catch (err) {
           console.warn("Supabase update novel exception non-bloquante:", err);
         }
@@ -3214,6 +3247,60 @@
       saveHeroStorage();
       renderAll();
       showToast("🔥 Bannière Héro enregistrée !");
+    }
+
+    async function syncAllToSupabaseCloud() {
+      const btn = document.getElementById('btn-cloud-sync');
+      if (btn) btn.innerHTML = '⏳ Synchronisation...';
+      showToast("⏳ Synchronisation vers le Cloud en cours...", "☁️");
+
+      try {
+        if (!sbClient) throw new Error("Client Supabase non initialisé");
+        const ok = await ensureAdminSession();
+        if (!ok) throw new Error("Échec d'authentification Cloud");
+
+        // 1. Synchroniser tous les romans et chapitres vers Supabase
+        let novelCount = 0;
+        for (const nov of NOVELS) {
+          const { error } = await sbClient.from('novels').upsert({
+            id: nov.id,
+            title: nov.title,
+            author: nov.author,
+            genre: nov.genre,
+            status: nov.status || 'En cours',
+            rating: parseFloat(nov.rating) || 4.9,
+            views: nov.views || "10.2K",
+            chapters_count: (nov.chapters || []).length || nov.chaptersCount || 0,
+            cover_url: nov.cover,
+            synopsis: nov.synopsis || '',
+            chapters_json: nov.chapters || []
+          }, { onConflict: 'id' });
+          if (!error) {
+            novelCount++;
+          } else {
+            console.warn("Erreur upsert roman:", nov.title, error);
+          }
+        }
+
+        // 2. Synchroniser toutes les séries vers Supabase
+        for (const drama of DRAMAS) {
+          await sbClient.from('series').upsert({
+            id: drama.id,
+            title: drama.title,
+            genre: drama.genre,
+            ep_count_text: drama.ep,
+            badge: drama.badge || 'HD',
+            cover_url: drama.cover
+          }, { onConflict: 'id' });
+        }
+
+        showToast(`✅ ${novelCount} roman(s) et chapitres synchronisés dans le Cloud ! Les téléphones et visiteurs sont à jour.`, "📱");
+      } catch (err) {
+        console.error("syncAllToSupabaseCloud:", err);
+        showToast("⚠️ " + (err.message || "Erreur de synchronisation"), "❌");
+      } finally {
+        if (btn) btn.innerHTML = '<span id="sync-icon">☁️</span> Synchroniser Téléphone';
+      }
     }
 
     function exportDatabaseJSON() {
