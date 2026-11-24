@@ -1,50 +1,18 @@
-// Service Worker pour DRAMA XOXO PWA (Mise en cache intelligente et mode hors-ligne fluide)
-const CACHE_NAME = "dramaxoxo-v1";
-const ASSETS_TO_CACHE = [
-  "/app",
-  "/catalog.json",
-  "/favicon.svg",
-  "/manifest.json"
-];
-
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
-    })
-  );
+// Service Worker de nettoyage immédiat pour DRAMA XOXO
+// Ce script désactive les anciens caches et garantit que tout appareil charge instantanément la dernière version du code.
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
-      return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-      );
-    })
+      return Promise.all(keys.map((k) => caches.delete(k)));
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
-  // Ignorer les requêtes non-GET et les API Stripe
-  if (event.request.method !== "GET" || event.request.url.includes("/api/")) {
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Retourne le cache et met à jour en arrière-plan (stale-while-revalidate)
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
-          }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-      return fetch(event.request);
-    })
-  );
+self.addEventListener('fetch', (event) => {
+  // Pas d'interception de cache : requête réseau directe
+  return;
 });

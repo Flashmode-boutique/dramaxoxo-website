@@ -14,6 +14,23 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="DRAMA XOXO">
+  <script>
+    // Désactiver tout Service Worker obsolète et vider les caches persistants pour forcer la synchronisation immédiate
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        for (var i = 0; i < regs.length; i++) {
+          regs[i].unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(keys) {
+        for (var i = 0; i < keys.length; i++) {
+          caches.delete(keys[i]);
+        }
+      });
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -644,19 +661,30 @@
 
     /* ================= LIVRE RÉEL EN DUR / HARDCOVER BOOK READER ================= */
     .real-book-stage {
-      background: radial-gradient(circle at 50% 25%, #1c181a 0%, #0c0b10 100%);
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 6px 8px 10px 8px;
-      box-sizing: border-box;
-      user-select: text;
-      overflow: hidden;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      z-index: 999999 !important;
+      background: radial-gradient(circle at 50% 25%, #1c181a 0%, #0c0b10 100%) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      padding: 10px 16px 14px 16px !important;
+      box-sizing: border-box !important;
+      user-select: text !important;
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+      touch-action: pan-y !important;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
 
     /* En-tête de lecture / Commandes rapides */
@@ -675,6 +703,8 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       flex-shrink: 0;
       box-sizing: border-box;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
     .book-top-btn {
       background: rgba(255, 255, 255, 0.08);
@@ -716,6 +746,10 @@
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
 
     /* Ruban marque-page satiné */
@@ -764,6 +798,10 @@
       transition: background 0.3s ease, color 0.3s ease;
       overflow: hidden;
       font-family: 'Times New Roman', Times, 'Liberation Serif', serif;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
 
     /* Mode plein écran immersif : Les pages remplissent l'écran de l'appareil (Mobile, Tablette, PC) */
@@ -805,18 +843,22 @@
     }
 
     @media (max-width: 640px) {
+      .real-book-stage,
       body.mode-chapter-reader .real-book-stage {
         padding: 4px 4px 6px 4px !important;
       }
+      .book-top-bar,
       body.mode-chapter-reader .book-top-bar {
         padding: 4px 8px !important;
         margin-bottom: 4px !important;
         border-radius: 8px !important;
       }
+      .book-hardcover-casing,
       body.mode-chapter-reader .book-hardcover-casing {
         padding: 4px 3px 6px 5px !important;
         border-radius: 4px 10px 10px 4px !important;
       }
+      .book-page-sheet,
       body.mode-chapter-reader .book-page-sheet {
         padding: 12px 12px 8px 14px !important;
         border-radius: 2px 6px 6px 2px !important;
@@ -841,6 +883,7 @@
     /* Corps du texte littéraire - Times New Roman 12, Interligne 1.5 */
     .book-page-content {
       flex: 1;
+      min-height: 0;
       font-family: 'Times New Roman', Times, 'Liberation Serif', serif;
       font-size: 12pt;
       line-height: 1.5;
@@ -850,9 +893,15 @@
       hyphens: auto;
       word-break: break-word;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       padding-right: 4px;
       scrollbar-width: thin;
       scrollbar-color: rgba(139,90,43,0.3) transparent;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: scroll-position, opacity;
+      transition: opacity 0.12s ease-out;
     }
 
     /* Paragraphes de narration bien structurés */
@@ -3652,6 +3701,73 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
       refreshCurrentScreen();
     }
 
+    function renderBookNavButtonsHTML(novelId, currentChIdx, totalChapters, isFirstPage, isLastPage) {
+      const prevBtn = isFirstPage ? `
+        <button class="book-nav-page-btn" ${currentChIdx > 0 ? `onclick="openPreviousChapter('${novelId}', ${currentChIdx})"` : `onclick="openNovelDetail('${novelId}')"`}>
+          <span>‹</span> ${currentChIdx > 0 ? 'Chapitre précédent' : 'Sommaire'}
+        </button>
+      ` : `
+        <button class="book-nav-page-btn" onclick="turnBookPage(-1)">
+          <span>‹</span> Page précédente
+        </button>
+      `;
+
+      const nextBtn = isLastPage ? `
+        ${currentChIdx < totalChapters - 1 ? `
+          <button class="book-nav-page-btn book-next-chapter-action" onclick="openNextChapter('${novelId}', ${currentChIdx})">
+            <span>📖</span> Chapitre suivant (${currentChIdx + 2}) <span>›</span>
+          </button>
+        ` : `
+          <button class="book-nav-page-btn book-next-chapter-action" onclick="showToast('🎉 Félicitations ! Vous êtes à jour dans ce roman.'); openNovelDetail('${novelId}');">
+            <span>✨</span> Fin du roman <span>✓</span>
+          </button>
+        `}
+      ` : `
+        <button class="book-nav-page-btn" onclick="turnBookPage(1)">
+          Page suivante <span>›</span>
+        </button>
+      `;
+
+      return `${prevBtn}${nextBtn}`;
+    }
+
+    function updateBookReaderInPlace(novel, chapter, currentChIdx, bookPages, totalPages) {
+      const isFirstPage = (activeChapterPageIndex === 0);
+      const isLastPage = (activeChapterPageIndex === totalPages - 1);
+      const currentPageParas = bookPages[activeChapterPageIndex] || [];
+      const readingPercent = Math.round(((activeChapterPageIndex + 1) / totalPages) * 100);
+
+      // Titres haut & page
+      const topNovel = document.getElementById('book-top-novel-title');
+      if (topNovel) topNovel.innerText = novel.title;
+      const topCh = document.getElementById('book-top-ch-title');
+      if (topCh) topCh.innerText = chapter.title;
+      const headerTitle = document.getElementById('book-page-header-title');
+      if (headerTitle) headerTitle.innerText = novel.title;
+      const headerCh = document.getElementById('book-page-header-ch');
+      if (headerCh) headerCh.innerText = `CH. ${chapter.num || (currentChIdx + 1)}`;
+
+      // Contenu du texte littéraire
+      const contentEl = document.getElementById('book-page-content');
+      if (contentEl) {
+        contentEl.innerHTML = currentPageParas.map((para, pIdx) => formatBookParagraphHTML(para, isFirstPage && pIdx === 0)).join('');
+        contentEl.scrollTop = 0; // Remise à zéro sans affecter le reste de l'écran
+      }
+
+      // Pagination & Progression
+      const pagEl = document.getElementById('book-pagination-number');
+      if (pagEl) pagEl.innerText = `Page ${activeChapterPageIndex + 1} sur ${totalPages}`;
+
+      const progEl = document.getElementById('book-progress-fill');
+      if (progEl) progEl.style.width = `${readingPercent}%`;
+
+      // Boutons de navigation
+      const navEl = document.getElementById('book-slide-nav-bar');
+      if (navEl) {
+        navEl.innerHTML = renderBookNavButtonsHTML(novel.id, currentChIdx, (novel.chapters || []).length, isFirstPage, isLastPage);
+      }
+    }
+
     function renderChapterReaderView(novelId, chapterId) {
       NOVELS = loadStoredNovels();
       const novel = NOVELS.find(n => n.id === novelId) || NOVELS[0];
@@ -3660,18 +3776,23 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
       const chapter = (currentChIdx !== -1) ? chapters[currentChIdx] : (chapters[0] || { title: "Chapitre 1", content: "" });
       const currentChapterNumber = chapter.num || (currentChIdx + 1);
 
-      const pane = document.getElementById('main-content-view');
-
       // Découper le chapitre en pages/slides de livre réel
       const bookPages = splitChapterContentIntoBookPages(chapter.content);
       const totalPages = bookPages.length;
       activeChapterPageIndex = Math.max(0, Math.min(activeChapterPageIndex, totalPages - 1));
 
-      const currentPageParas = bookPages[activeChapterPageIndex] || [];
+      const existingStage = document.getElementById('real-book-stage');
+
+      // Si le lecteur est déjà dans le DOM, mettre à jour sur place (ZERO flash / glitch)
+      if (existingStage) {
+        updateBookReaderInPlace(novel, chapter, currentChIdx, bookPages, totalPages);
+        bindBookTouchListeners();
+        return;
+      }
+
       const isFirstPage = (activeChapterPageIndex === 0);
       const isLastPage = (activeChapterPageIndex === totalPages - 1);
-
-      // Progression en pourcentage
+      const currentPageParas = bookPages[activeChapterPageIndex] || [];
       const readingPercent = Math.round(((activeChapterPageIndex + 1) / totalPages) * 100);
 
       // Thème papier
@@ -3680,6 +3801,7 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
       else if (readerTheme === 'night') themeClass = 'book-theme-night';
       else if (readerTheme === 'white') themeClass = 'book-theme-white';
 
+      const pane = document.getElementById('main-content-view');
       pane.innerHTML = `
         <div class="real-book-stage ${themeClass}" id="real-book-stage">
           <!-- Barre d'outils et navigation supérieure -->
@@ -3688,10 +3810,10 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
               <span>‹</span> ${t('backToNovels')}
             </button>
             <div style="text-align:center; flex:1; min-width:0; padding:0 8px;">
-              <p style="font-family:'Playfair Display', Georgia, serif; font-size:12px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+              <p id="book-top-novel-title" style="font-family:'Playfair Display', Georgia, serif; font-size:12px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                 ${novel.title}
               </p>
-              <p style="font-size:10px; color:#c4b5fd; margin-top:1px;">
+              <p id="book-top-ch-title" style="font-size:10px; color:#c4b5fd; margin-top:1px;">
                 ${chapter.title}
               </p>
             </div>
@@ -3715,8 +3837,8 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
               <!-- En-tête de la page -->
               <div class="book-page-header">
                 <span>❦ DRAMA XOXO • ÉDITION OFFICIELLE</span>
-                <span style="font-weight:700;">${novel.title}</span>
-                <span>CH. ${currentChapterNumber}</span>
+                <span id="book-page-header-title" style="font-weight:700;">${novel.title}</span>
+                <span id="book-page-header-ch">CH. ${currentChapterNumber}</span>
               </div>
 
               <!-- Corps du texte littéraire paginé (Times New Roman 12, Interligne 1.5) -->
@@ -3729,42 +3851,18 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
                 <!-- Numéro de page au format livre physique -->
                 <div class="book-pagination-ornament">
                   <span>— ❧</span>
-                  <span>Page ${activeChapterPageIndex + 1} sur ${totalPages}</span>
+                  <span id="book-pagination-number">Page ${activeChapterPageIndex + 1} sur ${totalPages}</span>
                   <span>❧ —</span>
                 </div>
 
                 <!-- Barre de progression discrète en bronze/bordeaux -->
                 <div style="width:100%; height:3px; background:rgba(139,90,43,0.15); border-radius:2px; overflow:hidden;">
-                  <div style="width:${readingPercent}%; height:100%; background:linear-gradient(90deg, #8B1E3F, #d97706); transition:width 0.3s ease;"></div>
+                  <div id="book-progress-fill" style="width:${readingPercent}%; height:100%; background:linear-gradient(90deg, #8B1E3F, #d97706); transition:width 0.25s ease;"></div>
                 </div>
 
                 <!-- Navigation par slides de livre -->
-                <div class="book-slide-nav-bar">
-                  ${isFirstPage ? `
-                    <button class="book-nav-page-btn" ${currentChIdx > 0 ? `onclick="openPreviousChapter('${novel.id}', ${currentChIdx})"` : `onclick="openNovelDetail('${novel.id}')"`}>
-                      <span>‹</span> ${currentChIdx > 0 ? 'Chapitre précédent' : 'Sommaire'}
-                    </button>
-                  ` : `
-                    <button class="book-nav-page-btn" onclick="turnBookPage(-1)">
-                      <span>‹</span> Page précédente
-                    </button>
-                  `}
-
-                  ${isLastPage ? `
-                    ${currentChIdx < chapters.length - 1 ? `
-                      <button class="book-nav-page-btn book-next-chapter-action" onclick="openNextChapter('${novel.id}', ${currentChIdx})">
-                        <span>📖</span> Chapitre suivant (${currentChIdx + 2}) <span>›</span>
-                      </button>
-                    ` : `
-                      <button class="book-nav-page-btn book-next-chapter-action" onclick="showToast('🎉 Félicitations ! Vous êtes à jour dans ce roman.'); openNovelDetail('${novel.id}');">
-                        <span>✨</span> Fin du roman <span>✓</span>
-                      </button>
-                    `}
-                  ` : `
-                    <button class="book-nav-page-btn" onclick="turnBookPage(1)">
-                      Page suivante <span>›</span>
-                    </button>
-                  `}
+                <div class="book-slide-nav-bar" id="book-slide-nav-bar">
+                  ${renderBookNavButtonsHTML(novel.id, currentChIdx, chapters.length, isFirstPage, isLastPage)}
                 </div>
               </div>
             </div>
@@ -3772,13 +3870,45 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
         </div>
       `;
 
-      setupBookKeyboardAndTouchNavigation(novel.id, chapter.id, totalPages);
+      bindBookTouchListeners();
+      setupBookKeyboardAndTouchNavigation();
     }
 
+    let isTurningBookPage = false;
+
     function turnBookPage(delta) {
-      activeChapterPageIndex += delta;
-      renderChapterReaderView(activeNovelId, activeChapterId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (isTurningBookPage) return;
+
+      NOVELS = loadStoredNovels();
+      const novel = NOVELS.find(n => n.id === activeNovelId) || NOVELS[0];
+      const chapters = novel.chapters || [];
+      const currentChIdx = chapters.findIndex(c => c.id === activeChapterId);
+      const chapter = (currentChIdx !== -1) ? chapters[currentChIdx] : (chapters[0] || { title: "Chapitre 1", content: "" });
+      const bookPages = splitChapterContentIntoBookPages(chapter.content);
+      const totalPages = bookPages.length;
+
+      const targetIdx = activeChapterPageIndex + delta;
+      if (targetIdx < 0 || targetIdx >= totalPages) return;
+
+      activeChapterPageIndex = targetIdx;
+      isTurningBookPage = true;
+
+      const contentEl = document.getElementById('book-page-content');
+      if (contentEl) {
+        // Micro-fondu ultra doux pour tourner la page comme un livre réel sans aucun saut
+        contentEl.style.opacity = '0.2';
+        setTimeout(() => {
+          updateBookReaderInPlace(novel, chapter, currentChIdx, bookPages, totalPages);
+          contentEl.scrollTop = 0;
+          contentEl.style.opacity = '1';
+          setTimeout(() => {
+            isTurningBookPage = false;
+          }, 100);
+        }, 70);
+      } else {
+        renderChapterReaderView(activeNovelId, activeChapterId);
+        isTurningBookPage = false;
+      }
     }
 
     function openNextChapter(novelId, currentIdx) {
@@ -3799,7 +3929,7 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
       readerFontSize = Math.max(9, Math.min(20, readerFontSize + delta));
       const content = document.getElementById('book-page-content');
       if (content) content.style.fontSize = readerFontSize + 'pt';
-      showToast(`Taille de police : ${readerFontSize} pt (Times New Roman)`, '🔤');
+      showToast(`Taille : ${readerFontSize} pt`, '🔤');
     }
 
     function cycleReaderTheme() {
@@ -3813,7 +3943,13 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
       const curIdx = themes.indexOf(readerTheme);
       readerTheme = themes[(curIdx + 1) % themes.length];
       showToast(`Papier : ${themeNames[readerTheme]}`, '🎨');
-      renderChapterReaderView(activeNovelId, activeChapterId);
+
+      const stage = document.getElementById('real-book-stage');
+      if (stage) {
+        stage.className = `real-book-stage book-theme-${readerTheme}`;
+      } else {
+        renderChapterReaderView(activeNovelId, activeChapterId);
+      }
     }
 
     function toggleReaderTheme() {
@@ -3822,55 +3958,70 @@ Elena serra les poings jusqu'à s'enfoncer les ongles dans les paumes. Ses propr
 
     let bookNavListenersBound = false;
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchEndX = 0;
+    let touchEndY = 0;
 
-    function setupBookKeyboardAndTouchNavigation(novelId, chapterId, totalPages) {
+    function setupBookKeyboardAndTouchNavigation() {
       if (!bookNavListenersBound) {
         bookNavListenersBound = true;
         window.addEventListener('keydown', (e) => {
           if (currentViewMode !== 'chapter_reader') return;
-          if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          NOVELS = loadStoredNovels();
+          const novel = NOVELS.find(n => n.id === activeNovelId);
+          if (!novel) return;
+          const chapters = novel.chapters || [];
+          const curIdx = chapters.findIndex(c => c.id === activeChapterId);
+          const chapter = (curIdx !== -1) ? chapters[curIdx] : chapters[0];
+          if (!chapter) return;
+          const bookPages = splitChapterContentIntoBookPages(chapter.content);
+          const totalPages = bookPages.length;
+
+          if (e.key === 'ArrowRight' || e.key === 'PageDown') {
             e.preventDefault();
             if (activeChapterPageIndex < totalPages - 1) {
               turnBookPage(1);
-            } else {
-              const novel = NOVELS.find(n => n.id === activeNovelId);
-              const curIdx = (novel && novel.chapters) ? novel.chapters.findIndex(c => c.id === activeChapterId) : -1;
-              if (novel && curIdx !== -1 && curIdx < novel.chapters.length - 1) {
-                openNextChapter(novel.id, curIdx);
-              }
+            } else if (curIdx !== -1 && curIdx < chapters.length - 1) {
+              openNextChapter(novel.id, curIdx);
             }
           } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
             e.preventDefault();
             if (activeChapterPageIndex > 0) {
               turnBookPage(-1);
+            } else if (curIdx > 0) {
+              openPreviousChapter(novel.id, curIdx);
             }
           }
         });
       }
+    }
 
+    function bindBookTouchListeners() {
       const sheet = document.getElementById('book-active-sheet');
-      if (sheet) {
-        sheet.addEventListener('touchstart', (e) => {
-          touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
+      if (!sheet || sheet.dataset.touchBound === 'true') return;
+      sheet.dataset.touchBound = 'true';
 
-        sheet.addEventListener('touchend', (e) => {
-          touchEndX = e.changedTouches[0].screenX;
-          const diff = touchEndX - touchStartX;
-          if (Math.abs(diff) > 50) {
-            if (diff < 0) {
-              if (activeChapterPageIndex < totalPages - 1) {
-                turnBookPage(1);
-              }
-            } else {
-              if (activeChapterPageIndex > 0) {
-                turnBookPage(-1);
-              }
-            }
+      sheet.addEventListener('touchstart', (e) => {
+        if (!e.changedTouches || !e.changedTouches[0]) return;
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+      }, { passive: true });
+
+      sheet.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || !e.changedTouches[0]) return;
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        // Geste horizontal net pour éviter tout conflit avec le défilement vertical du texte
+        if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.4) {
+          if (diffX < 0) {
+            turnBookPage(1);
+          } else {
+            turnBookPage(-1);
           }
-        }, { passive: true });
-      }
+        }
+      }, { passive: true });
     }
 
     // ================= FOR YOU FEED VIEW (SERIES ON TOP, NOVELS ON BOTTOM) =================
